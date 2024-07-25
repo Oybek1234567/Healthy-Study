@@ -1,4 +1,14 @@
-import { HomeOutlined, RiseOutlined } from "@ant-design/icons";
+import {
+    HomeOutlined,
+    UserOutlined,
+    UnorderedListOutlined,
+    SolutionOutlined,
+    DollarOutlined,
+    ShoppingOutlined,
+    FundOutlined,
+    UsergroupAddOutlined,
+    FileDoneOutlined,
+} from "@ant-design/icons";
 
 export const menu = [
     {
@@ -11,54 +21,50 @@ export const menu = [
         id: 2,
         title: "Foydalanuvchilar",
         path: "/static",
-        icon: <RiseOutlined />,
-    },{
+        icon: <UserOutlined />,
+    },
+    {
         id: 3,
         title: "Hisobotlar",
         path: "/reports",
-        icon: <RiseOutlined/>,
+        icon: <UnorderedListOutlined />,
         children: [
             {
                 id: 4,
                 title: "Education",
                 path: "/education",
-        icon: <RiseOutlined/>,
-
+                icon: <SolutionOutlined />,
             },
             {
                 id: 5,
                 title: "Revenue",
                 path: "/revenue",
-        icon: <RiseOutlined/>,
-
+                icon: <DollarOutlined />,
             },
             {
                 id: 6,
                 title: "Expense",
                 path: "/expense",
-        icon: <RiseOutlined/>,
-
+                icon: <ShoppingOutlined />,
             },
             {
                 id: 7,
                 title: "Map",
                 path: "/map",
-        icon: <RiseOutlined/>,
-
-            }
-        ] 
+                icon: <FundOutlined />,
+            },
+        ],
     },
     {
         id: 8,
         title: "Guruhlar",
         path: "/groups",
-        icon: <RiseOutlined/>
+        icon: <UsergroupAddOutlined />,
     },
     {
         id: 9,
         title: "Dars jadvali",
         path: "/timetable",
-        icon: <RiseOutlined/>
-    }
-
+        icon: <FileDoneOutlined />,
+    },
 ];
