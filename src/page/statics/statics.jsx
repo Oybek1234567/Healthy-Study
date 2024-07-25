@@ -1,7 +1,8 @@
 import { Button, Table } from "antd";
 import { data } from "./data";
-import useDrawer from "../hooks/useDrawer";
+import useDrawer from "../../hooks/useDrawer";
 import UseDrawer from "./drawer";
+import { DownloadOutlined } from "@ant-design/icons";
 
 const Statics = () => {
     const {open, onOpen, onClose} = useDrawer()
@@ -31,10 +32,13 @@ const Statics = () => {
     ];
     return (
         <div>
+            <div className="flex gap-1">
+            <a style={{marginLeft: '80%', marginRight: '10px', color: "blue", paddingTop: "20px"}} href="" download={"ma'lumotlar.xlsx"}>Download Excel <DownloadOutlined /></a>
             <Button style={{
-                marginBottom: "20px", backgroundColor: "blue", color: "white", marginLeft: '90%'
+                marginBottom: "20px", backgroundColor: "blue", color: "white", marginLeft: '0%'
             }}
-            onClick={onOpen}>+Qo'shish</Button>
+            onClick={onOpen}>+Qo`shish</Button>
+            </div>
             <UseDrawer open={open} onClosed={onClose}/>
             <Table columns={columns} dataSource={data} />
         </div>

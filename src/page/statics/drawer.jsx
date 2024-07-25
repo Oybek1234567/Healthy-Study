@@ -4,7 +4,7 @@ const UseDrawer = ({ open, onClosed }) => {
     return (
         <div>
             <Drawer open={open} onClose={onClosed}>
-                <h1 className='text-3xl mb-[20px]'> Qo`shish</h1>
+                <h1 style={{fontSize: "30px", fontWeight: "bold", marginBottom: "20px   "}}> Qo`shish</h1>
                 <form action='#'>
                     <label htmlFor='name'>Ism familiya qo`shish</label>
                     <br />
@@ -12,7 +12,7 @@ const UseDrawer = ({ open, onClosed }) => {
                         type='text'
                         id='name'
                         placeholder='Input your name...'
-                        className='w-full border-2 border-[#000] p-1 mt-4 mb-4'
+                        style={{border: "none", width: "100%", height: "30px", borderRadius: "5px", padding: "4px", border: "2px solid #000", marginTop: "10px", marginBottom: "20px"}}
                         required
                     />
                     <br />
@@ -22,7 +22,7 @@ const UseDrawer = ({ open, onClosed }) => {
                         type='text'
                         id='age'
                         placeholder='Input your age...'
-                        className='w-full border-2 border-[#000] p-1 mt-4 mb-4'
+                        style={{border: "none", width: "100%", height: "30px", borderRadius: "5px", padding: "4px", border: "2px solid #000", marginTop: "10px", marginBottom: "20px"}}
                         required
                     />
                     <label htmlFor='phone'>
@@ -32,13 +32,14 @@ const UseDrawer = ({ open, onClosed }) => {
                         type='number'
                         id='phone'
                         placeholder='Input your phone...'
-                        className='w-full  border-2 border-[#000] p-1 mt-4'
+                        style={{border: "none", width: "100%", height: "30px", borderRadius: "5px", padding: "4px", border: "2px solid #000", marginTop: "10px", marginBottom: "20px"}}
                         pattern='w/{1, 17}'
                         required
                     />
                     <button
                         type='submit'
-                        className='bg-[blue] text-[white] mt-10 ml-[80%] p-2 rounded-[8px] valid:bg-[green] invalid:bg-[red]'>
+                        style={{border: "none", width: "70px", height: "30px", borderRadius: "5px", backgroundColor: "blue", color: "white", cursor: "pointer", marginLeft: "78%"}}
+                        >
                         Yaratish
                     </button>
                     <button></button>

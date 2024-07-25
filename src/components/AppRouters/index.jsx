@@ -58,11 +58,27 @@ const AppRouters = () => {
                             marginRight: "20px",
                         }}
                         defaultSelectedKeys={["1"]}
-                        items={menu.map(({ id, title, path,icon }) => ({
-                            key: id,
-                            label: <Link to={path}>{title}</Link>,
-                            icon: icon
-                        }))}
+                        items={menu.map(({id, path, title, icon, children}) => {
+                            if(children){
+                                return{
+                                    key: id,
+                                    label: <Link to={path}>{title}</Link>,
+                                    icon: icon,
+                                    children: children.map(
+                                        ({title, path, id, icon}) => ({
+                                            key: id,
+                                            icon: icon,
+                                            label: <Link to={path}>{title}</Link>,
+                                        })
+                                    )
+                                }
+                            }
+                            return{
+                                key: id,
+                                label: <Link to={path}>{title}</Link>,
+                                icon: icon
+                            }
+                        })}
                     />
                 </Sider>
                 <Layout>
