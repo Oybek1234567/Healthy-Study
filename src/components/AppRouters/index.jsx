@@ -1,8 +1,5 @@
 import { Button, Layout, Menu, theme } from "antd";
-import {
-    MenuFoldOutlined,
-    MenuUnfoldOutlined,
-} from "@ant-design/icons";
+import { MenuFoldOutlined, MenuUnfoldOutlined } from "@ant-design/icons";
 import { useState } from "react";
 import { Icons } from "../../assets/Icons";
 import { menu } from "../../constants/data";
@@ -58,27 +55,33 @@ const AppRouters = () => {
                             marginRight: "20px",
                         }}
                         defaultSelectedKeys={["1"]}
-                        items={menu.map(({id, path, title, icon, children}) => {
-                            if(children){
-                                return{
+                        items={menu.map(
+                            ({ id, path, title, icon, children }) => {
+                                if (children) {
+                                    return {
+                                        key: id,
+                                        label: <Link to={path}>{title}</Link>,
+                                        icon: icon,
+                                        children: children.map(
+                                            ({ title, path, id, icon }) => ({
+                                                key: id,
+                                                icon: icon,
+                                                label: (
+                                                    <Link to={path}>
+                                                        {title}
+                                                    </Link>
+                                                ),
+                                            })
+                                        ),
+                                    };
+                                }
+                                return {
                                     key: id,
                                     label: <Link to={path}>{title}</Link>,
                                     icon: icon,
-                                    children: children.map(
-                                        ({title, path, id, icon}) => ({
-                                            key: id,
-                                            icon: icon,
-                                            label: <Link to={path}>{title}</Link>,
-                                        })
-                                    )
-                                }
+                                };
                             }
-                            return{
-                                key: id,
-                                label: <Link to={path}>{title}</Link>,
-                                icon: icon
-                            }
-                        })}
+                        )}
                     />
                 </Sider>
                 <Layout>
@@ -105,6 +108,7 @@ const AppRouters = () => {
                                 width: 64,
                                 height: 64,
                             }}
+                            className="show--hide_btn"
                         />
                     </Header>
                     <Content
