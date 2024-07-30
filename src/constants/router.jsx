@@ -1,3 +1,6 @@
+import Applications from "../page/applications";
+import Register from "../page/applications/register";
+import User from "../page/applications/user";
 import Dashboard from "../page/dashboard/dashboard";
 import Groups from "../page/groups";
 import Education from "../page/reports/education";
@@ -53,5 +56,20 @@ export const MenuList = [
         id: 9,
         path: "/timetable",
         element: <Timetable />
+    },
+    {
+        id: 10,
+        path: "/applications",
+        element: <Applications />,
+    },
+    {
+        id: 11,
+        path: "/user",
+        element: <User />,
+    },
+    {
+        id: 12,
+        path: "/register",
+        element: <Register />
     }
 ]

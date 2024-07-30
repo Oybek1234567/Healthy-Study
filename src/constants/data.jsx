@@ -67,4 +67,24 @@ export const menu = [
         path: "/timetable",
         icon: <FileDoneOutlined />,
     },
+    {
+        id: 10,
+        title: "Applications",
+        path: "/applications",
+        icon: <FileDoneOutlined />,
+        children: [
+            {
+                id: 11,
+                title: "New User",
+                path: "/user",
+                icon: <UsergroupAddOutlined />
+            },
+            {
+                id: 12,
+                title: "Group Registration",
+                path: "/register",
+                icon: <SolutionOutlined />
+            }
+        ]
+    }
 ];

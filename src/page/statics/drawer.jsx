@@ -12,7 +12,7 @@ const UseDrawer = ({ open, onClosed }) => {
                         type='text'
                         id='name'
                         placeholder='Input your name...'
-                        style={{border: "none", width: "100%", height: "30px", borderRadius: "5px", padding: "4px", border: "2px solid #000", marginTop: "10px", marginBottom: "20px"}}
+                        style={{ width: "100%", height: "30px", borderRadius: "5px", padding: "4px", border: "2px solid #000", marginTop: "10px", marginBottom: "20px"}}
                         required
                     />
                     <br />
@@ -22,7 +22,7 @@ const UseDrawer = ({ open, onClosed }) => {
                         type='text'
                         id='age'
                         placeholder='Input your age...'
-                        style={{border: "none", width: "100%", height: "30px", borderRadius: "5px", padding: "4px", border: "2px solid #000", marginTop: "10px", marginBottom: "20px"}}
+                        style={{ width: "100%", height: "30px", borderRadius: "5px", padding: "4px", border: "2px solid #000", marginTop: "10px", marginBottom: "20px"}}
                         required
                     />
                     <label htmlFor='phone'>
@@ -32,13 +32,13 @@ const UseDrawer = ({ open, onClosed }) => {
                         type='number'
                         id='phone'
                         placeholder='Input your phone...'
-                        style={{border: "none", width: "100%", height: "30px", borderRadius: "5px", padding: "4px", border: "2px solid #000", marginTop: "10px", marginBottom: "20px"}}
+                        style={{ width: "100%", height: "30px", borderRadius: "5px", padding: "4px", border: "2px solid #000", marginTop: "10px", marginBottom: "20px"}}
                         pattern='w/{1, 17}'
                         required
                     />
                     <button
                         type='submit'
-                        style={{border: "none", width: "70px", height: "30px", borderRadius: "5px", backgroundColor: "blue", color: "white", cursor: "pointer", marginLeft: "78%"}}
+                        style={{ width: "70px", height: "30px", borderRadius: "5px", backgroundColor: "blue", color: "white", cursor: "pointer", marginLeft: "78%"}}
                         >
                         Yaratish
                     </button>

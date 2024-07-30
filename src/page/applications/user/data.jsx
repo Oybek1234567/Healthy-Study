@@ -1,28 +1,31 @@
-
 import { Checkbox } from "antd";
-export const data = [
+import { EditOutlined, DeleteOutlined } from "@ant-design/icons";
+export const userData = [
     {
         key: "1",
         show: <Checkbox />,
         name: "John Brown",
-        phone: "+998 99 999 99 99",
         dateOfBirth: "12.04.2000",
-        role: "Admin",
+        phone: "+998 99 999 99 99",
+        series: "AB 1789629",
+        passportImg: "/",
     },
     {
         key: "2",
         show: <Checkbox />,
         name: "Jim Green",
-        phone: "+998 99 999 99 99",
         dateOfBirth: "12.04.2000",
-        role: "Student",
+        phone: "+998 99 999 99 99",
+        series: "AB 1789629",
+        passportImg: "/",
     },
     {
         key: "3",
         show: <Checkbox />,
         name: "Joe Black",
-        phone: "+998 99 999 99 99",
         dateOfBirth: "12.04.2000",
-        role: "Student",
+        phone: "+998 99 999 99 99",
+        series: "AB 1789629",
+        passportImg: "/",
     },
 ];
