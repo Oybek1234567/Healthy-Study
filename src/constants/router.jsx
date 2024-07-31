@@ -1,6 +1,7 @@
 import Applications from "../page/applications";
 import Register from "../page/applications/register";
 import User from "../page/applications/user";
+import Profile from "../page/applications/user/profile";
 import Dashboard from "../page/dashboard/dashboard";
 import Groups from "../page/groups";
 import Excisting from "../page/groups/excisting";
@@ -89,5 +90,10 @@ export const MenuList = [
         id: 15,
         path: "/pending",
         element: <Pending />
+    },
+    {
+        id: 16,
+        path: '/profile',
+        element: <Profile />
     }
 ]

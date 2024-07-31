@@ -38,8 +38,17 @@ const Pending = () => {
         {
             title: "Status",
             dataIndex: "status",
-            render: (status) => {
-                <div className='w-10'>{status}</div>;
+            render: () => {
+                return (
+                    <div className='relative z-10 flex  items-center w-[100px] h-[20px] bg-white border-2 border-black'>
+                        <div
+                            className='absolute z-1 w-1/2 h-full bg-[green]'
+                            style={{
+                                clipPath:
+                                    "polygon(0 0, 100% 0%, 80% 100%, 0% 100%)",
+                            }}></div>
+                    </div>
+                );
             },
         },
     ];
@@ -47,6 +56,9 @@ const Pending = () => {
     return (
         <div>
             <Table columns={columns} dataSource={pendingData} />
+            <div className='w-40 mt-32 h-10 bg-white border-2'>
+                <div className='w-1/2 h-10 bg-black'></div>
+            </div>
         </div>
     );
 };
