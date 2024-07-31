@@ -108,7 +108,7 @@ const Statics = () => {
                     onClick={onOpen}>
                     +
                 </Button>
-                <select name="phone" id="phone" style={{ left: "50px"}}>
+                <select name="phone" id="phone" className="absolute ml-[800px]">
                     <option value="5">5</option>
                     <option value="10">10</option>
                     <option value="15">15</option>

@@ -1,11 +1,8 @@
 import { Table,Button } from "antd";
-import UseDrawer from "../../statics/drawer";
-import useDrawer from "../../../hooks/useDrawer";
 import * as XLSX from "xlsx";
 import { DownloadOutlined, EditFilled, DeleteOutlined } from "@ant-design/icons";
 import { userData } from "./data";
 const User = () => {
- const { open, onOpen, onClose } = useDrawer();
 
  const handleDownloadExcel = () => {
      const filteredData = userData.map(({show, ...rest }) => rest);
@@ -104,7 +101,8 @@ const User = () => {
                          backgroundColor: "lightgreen",
                          color: "white",
                          borderRadius: "50%",
-                     }}>
+                     }}
+                 >
                      +
                  </Button>
              </div>
@@ -136,7 +134,6 @@ const User = () => {
                  Download Excel <DownloadOutlined />
              </button>
          </div>
-         <UseDrawer open={open} onClosed={onClose} />
          <Table columns={columns} dataSource={userData} />
      </div>
  );

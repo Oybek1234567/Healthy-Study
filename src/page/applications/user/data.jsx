@@ -1,5 +1,4 @@
 import { Checkbox } from "antd";
-import { EditOutlined, DeleteOutlined } from "@ant-design/icons";
 export const userData = [
     {
         key: "1",

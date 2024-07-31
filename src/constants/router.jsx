@@ -3,6 +3,9 @@ import Register from "../page/applications/register";
 import User from "../page/applications/user";
 import Dashboard from "../page/dashboard/dashboard";
 import Groups from "../page/groups";
+import Excisting from "../page/groups/excisting";
+import New from "../page/groups/new";
+import Pending from "../page/groups/pending";
 import Education from "../page/reports/education";
 import Expense from "../page/reports/expense";
 import Map from "../page/reports/map";
@@ -71,5 +74,20 @@ export const MenuList = [
         id: 12,
         path: "/register",
         element: <Register />
+    },
+    {
+        id: 13,
+        path: "/new",
+        element: <New />
+    },
+    {
+        id: 14,
+        path: "/excisting",
+        element: <Excisting />
+    },
+    {
+        id: 15,
+        path: "/pending",
+        element: <Pending />
     }
 ]
