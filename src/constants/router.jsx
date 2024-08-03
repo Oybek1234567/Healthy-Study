@@ -2,6 +2,9 @@ import Applications from "../page/applications";
 import Register from "../page/applications/register";
 import User from "../page/applications/user";
 import Profile from "../page/applications/user/profile";
+import Courses from "../page/courses";
+import ExistingCourses from "../page/courses/existing_courses";
+import NewCourses from "../page/courses/new_courses";
 import Dashboard from "../page/dashboard/dashboard";
 import Groups from "../page/groups";
 import Excisting from "../page/groups/excisting";
@@ -12,6 +15,9 @@ import Expense from "../page/reports/expense";
 import Map from "../page/reports/map";
 import Reports from "../page/reports/reports";
 import Revenue from "../page/reports/revenue";
+import Rooms from "../page/rooms";
+import ExistingRoom from "../page/rooms/existing_room";
+import NewRooms from "../page/rooms/new_room";
 import Statics from "../page/statics/statics";
 import Timetable from "../page/timetable";
 
@@ -95,5 +101,35 @@ export const MenuList = [
         id: 16,
         path: '/profile',
         element: <Profile />
+    },
+    {
+        id: 17,
+        path: "/courses",
+        element: <Courses />
+    },
+    {
+        id: 18,
+        path: "new_courses",
+        element: <NewCourses />
+    },
+    {
+        id: 19,
+        path: "existing_courses",
+        element: <ExistingCourses />
+    },
+    {
+        id: 20,
+        path: '/rooms',
+        element: <Rooms />
+    },
+    {
+        id: 21,
+        path: '/new_room',
+        element: <NewRooms />
+    },
+    {
+        id: 22,
+        path: '/existing_room',
+        element: <ExistingRoom />
     }
 ]
