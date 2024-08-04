@@ -3,8 +3,7 @@ import Register from "../page/applications/register";
 import User from "../page/applications/user";
 import Profile from "../page/applications/user/profile";
 import Courses from "../page/courses";
-import ExistingCourses from "../page/courses/existing_courses";
-import NewCourses from "../page/courses/new_courses";
+import Modules from "../page/courses/module/module";
 import Dashboard from "../page/dashboard/dashboard";
 import Groups from "../page/groups";
 import Excisting from "../page/groups/excisting";
@@ -109,26 +108,21 @@ export const MenuList = [
     },
     {
         id: 18,
-        path: "new_courses",
-        element: <NewCourses />
-    },
-    {
-        id: 19,
-        path: "existing_courses",
-        element: <ExistingCourses />
-    },
-    {
-        id: 20,
         path: '/rooms',
         element: <Rooms />
     },
     {
-        id: 21,
+        id: 19,
         path: '/new_room',
         element: <NewRooms />
     },
     {
-        id: 22,
+        id: 20,
+        path: '/modules',
+        element: <Modules />
+    },
+    {
+        id: 21,
         path: '/existing_room',
         element: <ExistingRoom />
     }

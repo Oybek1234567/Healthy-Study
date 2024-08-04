@@ -85,7 +85,6 @@ const UseDrawer = ({ open, onClosed }) => {
                         }}>
                         Yaratish
                     </button>
-                    <button></button>
                 </form>
             </Drawer>
         </div>

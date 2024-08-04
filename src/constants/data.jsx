@@ -48,41 +48,27 @@ export const menu = [
         title: "Kurslar",
         path: "/courses",
         icon: <UnorderedListOutlined />,
-        children: [
-            {
-                id: 7,
-                title: "Yangi",
-                path: "/new_courses",
-                icon: <FileDoneOutlined />,
-            },
-            {
-                id: 8,
-                title: "Mavjud",
-                path: "/existing_courses",
-                icon: <ShoppingOutlined />
-            }
-        ]
     },
     {
-        id: 9,
+        id: 7,
         title: "Guruhlar",
         path: "/groups",
         icon: <UsergroupAddOutlined />,
         children: [
             {
-                id: 10,
+                id: 8,
                 title: "Yangi",
                 path: "/new",
                 icon: <SolutionOutlined />,
             },
             {
-                id: 11,
+                id: 9,
                 title: "Kutilayotgan",
                 path: "/excisting",
                 icon: <FileDoneOutlined />,
             },
             {
-                id: 12,
+                id: 10,
                 title: "Mavjud",
                 path: "/pending",
                 icon: <FileDoneOutlined />,
@@ -90,19 +76,19 @@ export const menu = [
         ],
     },
     {
-        id: 13,
+        id: 11,
         title: "Xonalar",
         path: '/rooms',
         icon: <FundOutlined />,
         children: [
             {
-                id: 14,
+                id: 12,
                 title: "Yangi",
                 path: "/new_room",
                 icon: <SolutionOutlined />,
             },
             {
-                id: 15,
+                id: 13,
                 title: "Mavjud",
                 path: "/existing_room",
                 icon: <FileDoneOutlined />,
@@ -110,37 +96,37 @@ export const menu = [
         ],
     },
     {
-        id: 16,
+        id: 14,
         title: "Dars jadvali",
         path: "/timetable",
         icon: <FileDoneOutlined />,
     },
     {
-        id: 17,
+        id: 15,
         title: "Hisobotlar",
         path: "/reports",
         icon: <UnorderedListOutlined />,
         children: [
             {
-                id: 18,
+                id: 16,
                 title: "Education",
                 path: "/education",
                 icon: <SolutionOutlined />,
             },
             {
-                id: 19,
+                id: 17,
                 title: "Revenue",
                 path: "/revenue",
                 icon: <DollarOutlined />,
             },
             {
-                id: 20,
+                id: 18,
                 title: "Expense",
                 path: "/expense",
                 icon: <ShoppingOutlined />,
             },
             {
-                id: 21,
+                id: 19,
                 title: "Map",
                 path: "/map",
                 icon: <FundOutlined />,

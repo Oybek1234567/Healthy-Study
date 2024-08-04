@@ -14,25 +14,19 @@ const Statics = () => {
     const { open, onOpen, onClose } = useDrawer();
 
     const handleDownloadExcel = () => {
-        // Filter out the 'show' key from the data
         const filteredData = userData.map(({ show, ...rest }) => rest);
 
-        // Create a new workbook and add a worksheet
         const wb = XLSX.utils.book_new();
         const ws = XLSX.utils.json_to_sheet(filteredData);
 
-        // Append the worksheet to the workbook
         XLSX.utils.book_append_sheet(wb, ws, "Data");
 
-        // Generate a binary string of the workbook
         const wbout = XLSX.write(wb, { bookType: "xlsx", type: "binary" });
 
-        // Convert the binary string to a Blob
         const blob = new Blob([s2ab(wbout)], {
             type: "application/octet-stream",
         });
 
-        // Create a download link and trigger the download
         const url = URL.createObjectURL(blob);
         const a = document.createElement("a");
         a.href = url;
