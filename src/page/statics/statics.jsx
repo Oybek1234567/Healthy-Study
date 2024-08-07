@@ -2,6 +2,7 @@
 // import { Button } from "antd";
 import axios from "axios";
 import { useState, useEffect } from "react";
+import "./style.css";
 // import XLSX from "xlsx";
 // import useDrawer from "../../hooks/useDrawer";
 // import UseDrawer from "./drawer";
@@ -116,14 +117,14 @@ const Statics = () => {
             {/* <UseDrawer open={open} onClosed={onClose} /> */}
             <table>
                 <thead>
-                <tr>
-                    <th>Name</th>
-                    <th>Surname</th>
-                    <th>Phone</th>
-                    <th>Role</th>
-                </tr>
+                    <tr>
+                        <th>Name</th>
+                        <th>Surname</th>
+                        <th>Phone</th>
+                        <th>Role</th>
+                    </tr>
                 </thead>
-                <tbody className='ml-10'>
+                <tbody>
                     {data.map((item) => (
                         <tr key={item.id}>
                             <td>{item.name}</td>
