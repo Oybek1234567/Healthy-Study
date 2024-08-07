@@ -19,6 +19,7 @@ import ExistingRoom from "../page/rooms/existing_room";
 import NewRooms from "../page/rooms/new_room";
 import Statics from "../page/statics/statics";
 import Timetable from "../page/timetable";
+import Login from "../page/register";
 
 export const MenuList = [
     {
@@ -125,5 +126,10 @@ export const MenuList = [
         id: 21,
         path: '/existing_room',
         element: <ExistingRoom />
+    },
+    {
+        id: 22,
+        path: '/login',
+        element: <Login />
     }
 ]

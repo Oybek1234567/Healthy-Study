@@ -1,10 +1,17 @@
 import { Route, Routes, useNavigate } from "react-router-dom";
 import Modules from "./module/module";
 import useDrawer from "../../hooks/useDrawer";
-import SetDrawer from "./drawer";
+import { useState } from "react";
+import CoursesDrawer from "./drawer";
 
 const NewCourses = () => {
     const { open, onOpen, onClose } = useDrawer();
+    const [divContents, setDivContents] = useState([]);
+
+    const handleCreate = (value) => {
+        setDivContents([...divContents, value]);
+        onClose();
+    };
 
     const navigate = useNavigate();
 
@@ -13,45 +20,23 @@ const NewCourses = () => {
     };
 
     return (
-        <div className='flex gap-24 flex-wrap'>
-            <h1 className='w-full text-4xl font-semibold mb-0'>Kurslar</h1>
-            <div
-                className='flex cursor-pointer justify-center items-center w-1/4 h-[15vh] border-4 border-black'
-                onClick={handleNavigation}>
-                <b className='text-lg font-semibold'>English</b>
-            </div>
-            <div
-                className='flex cursor-pointer justify-center items-center w-1/4 h-[15vh] border-4 border-black'
-                onClick={handleNavigation}>
-                <b className='text-lg font-semibold'>Chemistry</b>
-            </div>
-            <div
-                className='flex cursor-pointer justify-center items-center w-1/4 h-[15vh] border-4 border-black'
-                onClick={handleNavigation}>
-                <b className='text-lg font-semibold'>Math</b>
-            </div>
-            <div
-                className='flex cursor-pointer justify-center items-center w-1/4 h-[15vh] border-4 border-black'
-                onClick={handleNavigation}>
-                <b className='text-lg font-semibold'>Other Subject</b>
-            </div>
-            <div
-                className='flex cursor-pointer justify-center items-center w-1/4 h-[15vh] border-4 border-black'
-                onClick={handleNavigation}>
-                <b className='text-lg font-semibold'>More</b>
-            </div>
-            <div
-                className='flex cursor-pointer justify-center items-center w-1/4 h-[15vh] border-4 border-black'
-                onClick={handleNavigation}>
-                <b className='text-lg font-semibold'>And More</b>
-            </div>
+        <div className='flex gap-4 flex-wrap'>
+            <h1 className="absolute text-4xl">Kurslar</h1>
+            {divContents.map((content, index) => (
+                <div
+                    key={index}
+                    className='flex cursor-pointer mt-20 justify-center items-center w-1/4 h-40 border-4 border-black'
+                    onClick={handleNavigation}>
+                    {content}
+                </div>
+            ))}
             <button
-                className='w-14 h-10 bg-green-700 ml-[1100px] rounded-full text-white translate-y-[-550px]'
+                className='absolute w-10 h-10 ml-[70%] bg-green-700 rounded-full text-white'
                 type='button'
                 onClick={onOpen}>
                 +
             </button>
-            <SetDrawer open={open} onClosed={onClose} />
+            <CoursesDrawer open={open} onClose={onClose} onCreate={handleCreate} />
         </div>
     );
 };

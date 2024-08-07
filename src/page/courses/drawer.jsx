@@ -1,21 +1,37 @@
+import { useState } from "react";
 import { Drawer } from "antd";
 
-const SetDrawer = ({ open, onClosed }) => {
+const CoursesDrawer = ({ open, onClosed, onCreate }) => {
+    const [inputValue, setInputValue] = useState("");
+
+    const handleInputChange = (e) => {
+        setInputValue(e.target.value);
+    };
+    const handleCreateClick = () => {
+        onCreate(inputValue);
+        setInputValue("");
+    };
+
     return (
-        <div>
-            <Drawer open={open} onClose={onClosed}>
-                <h1 className='mb-4 text-2xl font-semibold'>Kurs Qo`shish</h1>
-                <input type='text' className='border-2 border-black' />
-                <br />
-                <br />
-                <button
-                    className='bg-green-800 p-2 text-white ml-3 rounded-lg'
-                    onClick={onClosed}>
-                    Create
-                </button>
+        <Drawer
+            onClose={onClosed}
+            open={open}>
+            <input
+                value={inputValue}
+                onChange={handleInputChange}
+                placeholder='Type here'
+                className='border-2 border-black p-1'
+                required
+            />
+            <br />
+            <br />
+            <button
+                className='bg-green-800 p-2 text-white ml-3 rounded-lg'
+                onClick={handleCreateClick}>
+                Create
+            </button>
             </Drawer>
-        </div>
     );
 };
 
-export default SetDrawer;
+export default CoursesDrawer;

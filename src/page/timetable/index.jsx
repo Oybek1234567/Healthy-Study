@@ -1,5 +1,5 @@
 import { useState } from "react";
-import  TableMonday  from "./tables/monday/table";
+import TableMonday from "./tables/monday/table";
 import TableTuesday from "./tables/tuesday/table";
 import TableFriday from "./tables/friday/table";
 import TableWednesday from "./tables/wednesday/table";
@@ -30,7 +30,7 @@ const Timetable = () => {
             default:
                 return null;
         }
-    }
+    };
     return (
         <div>
             <h1
@@ -44,14 +44,10 @@ const Timetable = () => {
             <select
                 name='weeks'
                 style={{ marginBottom: "20px", marginLeft: "80%" }}
-                onChange={handleChange}
-            >
+                onChange={handleChange}>
+                <option value='Monday'>Monday</option>
 
-                <option value='Monday'
-                >Monday</option>
-
-                <option value='Tuesday'
-                >Tuesday</option>
+                <option value='Tuesday'>Tuesday</option>
 
                 <option value='Wednesday'>Wednesday</option>
 

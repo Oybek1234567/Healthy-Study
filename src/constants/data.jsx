@@ -133,4 +133,10 @@ export const menu = [
             },
         ],
     },
+    {
+        id: 20,
+        title: "Registratsiya",
+        path: "/login",
+        icon: <FundOutlined />
+    }
 ];

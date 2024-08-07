@@ -1,74 +1,64 @@
-
-import { Button, Table } from "antd";
-import useDrawer from "../../hooks/useDrawer";
-import UseDrawer from "./drawer";
-import {
-    DownloadOutlined,
-    EditFilled,
-    DeleteOutlined,
-} from "@ant-design/icons";
-import * as XLSX from "xlsx";
-import { userData } from "../applications/user/data";
-
+// import { DeleteOutlined, DownloadOutlined, EditFilled } from "@ant-design/icons";
+// import { Button } from "antd";
+import axios from "axios";
+import { useState, useEffect } from "react";
+// import XLSX from "xlsx";
+// import useDrawer from "../../hooks/useDrawer";
+// import UseDrawer from "./drawer";
 const Statics = () => {
-    const { open, onOpen, onClose } = useDrawer();
+    const [data, setData] = useState([]);
+    // const {open, onOpen, onClose} = useDrawer();
 
-    const handleDownloadExcel = () => {
-        const filteredData = userData.map(({ show, ...rest }) => rest);
+    useEffect(() => {
+        const fetchData = async () => {
+            try {
+                const response = await axios.get(
+                    "http://localhost:3000/users/all"
+                );
+                setData(response.data.users);
+            } catch (error) {
+                console.error("Error fetching data:", error);
+            }
+        };
 
-        const wb = XLSX.utils.book_new();
-        const ws = XLSX.utils.json_to_sheet(filteredData);
+        fetchData();
+    }, []);
+    console.log(data);
 
-        XLSX.utils.book_append_sheet(wb, ws, "Data");
+    // const handleDownloadExcel = () => {
+    //     const filteredData = data.map(({ show, ...rest }) => rest);
 
-        const wbout = XLSX.write(wb, { bookType: "xlsx", type: "binary" });
+    //     const wb = XLSX.utils.book_new();
+    //     const ws = XLSX.utils.json_to_sheet(filteredData);
 
-        const blob = new Blob([s2ab(wbout)], {
-            type: "application/octet-stream",
-        });
+    //     XLSX.utils.book_append_sheet(wb, ws, "Data");
 
-        const url = URL.createObjectURL(blob);
-        const a = document.createElement("a");
-        a.href = url;
-        a.download = "ma'lumotlar.xlsx";
-        a.click();
-        URL.revokeObjectURL(url);
-    };
+    //     const wbout = XLSX.write(wb, { bookType: "xlsx", type: "binary" });
 
-    const s2ab = (s) => {
-        const buf = new ArrayBuffer(s.length);
-        const view = new Uint8Array(buf);
-        for (let i = 0; i < s.length; i++) {
-            view[i] = s.charCodeAt(i) & 0xff;
-        }
-        return buf;
-    };
+    //     const blob = new Blob([s2ab(wbout)], {
+    //         type: "application/octet-stream",
+    //     });
 
-    const columns = [
-        {
-            dataIndex: "show",
-        },
-        {
-            title: "Name",
-            dataIndex: "name",
-        },
-        {
-            title: "Date of Birth",
-            dataIndex: "dateOfBirth",
-        },
-        {
-            title: "Phone",
-            dataIndex: "phone",
-        },
-        {
-            title: "Role",
-            dataIndex: "role",
-        },
-    ];
+    //     const url = URL.createObjectURL(blob);
+    //     const a = document.createElement("a");
+    //     a.href = url;
+    //     a.download = "ma'lumotlar.xlsx";
+    //     a.click();
+    //     URL.revokeObjectURL(url);
+    // };
+
+    // const s2ab = (s) => {
+    //     const buf = new ArrayBuffer(s.length);
+    //     const view = new Uint8Array(buf);
+    //     for (let i = 0; i < s.length; i++) {
+    //         view[i] = s.charCodeAt(i) & 0xff;
+    //     }
+    //     return buf;
+    // };
 
     return (
         <div>
-            <div style={{display: "flex", marginBottom: "20px"}}>
+            {/* <div style={{ display: "flex", marginBottom: "20px" }}>
                 <button
                     style={{
                         width: "35px",
@@ -102,13 +92,13 @@ const Statics = () => {
                     onClick={onOpen}>
                     +
                 </Button>
-                <select name="phone" id="phone" className="absolute ml-[800px]">
-                    <option value="5">5</option>
-                    <option value="10">10</option>
-                    <option value="15">15</option>
-                    <option value="20">20</option>
-                    <option value="50">50</option>
-                    <option value="100">100</option>
+                <select name='phone' id='phone' className='absolute ml-[800px]'>
+                    <option value='5'>5</option>
+                    <option value='10'>10</option>
+                    <option value='15'>15</option>
+                    <option value='20'>20</option>
+                    <option value='50'>50</option>
+                    <option value='100'>100</option>
                 </select>
                 <button
                     style={{
@@ -122,9 +112,28 @@ const Statics = () => {
                     onClick={handleDownloadExcel}>
                     Download Excel <DownloadOutlined />
                 </button>
-            </div>
-            <UseDrawer open={open} onClosed={onClose} />
-            <Table columns={columns} dataSource={userData} />
+            </div> */}
+            {/* <UseDrawer open={open} onClosed={onClose} /> */}
+            <table>
+                <thead>
+                <tr>
+                    <th>Name</th>
+                    <th>Surname</th>
+                    <th>Phone</th>
+                    <th>Role</th>
+                </tr>
+                </thead>
+                <tbody className='ml-10'>
+                    {data.map((item) => (
+                        <tr key={item.id}>
+                            <td>{item.name}</td>
+                            <td>{item.surname}</td>
+                            <td>{item.phone}</td>
+                            <td>{item.role}</td>
+                        </tr>
+                    ))}
+                </tbody>
+            </table>
         </div>
     );
 };

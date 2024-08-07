@@ -1,9 +1,12 @@
-const Dashboard = () => {
-  return (
-    <div>
-      Dashboard
-    </div>
-  )
-}
 
-export default Dashboard
+const Dashboard = () => {
+  
+
+    return (
+        <>
+            <h1>Dashboard</h1>
+        </>
+    );
+};
+
+export default Dashboard;
