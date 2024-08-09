@@ -56,9 +56,6 @@ const Pending = () => {
     return (
         <div>
             <Table columns={columns} dataSource={pendingData} />
-            <div className='w-40 mt-32 h-10 bg-white border-2'>
-                <div className='w-1/2 h-10 bg-black'></div>
-            </div>
         </div>
     );
 };

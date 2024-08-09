@@ -34,6 +34,7 @@ const AppRouters = () => {
                             width: hidePart ? "70px" : "210px",
                             height: hidePart ? "150px" : "150px",
                         }}>
+                        <Link to={"/"}>
                         <Icons.logo
                             style={{
                                 width: "200px",
@@ -41,6 +42,7 @@ const AppRouters = () => {
                                 marginLeft: "10px",
                             }}
                         />
+                        </Link>
                     </div>
                     <div className='demo-logo-vertical' />
                     <Menu
