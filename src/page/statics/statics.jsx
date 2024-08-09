@@ -19,7 +19,7 @@
                     setData(response.data.users);
                 } catch (error) {
                     console.error("Error fetching data:", error);
-                }j
+                }
             };
 
             fetchData();
