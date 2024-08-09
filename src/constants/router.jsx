@@ -20,6 +20,8 @@ import NewRooms from "../page/rooms/new_room";
 import Statics from "../page/statics/statics";
 import Timetable from "../page/timetable";
 import Login from "../page/register";
+import Tests from "../page/courses/module/test";
+import Success from "../page/register/success";
 
 export const MenuList = [
     {
@@ -131,5 +133,15 @@ export const MenuList = [
         id: 22,
         path: '/login',
         element: <Login />
+    },
+    {
+        id: 23,
+        path: "/tests",
+        element: <Tests />
+    },
+    {
+        id: 24,
+        path: "/success",
+        element: <Success />
     }
 ]

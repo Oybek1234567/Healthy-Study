@@ -14,8 +14,11 @@ const CoursesDrawer = ({ open, onClosed, onCreate }) => {
 
     return (
         <Drawer
+            title='Modul Yaratish'
+            placement='right'
             onClose={onClosed}
-            open={open}>
+            open={open}
+            className='flex'>
             <input
                 value={inputValue}
                 onChange={handleInputChange}
@@ -30,7 +33,7 @@ const CoursesDrawer = ({ open, onClosed, onCreate }) => {
                 onClick={handleCreateClick}>
                 Create
             </button>
-            </Drawer>
+        </Drawer>
     );
 };
 
