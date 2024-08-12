@@ -1,13 +1,71 @@
-import { Table, Button } from "antd";
-import * as XLSX from "xlsx";
 import {
-    DownloadOutlined,
-    EditFilled,
     DeleteOutlined,
+    DownOutlined,
+    EditFilled,
+    UpOutlined,
 } from "@ant-design/icons";
-import { userData } from "./data";
-import { Link } from "react-router-dom";
+import { Button } from "antd";
+import axios from "axios";
+import { useEffect, useState } from "react";
+import * as XLSX from "xlsx";
+import useDrawer from "../../../hooks/useDrawer";
+import UserDrawer from "./drawer";
+
 const User = () => {
+    const [userData, setUserData] = useState([]);
+    const [sortConfig, setSortConfig] = useState(null);
+    const { open, onOpen, onClose } = useDrawer();
+
+    // Axios POST method
+    const handleAlert = async () => {
+        try {
+            const res = await axios.post(
+                "http://localhost:3000/users/create",
+                userData
+            );
+            console.log(res);
+            alert("Success");
+        } catch (error) {
+            console.error("Error posting data", error);
+        }
+    };
+
+    // Axios GET method
+    useEffect(() => {
+        const fetchData = async () => {
+            try {
+                const response = await axios.get(
+                    "http://localhost:3000/applications/all"
+                );
+                setUserData(response.data.users || []);
+            } catch (error) {
+                console.error("Error fetching data:", error);
+            }
+        };
+
+        fetchData();
+    }, []);
+
+    // Sorting function
+    const handleSort = (key) => {
+        let direction = "ascending";
+
+        if (sortConfig?.key === key && sortConfig.direction === "ascending") {
+            direction = "descending";
+        }
+
+        setSortConfig({ key, direction });
+
+        const sortedData = [...userData].sort((a, b) => {
+            if (a[key] < b[key]) return direction === "ascending" ? -1 : 1;
+            if (a[key] > b[key]) return direction === "ascending" ? 1 : -1;
+            return 0;
+        });
+
+        setUserData(sortedData);
+    };
+
+    // Download Excel
     const handleDownloadExcel = () => {
         const filteredData = userData.map(({ show, ...rest }) => rest);
 
@@ -21,6 +79,7 @@ const User = () => {
         const blob = new Blob([s2ab(wbout)], {
             type: "application/octet-stream",
         });
+
         const url = URL.createObjectURL(blob);
         const a = document.createElement("a");
         a.href = url;
@@ -38,126 +97,135 @@ const User = () => {
         return buf;
     };
 
-    const columns = [
-        {
-            dataIndex: "show",
-        },
-        {
-            title: "Photo",
-            dataIndex: "photo",
-            render: (img) => {
-                return (
-                    <Link to={'/profile'}>
-                    <img
-                        src={img}
-                        alt='img'
-                        width={40}
-                        height={40}
-                        style={{ borderRadius: "50%",objectFit: "cover" }}
-                    />
-                    </Link>
-                );
-            },
-        },
-        {
-            title: "Name",
-            dataIndex: "name",
-        },
-        {
-            title: "Date of Birth",
-            dataIndex: "dateOfBirth",
-        },
-        {
-            title: "Phone",
-            dataIndex: "phone",
-        },
-        {
-            title: "Passport Series",
-            dataIndex: "series",
-        },
-        {
-            title: "Passport Image",
-            dataIndex: "passportImg",
-            render: (img) => {
-                return (
-                    <img src={img} aria-hidden='true' width={50} height={50} />
-                );
-            },
-        },
-        {
-            title: "Action",
-            key: "action",
-            render: () => (
-                <div
-                    style={{
-                        display: "flex",
-                        justifyContent: "space-between",
-                    }}>
-                    <Button
-                        type='primary'
-                        icon={<EditFilled />}
-                        style={{
-                            width: "35px",
-                            height: "35px",
-                            backgroundColor: "yellow",
-                            color: "white",
-                            marginRight: "10px",
-                            borderRadius: "50%",
-                        }}
-                    />
-                    <Button
-                        type='default'
-                        icon={<DeleteOutlined />}
-                        style={{
-                            width: "35px",
-                            height: "35px",
-                            backgroundColor: "red",
-                            marginRight: "10px",
-                            color: "white",
-                            borderRadius: "50%",
-                        }}
-                    />
-                    <Button
-                        type='dashed'
-                        style={{
-                            width: "35px",
-                            height: "35px",
-                            backgroundColor: "lightgreen",
-                            color: "white",
-                            borderRadius: "50%",
-                        }}>
-                        +
-                    </Button>
-                </div>
-            ),
-        },
-    ];
-
     return (
         <div>
-            <div style={{ display: "flex", marginBottom: "20px" }}>
-                <select name='phone' id='phone' style={{ left: "50px" }}>
-                    <option value='5'>5</option>
-                    <option value='10'>10</option>
-                    <option value='15'>15</option>
-                    <option value='20'>20</option>
-                    <option value='50'>50</option>
-                    <option value='100'>100</option>
-                </select>
-                <button
-                    style={{
-                        marginLeft: "60%",
-                        marginRight: "10px",
-                        border: "none",
-                        backgroundColor: "inherit",
-                        color: "blue",
-                        paddingBottom: "20px",
-                    }}
-                    onClick={handleDownloadExcel}>
-                    Download Excel <DownloadOutlined />
-                </button>
-            </div>
-            <Table columns={columns} dataSource={userData} />
+            <a
+                href='#'
+                onClick={handleDownloadExcel}
+                style={{ marginBottom: "10px" }}>
+                Download Excel
+            </a>
+            <button
+                type='button'
+                className='ml-[80%] w-10 h-10 bg-[green] rounded-full text-white'
+                onClick={onOpen}>
+                +
+            </button>
+            <UserDrawer open={open} onClosed={onClose} />
+            <table className='mt-5'>
+                <thead>
+                    <tr>
+                        <th
+                            onClick={() => handleSort("name")}
+                            className='cursor-pointer'>
+                            Name
+                            {sortConfig?.key === "name" &&
+                            sortConfig?.direction === "ascending" ? (
+                                <UpOutlined />
+                            ) : (
+                                <DownOutlined />
+                            )}
+                        </th>
+                        <th
+                            onClick={() => handleSort("surname")}
+                            className='cursor-pointer'>
+                            Surname
+                            {sortConfig?.key === "surname" &&
+                            sortConfig?.direction === "ascending" ? (
+                                <UpOutlined />
+                            ) : (
+                                <DownOutlined />
+                            )}
+                        </th>
+                        <th
+                            onClick={() => handleSort("date_of_birth")}
+                            className='cursor-pointer'>
+                            Date Of Birth
+                            {sortConfig?.key === "date_of_birth" &&
+                            sortConfig?.direction === "ascending" ? (
+                                <UpOutlined />
+                            ) : (
+                                <DownOutlined />
+                            )}
+                        </th>
+                        <th>Phone</th>
+                        <th
+                            onClick={() => handleSort("role")}
+                            className='cursor-pointer'>
+                            Role
+                            {sortConfig?.key === "role" &&
+                            sortConfig?.direction === "ascending" ? (
+                                <UpOutlined />
+                            ) : (
+                                <DownOutlined />
+                            )}
+                        </th>
+                        <th
+                            onClick={() => handleSort("passport_series")}
+                            className='cursor-pointer'>
+                            Passport Series
+                            {sortConfig?.key === "passport_series" &&
+                            sortConfig?.direction === "ascending" ? (
+                                <UpOutlined />
+                            ) : (
+                                <DownOutlined />
+                            )}
+                        </th>
+                        <th
+                            onClick={() => handleSort("expiration_date")}
+                            className='cursor-pointer'>
+                            Expiration Date
+                            {sortConfig?.key === "expiration_date" &&
+                            sortConfig?.direction === "ascending" ? (
+                                <UpOutlined />
+                            ) : (
+                                <DownOutlined />
+                            )}
+                        </th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {userData.map((user) => (
+                        <tr key={user.id}>
+                            <td>{user.name}</td>
+                            <td>{user.surname}</td>
+                            <td>
+                                {user.date_of_birth
+                                    ? user.date_of_birth.slice(0, 10)
+                                    : "No date"}
+                            </td>
+                            <td>{user.phone}</td>
+                            <td>{user.role}</td>
+                            <td>{user.passport_series || "Undefined"}</td>
+                            <td>{user.expiration_date || "Undefined"}</td>
+                            <td className='flex'>
+                                <Button
+                                    type='primary'
+                                    icon={<EditFilled />}
+                                    style={{
+                                        backgroundColor: "yellow",
+                                        color: "white",
+                                        marginRight: "10px",
+                                        borderRadius: "50%",
+                                    }}
+                                />
+                                <Button
+                                    type='default'
+                                    icon={<DeleteOutlined />}
+                                    className='rounded-full bg-[red] text-white'
+                                />
+                                <Button
+                                    type='default'
+                                    onClick={handleAlert}
+                                    className='border-none'>
+                                    ✅
+                                </Button>
+                            </td>
+                        </tr>
+                    ))}
+                </tbody>
+            </table>
         </div>
     );
 };

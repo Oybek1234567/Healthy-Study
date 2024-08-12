@@ -1,25 +1,36 @@
 import { useState } from "react";
 import { Drawer } from "antd";
+import axios from "axios";
 
-const CoursesDrawer = ({ open, onClosed, onCreate }) => {
+const CoursesDrawer = ({ open, onClose, onCreate }) => {
     const [inputValue, setInputValue] = useState("");
-
+    const [data, setData] = useState([])
     const handleInputChange = (e) => {
         setInputValue(e.target.value);
     };
-    const handleCreateClick = () => {
+    const handleCreateClick = async() => {
+        try {
+            const res = axios.get("http://localhost:3000/courses/create", data);
+            console.log(res);
+            alert('Muvaffaqiyatli bajarildi')
+            setData(res.data);
+        } catch (err) {
+            console.error("Xato bor", err);
+        }
         onCreate(inputValue);
         setInputValue("");
     };
 
     return (
         <Drawer
-            title='Modul Yaratish'
+            title='Kurs Yaratish'
             placement='right'
-            onClose={onClosed}
+            onClose={onClose} 
             open={open}
-            className='flex'>
+        >
+            <label htmlFor="name">Name:</label>
             <input
+                id="name"
                 value={inputValue}
                 onChange={handleInputChange}
                 placeholder='Type here'

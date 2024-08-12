@@ -1,66 +1,64 @@
-import { Form, Input, Button, Select } from "antd";
+import { UploadOutlined } from "@ant-design/icons";
+import { Button, Drawer, Form, Input, message, Select } from "antd";
+import { Option } from "antd/es/mentions";
 import axios from "axios";
-import { useCallback, /* useState */ } from "react";
 import { useNavigate } from "react-router-dom";
 
-const { Option } = Select;
-
-const App = () => {
-    // const [img, setImg] = useState(null);
-    // const [previewUrl, setPreviewUrl] = useState(null); // Rasm oldindan ko'rinishini saqlash
+const UserDrawer = ({ open, onClosed }) => {
     const [form] = Form.useForm();
     const navigate = useNavigate();
 
     // Upload Img
-    // const handleImg = (e) => {
-    //     const file = e.target.files[0];
-    //     setImg(file);
-
-    //     // Rasm oldindan ko'rinishini yaratish uchun URL
-    //     const fileUrl = URL.createObjectURL(file);
-    //     setPreviewUrl(fileUrl);
-    // };
-
-    const onFinish = useCallback(
-        async (values) => {
-            console.log("Form values: ", values);
-
-            try {
-                const formData = new FormData();
-                formData.append("phone", values.phone);
-                formData.append("password", values.password);
-                formData.append("name", values.name);
-                formData.append("surname", values.surname);
-                formData.append("date_of_birth", values.date_of_birth);
-                formData.append("role", values.role);
-                formData.append("passport_series", values.passport_series);
-                formData.append("expiration_date", values.expiration_date);
-
-                console.log("Request data: ", formData);
-
-                const res = await axios.post(
-                    "http://localhost:3000/applications/create",
-                    formData,
-                );
-                if (res.data) {
-                    navigate("/success");
-                }
-            } catch (error) {
-                if (!error.response) {
-                    console.error('Network error');
-                }
-                else {
-                    
-                    console.error("Error submitting form: ", error.response);
-                }
-
+    const props = {
+        name: "file",
+        action: "https://660d2bd96ddfa2943b33731c.mockapi.io/api/upload",
+        headers: {
+            authorization: "authorization-text",
+        },
+        onChange(info) {
+            if (info.file.status !== "uploading") {
+                console.log(info.file, info.fileList);
+            }
+            if (info.file.status === "done") {
+                message.success(`${info.file.name} file uploaded successfully`);
+            } else if (info.file.status === "error") {
+                message.error(`${info.file.name} file upload failed.`);
             }
         },
-        [navigate]
-    );
+    };
 
+    const onFinish = async (values) => {
+        console.log("Form values: ", values);
+
+        try {
+            const request = {
+                phone: values.phone,
+                password: values.password,
+                name: values.name,
+                surname: values.surname,
+                date_of_birth: values.date_of_birth,
+                role: values.role,
+                passport_series: values.passport_series,
+                expiration_date: values.expiration_date,
+                passport_photo: values.passport_photo,
+            };
+
+            console.log("Request data: ", request);
+
+            const res = await axios.post(
+                "http://localhost:3000/applications/create",
+                request
+            );
+
+            if (res.data) {
+                navigate("/success");
+            }
+        } catch (error) {
+            console.error("Error fetching data:", error);
+        }
+    };
     return (
-        <>
+        <Drawer title='Register' onClose={onClosed} open={open}>
             <Form form={form} onFinish={onFinish}>
                 <Form.Item
                     label='Phone'
@@ -138,32 +136,36 @@ const App = () => {
                         <Option value='student'>Student</Option>
                     </Select>
                 </Form.Item>
-                <Form.Item label='Passport Series' name='passport_series'>
+                <Form.Item
+                    label='Passport Series'
+                    name='passport_series'
+                    rules={[
+                        {
+                            required: false,
+                        },
+                    ]}>
                     <Input type='text' className='border-2 border-black' />
                 </Form.Item>
-                <Form.Item label='Expiration Date' name='expiration_date'>
+                <Form.Item
+                    label='Expiration Date'
+                    name='expiration_date'
+                    rules={[
+                        {
+                            required: false,
+                        },
+                    ]}>
                     <Input
                         type='date'
                         className='w-full border-2 border-black'
                     />
                 </Form.Item>
-                <Form.Item label='Upload Image' name='upload'>
-                    <input type='file' /* onChange={handleImg} */ />
-                    {/* {previewUrl && (
-                        <span>
-                            <p>Preview:</p>
-                            <img
-                                src={previewUrl}
-                                alt='Preview'
-                                style={{
-                                    width: "100px",
-                                    height: "100px",
-                                    marginTop: "10px",
-                                    objectFit: "contain"
-                                }}
-                            />
-                        </span>
-                    )} */}
+                <Form.Item
+                    label='Upload Image'
+                    name='passport_photo'
+                    valuePropName='fileList'
+                    getValueFromEvent={(e) => e && e.fileList}>
+                    <input type="file" name=""/>
+                        {/* <Button icon={<UploadOutlined />}>Upload</Button>    */}
                 </Form.Item>
                 <Form.Item>
                     <Button
@@ -174,8 +176,8 @@ const App = () => {
                     </Button>
                 </Form.Item>
             </Form>
-        </>
+        </Drawer>
     );
 };
 
-export default App;
+export default UserDrawer;
