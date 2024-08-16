@@ -22,6 +22,9 @@ import Timetable from "../page/timetable";
 import Login from "../page/register";
 import Tests from "../page/courses/module/test";
 import Success from "../page/register/success";
+import Accepted from "../page/applications/accepted";
+import UsersPending from "../page/applications/pending";
+import Denied from "../page/applications/denied";
 
 export const MenuList = [
     {
@@ -143,5 +146,20 @@ export const MenuList = [
         id: 24,
         path: "/success",
         element: <Success />
+    },
+    {
+        id: 26,
+        path: "/accepted",
+        element: <Accepted/>
+    },
+    {
+        id: 27,
+        path: "user_pending",
+        element: <UsersPending/>
+    },
+    {
+        id: 28,
+        path: "/denied",
+        element: <Denied />
     }
 ]

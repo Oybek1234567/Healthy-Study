@@ -1,36 +1,104 @@
-import {
-    DeleteOutlined,
-    DownOutlined,
-    EditFilled,
-    UpOutlined,
-} from "@ant-design/icons";
-import { Button } from "antd";
+import { DownOutlined, EditFilled, UpOutlined } from "@ant-design/icons";
+import { Button, Input, Modal } from "antd";
 import axios from "axios";
 import { useEffect, useState } from "react";
 import * as XLSX from "xlsx";
 import useDrawer from "../../../hooks/useDrawer";
 import UserDrawer from "./drawer";
+import { useSort } from "../../../hooks/useSort";
+import useDelete from "../../../hooks/useDelete";
 
 const User = () => {
-    const [userData, setUserData] = useState([]);
-    const [sortConfig, setSortConfig] = useState(null);
+    const [selectedStatuses, setSelectedStatuses] = useState([]);
     const { open, onOpen, onClose } = useDrawer();
+    const [userData, setUserData] = useState([]);
+    const [editedUserData, setEditedUserData] = useState({});
+    const [editRowKey, setEditRowKey] = useState(null);
+    const [isModalVisible, setIsModalVisible] = useState(false);
+    const [disabledButtons, setDisabledButtons] = useState({});
 
-    // Axios POST method
-    const handleAlert = async () => {
+    const handleSave = async () => {
+        const originalUser = userData.find(
+            (user) => user.id === editedUserData.id
+        );
+
+        if (!originalUser) {
+            alert("Foydalanuvchi topilmadi.");
+            return;
+        }
+
+        const updatedFields = Object.keys(editedUserData).reduce((acc, key) => {
+            if (editedUserData[key] !== originalUser[key]) {
+                acc[key] = editedUserData[key];
+            }
+            return acc;
+        }, {});
+
+        if (!Object.keys(updatedFields).length) {
+            alert("Hech qanday o'zgarishlar topilmadi.");
+            setEditRowKey(null);
+            setIsModalVisible(false);
+            return;
+        }
+
         try {
-            const res = await axios.post(
-                "http://localhost:3000/users/create",
-                userData
+            const response = await axios.post(
+                `http://localhost:3000/applications/edit/${editedUserData.id}`,
+                updatedFields
             );
-            console.log(res);
-            alert("Success");
+
+            alert(response.data.msg);
+
+            setUserData((prevData) =>
+                prevData.map((user) =>
+                    user.id === editedUserData.id
+                        ? { ...user, ...updatedFields }
+                        : user
+                )
+            );
+            setEditRowKey(null);
+            setIsModalVisible(false);
         } catch (error) {
-            console.error("Error posting data", error);
+            console.error("Foydalanuvchini tahrirlashda xato:", error.message);
+            alert(
+                "Foydalanuvchini tahrirlashda xatolik yuz berdi: " +
+                    error.message
+            );
         }
     };
 
-    // Axios GET method
+    const handleEdit = (user) => {
+        setEditRowKey(user.id);
+        setEditedUserData(user);
+        setIsModalVisible(true);
+    };
+
+    // useSort
+    const { handleSort, sortConfig } = useSort(userData, setUserData);
+
+    // useDelete
+    const { handleDelete } = useDelete();
+
+    const handleSubmit = async (user) => {
+        const formattedUser = {
+            ...user,
+            phone: String(user.phone),
+        };
+
+        try {
+            const res = await axios.post(
+                "http://localhost:3000/users/create",
+                formattedUser
+            );
+            alert("Success");
+        } catch (error) {
+            console.error(
+                "Error posting data",
+                error.response ? error.response.data : error.message
+            );
+        }
+    };
+
     useEffect(() => {
         const fetchData = async () => {
             try {
@@ -44,28 +112,8 @@ const User = () => {
         };
 
         fetchData();
-    }, []);
+    }, [setUserData]);
 
-    // Sorting function
-    const handleSort = (key) => {
-        let direction = "ascending";
-
-        if (sortConfig?.key === key && sortConfig.direction === "ascending") {
-            direction = "descending";
-        }
-
-        setSortConfig({ key, direction });
-
-        const sortedData = [...userData].sort((a, b) => {
-            if (a[key] < b[key]) return direction === "ascending" ? -1 : 1;
-            if (a[key] > b[key]) return direction === "ascending" ? 1 : -1;
-            return 0;
-        });
-
-        setUserData(sortedData);
-    };
-
-    // Download Excel
     const handleDownloadExcel = () => {
         const filteredData = userData.map(({ show, ...rest }) => rest);
 
@@ -97,6 +145,43 @@ const User = () => {
         return buf;
     };
 
+    const handleInputChange = (e, field) => {
+        setEditedUserData({
+            ...editedUserData,
+            [field]: e.target.value || "",
+        });
+    };
+
+    const handleCheckboxChange = (status) => {
+        setSelectedStatuses((prevStatuses) =>
+            prevStatuses.includes(status)
+                ? prevStatuses.filter((s) => s !== status)
+                : [...prevStatuses, status]
+        );
+    };
+
+    const handleDeleteClick = (userId) => {
+        handleDelete(userId);
+        setDisabledButtons((prev) => ({
+            ...prev,
+            [userId]: false, // Change this to false if you want to enable the button
+        }));
+    };
+
+    const handleSubmitClick = (userId) => {
+        handleSubmit(userId);
+        setDisabledButtons((prev) => ({
+            ...prev,
+            [userId]: true,
+        }));
+    };
+
+    const filteredUserData = userData.filter(
+        (user) =>
+            selectedStatuses.length === 0 ||
+            selectedStatuses.includes(user.status)
+    );
+
     return (
         <div>
             <a
@@ -105,6 +190,29 @@ const User = () => {
                 style={{ marginBottom: "10px" }}>
                 Download Excel
             </a>
+            <div className='flex mt-2'>
+                <label htmlFor='accepted'>Accepted</label>
+                <input
+                    type='checkbox'
+                    id='accepted'
+                    onChange={() => handleCheckboxChange("accepted")}
+                    className='cursor-pointer'
+                />
+                <label htmlFor='pending'>Pending</label>
+                <input
+                    type='checkbox'
+                    id='pending'
+                    onChange={() => handleCheckboxChange("pending")}
+                    className='cursor-pointer'
+                />
+                <label htmlFor='denied'>Denied</label>
+                <input
+                    type='checkbox'
+                    id='denied'
+                    onChange={() => handleCheckboxChange("denied")}
+                    className='cursor-pointer'
+                />
+            </div>
             <button
                 type='button'
                 className='ml-[80%] w-10 h-10 bg-[green] rounded-full text-white'
@@ -115,6 +223,7 @@ const User = () => {
             <table className='mt-5'>
                 <thead>
                     <tr>
+                        <th>ID</th>
                         <th
                             onClick={() => handleSort("name")}
                             className='cursor-pointer'>
@@ -186,21 +295,27 @@ const User = () => {
                     </tr>
                 </thead>
                 <tbody>
-                    {userData.map((user) => (
+                    {filteredUserData.map((user) => (
                         <tr key={user.id}>
+                            <td>{user.id}</td>
                             <td>{user.name}</td>
                             <td>{user.surname}</td>
                             <td>
                                 {user.date_of_birth
                                     ? user.date_of_birth.slice(0, 10)
-                                    : "No date"}
+                                    : ""}
                             </td>
                             <td>{user.phone}</td>
                             <td>{user.role}</td>
-                            <td>{user.passport_series || "Undefined"}</td>
-                            <td>{user.expiration_date || "Undefined"}</td>
+                            <td>{user.passport_series}</td>
+                            <td>
+                                {user.expiration_date
+                                    ? user.expiration_date.slice(0, 10)
+                                    : ""}
+                            </td>
                             <td className='flex'>
                                 <Button
+                                    onClick={() => handleEdit(user)}
                                     type='primary'
                                     icon={<EditFilled />}
                                     style={{
@@ -210,15 +325,17 @@ const User = () => {
                                         borderRadius: "50%",
                                     }}
                                 />
+                                <button
+                                    className='border-none'
+                                    onClick={() => handleDeleteClick(user.id)}
+                                    disabled={disabledButtons[user.id]}>
+                                    ❌
+                                </button>
                                 <Button
                                     type='default'
-                                    icon={<DeleteOutlined />}
-                                    className='rounded-full bg-[red] text-white'
-                                />
-                                <Button
-                                    type='default'
-                                    onClick={handleAlert}
-                                    className='border-none'>
+                                    onClick={() => handleSubmitClick(user.id)}
+                                    className='border-none'
+                                    disabled={disabledButtons[user.id]}>
                                     ✅
                                 </Button>
                             </td>
@@ -226,6 +343,54 @@ const User = () => {
                     ))}
                 </tbody>
             </table>
+            <Modal title='Edit User' open={isModalVisible} onOk={handleSave}>
+                <div className='flex flex-col gap-2'>
+                    <Input
+                        placeholder='Name'
+                        value={editedUserData.name || ""}
+                        onChange={(e) => handleInputChange(e, "name")}
+                    />
+                    <Input
+                        placeholder='Surname'
+                        value={editedUserData.surname || ""}
+                        onChange={(e) => handleInputChange(e, "surname")}
+                    />
+                    <Input
+                        placeholder='Date of Birth'
+                        value={editedUserData.date_of_birth || ""}
+                        onChange={(e) => handleInputChange(e, "date_of_birth")}
+                    />
+                    <Input
+                        placeholder='Phone'
+                        value={editedUserData.phone || ""}
+                        onChange={(e) => handleInputChange(e, "phone")}
+                    />
+                    <Input
+                        placeholder='Role'
+                        value={editedUserData.role || ""}
+                        onChange={(e) => handleInputChange(e, "role")}
+                    />
+                    <Input
+                        placeholder='Passport Series'
+                        value={editedUserData.passport_series || ""}
+                        onChange={(e) =>
+                            handleInputChange(e, "passport_series")
+                        }
+                    />
+                    <Input
+                        placeholder='Expiration Date'
+                        value={editedUserData.expiration_date || ""}
+                        onChange={(e) =>
+                            handleInputChange(e, "expiration_date")
+                        }
+                    />
+                    <Input
+                        placeholder='Status'
+                        value={editedUserData.status || ""}
+                        onChange={(e) => handleInputChange(e, "status")}
+                    />
+                </div>
+            </Modal>
         </div>
     );
 };

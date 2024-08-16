@@ -1,5 +1,5 @@
-import { UploadOutlined } from "@ant-design/icons";
-import { Button, Drawer, Form, Input, message, Select } from "antd";
+// import { UploadOutlined } from "@ant-design/icons";
+import { Button, Drawer, Form, Input, Select } from "antd";
 import { Option } from "antd/es/mentions";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
@@ -9,23 +9,23 @@ const UserDrawer = ({ open, onClosed }) => {
     const navigate = useNavigate();
 
     // Upload Img
-    const props = {
-        name: "file",
-        action: "https://660d2bd96ddfa2943b33731c.mockapi.io/api/upload",
-        headers: {
-            authorization: "authorization-text",
-        },
-        onChange(info) {
-            if (info.file.status !== "uploading") {
-                console.log(info.file, info.fileList);
-            }
-            if (info.file.status === "done") {
-                message.success(`${info.file.name} file uploaded successfully`);
-            } else if (info.file.status === "error") {
-                message.error(`${info.file.name} file upload failed.`);
-            }
-        },
-    };
+    // const props = {
+    //     name: "file",
+    //     action: "https://660d2bd96ddfa2943b33731c.mockapi.io/api/upload",
+    //     headers: {
+    //         authorization: "authorization-text",
+    //     },
+    //     onChange(info) {
+    //         if (info.file.status !== "uploading") {
+    //             console.log(info.file, info.fileList);
+    //         }
+    //         if (info.file.status === "done") {
+    //             message.success(`${info.file.name} file uploaded successfully`);
+    //         } else if (info.file.status === "error") {
+    //             message.error(`${info.file.name} file upload failed.`);
+    //         }
+    //     },
+    // };
 
     const onFinish = async (values) => {
         console.log("Form values: ", values);
@@ -40,7 +40,7 @@ const UserDrawer = ({ open, onClosed }) => {
                 role: values.role,
                 passport_series: values.passport_series,
                 expiration_date: values.expiration_date,
-                passport_photo: values.passport_photo,
+                // passport_photo: values.passport_photo,
             };
 
             console.log("Request data: ", request);

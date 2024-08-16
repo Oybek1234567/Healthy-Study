@@ -1,67 +1,52 @@
 import { Form, Input, Button, Select } from "antd";
 import axios from "axios";
-import { useCallback, /* useState */ } from "react";
 import { useNavigate } from "react-router-dom";
 
 const { Option } = Select;
 
 const App = () => {
-    // const [img, setImg] = useState(null);
-    // const [previewUrl, setPreviewUrl] = useState(null); // Rasm oldindan ko'rinishini saqlash
-    const [form] = Form.useForm();
     const navigate = useNavigate();
 
-    // Upload Img
-    // const handleImg = (e) => {
-    //     const file = e.target.files[0];
-    //     setImg(file);
+    const onFinish = async (values) => {
+        try {
+            const requestData = {
+                phone: values.phone,
+                password: values.password,
+                name: values.name,
+                surname: values.surname,
+                date_of_birth: values.date_of_birth,
+                role: values.role,
+                passport_series: values.passport_series,
+                expiration_date: values.expiration_date,
+            };
 
-    //     // Rasm oldindan ko'rinishini yaratish uchun URL
-    //     const fileUrl = URL.createObjectURL(file);
-    //     setPreviewUrl(fileUrl);
-    // };
+            console.log("Request data: ", requestData);
 
-    const onFinish = useCallback(
-        async (values) => {
-            console.log("Form values: ", values);
-
-            try {
-                const formData = new FormData();
-                formData.append("phone", values.phone);
-                formData.append("password", values.password);
-                formData.append("name", values.name);
-                formData.append("surname", values.surname);
-                formData.append("date_of_birth", values.date_of_birth);
-                formData.append("role", values.role);
-                formData.append("passport_series", values.passport_series);
-                formData.append("expiration_date", values.expiration_date);
-
-                console.log("Request data: ", formData);
-
-                const res = await axios.post(
-                    "http://localhost:3000/applications/create",
-                    formData,
-                );
-                if (res.data) {
-                    navigate("/success");
+            const res = await axios.post(
+                "http://localhost:3000/applications/create",
+                JSON.stringify(requestData),
+                {
+                    headers: {
+                        "Content-Type": "application/json",
+                    },
                 }
-            } catch (error) {
-                if (!error.response) {
-                    console.error('Network error');
-                }
-                else {
-                    
-                    console.error("Error submitting form: ", error.response);
-                }
+            );
 
+            if (res.data) {
+                navigate("/success");
             }
-        },
-        [navigate]
-    );
+        } catch (error) {
+            if (!error.response) {
+                console.error("Network error");
+            } else {
+                console.error("Error submitting form: ", error.response);
+            }
+        }
+    };
 
     return (
         <>
-            <Form form={form} onFinish={onFinish}>
+            <Form onFinish={onFinish}>
                 <Form.Item
                     label='Phone'
                     name='phone'
@@ -132,7 +117,7 @@ const App = () => {
                     rules={[
                         { required: true, message: "Please select your role!" },
                     ]}>
-                    <Select className='w-full' defaultValue={"Select role"}>
+                    <Select className='w-full'>
                         <Option value='super'>Super</Option>
                         <Option value='teacher'>O`qituvchi</Option>
                         <Option value='student'>Student</Option>
@@ -146,24 +131,6 @@ const App = () => {
                         type='date'
                         className='w-full border-2 border-black'
                     />
-                </Form.Item>
-                <Form.Item label='Upload Image' name='upload'>
-                    <input type='file' /* onChange={handleImg} */ />
-                    {/* {previewUrl && (
-                        <span>
-                            <p>Preview:</p>
-                            <img
-                                src={previewUrl}
-                                alt='Preview'
-                                style={{
-                                    width: "100px",
-                                    height: "100px",
-                                    marginTop: "10px",
-                                    objectFit: "contain"
-                                }}
-                            />
-                        </span>
-                    )} */}
                 </Form.Item>
                 <Form.Item>
                     <Button
