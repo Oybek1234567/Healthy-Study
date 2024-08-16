@@ -24,7 +24,7 @@ const Modules = () => {
               {divContents.map((content, index) => (
                   <div
                       key={index}
-                      className='flex flex-col justify-center items-center w-[300px] h-[100px] p-4 border-[6px] border-black'
+                      className='flex flex-col justify-center items-center w-[300px] h-[100px] p-4 border-[6px] border-black cursor-pointer'
                       onClick={handleNavigate}>
                       <p>Module Name: {content.name}</p>
                       <p>Module Weight: {content.weight}</p>

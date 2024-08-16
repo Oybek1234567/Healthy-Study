@@ -14,9 +14,10 @@
             const fetchData = async () => {
                 try {
                     const response = await axios.get(
-                        "http://localhost:3000/users/all"
+                        "http://localhost:3000/applications/all"
                     );
-                    setData(response.data.users);
+                    console.log("Fetched user data:", response.data.users);
+                    setData(response.data.users || []);
                 } catch (error) {
                     console.error("Error fetching data:", error);
                 }
@@ -24,6 +25,7 @@
 
             fetchData();
         }, []);
+
         console.log(data);
 
         // const handleDownloadExcel = () => {
@@ -119,15 +121,26 @@
                     <thead>
                         <tr>
                             <th>Name</th>
-                            {/* <th>Surname</th>
+                            <th>Surname</th>
+                            <th>Date Of Birth</th>                            
                             <th>Phone</th>
-                            <th>Role</th> */}
+                            <th>Role</th>
+                            <th>Passport Series</th>
+                            <th>Expiration Date</th>
+                            {/* <th>Passport Photo</th> */}
                         </tr>
                     </thead>
                     <tbody>
                         {data.map((item) => (
                             <tr key={item.id}>
                                 <td>{item.name}</td>
+                                <td>{item.surname}</td>
+                                <td>{item.date_of_birth ? item.date_of_birth.slice(0, 10) : "Undefined"}</td>
+                                <td>{item.phone}</td>
+                                <td>{item.role}</td>
+                                <td>{item.passport_series}</td>
+                                <td>{item.expiration_date ? item.expiration_date.slice(0, 10) : "Undefined"}</td>
+                                {/* <td>{item.passport_photo}</td> */}
                             </tr>
                         ))}
                     </tbody>

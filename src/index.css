@@ -4,3 +4,7 @@
 .ant-table-pagination{
     position: absolute;
 }
+
+.ant-modal-content .ant-modal-footer .ant-btn-default, .ant-modal-close{
+    display: none;
+}

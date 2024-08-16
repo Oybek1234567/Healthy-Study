@@ -1,13 +1,119 @@
-import { Table, Button } from "antd";
+import { DownOutlined, EditFilled, UpOutlined } from "@ant-design/icons";
+import { Button, Input, Modal } from "antd";
+import axios from "axios";
+import { useEffect, useState } from "react";
 import * as XLSX from "xlsx";
-import {
-    DownloadOutlined,
-    EditFilled,
-    DeleteOutlined,
-} from "@ant-design/icons";
-import { userData } from "./data";
-import { Link } from "react-router-dom";
+import useDrawer from "../../../hooks/useDrawer";
+import UserDrawer from "./drawer";
+import { useSort } from "../../../hooks/useSort";
+import useDelete from "../../../hooks/useDelete";
+
 const User = () => {
+    const [selectedStatuses, setSelectedStatuses] = useState([]);
+    const { open, onOpen, onClose } = useDrawer();
+    const [userData, setUserData] = useState([]);
+    const [editedUserData, setEditedUserData] = useState({});
+    const [editRowKey, setEditRowKey] = useState(null);
+    const [isModalVisible, setIsModalVisible] = useState(false);
+    const [disabledButtons, setDisabledButtons] = useState({});
+
+    const handleSave = async () => {
+        const originalUser = userData.find(
+            (user) => user.id === editedUserData.id
+        );
+
+        if (!originalUser) {
+            alert("Foydalanuvchi topilmadi.");
+            return;
+        }
+
+        const updatedFields = Object.keys(editedUserData).reduce((acc, key) => {
+            if (editedUserData[key] !== originalUser[key]) {
+                acc[key] = editedUserData[key];
+            }
+            return acc;
+        }, {});
+
+        if (!Object.keys(updatedFields).length) {
+            alert("Hech qanday o'zgarishlar topilmadi.");
+            setEditRowKey(null);
+            setIsModalVisible(false);
+            return;
+        }
+
+        try {
+            const response = await axios.post(
+                `http://localhost:3000/applications/edit/${editedUserData.id}`,
+                updatedFields
+            );
+
+            alert(response.data.msg);
+
+            setUserData((prevData) =>
+                prevData.map((user) =>
+                    user.id === editedUserData.id
+                        ? { ...user, ...updatedFields }
+                        : user
+                )
+            );
+            setEditRowKey(null);
+            setIsModalVisible(false);
+        } catch (error) {
+            console.error("Foydalanuvchini tahrirlashda xato:", error.message);
+            alert(
+                "Foydalanuvchini tahrirlashda xatolik yuz berdi: " +
+                    error.message
+            );
+        }
+    };
+
+    const handleEdit = (user) => {
+        setEditRowKey(user.id);
+        setEditedUserData(user);
+        setIsModalVisible(true);
+    };
+
+    // useSort
+    const { handleSort, sortConfig } = useSort(userData, setUserData);
+
+    // useDelete
+    const { handleDelete } = useDelete();
+
+    const handleSubmit = async (user) => {
+        const formattedUser = {
+            ...user,
+            phone: String(user.phone),
+        };
+
+        try {
+            const res = await axios.post(
+                "http://localhost:3000/users/create",
+                formattedUser
+            );
+            alert("Success");
+        } catch (error) {
+            console.error(
+                "Error posting data",
+                error.response ? error.response.data : error.message
+            );
+        }
+    };
+
+    useEffect(() => {
+        const fetchData = async () => {
+            try {
+                const response = await axios.get(
+                    "http://localhost:3000/applications/all"
+                );
+                setUserData(response.data.users || []);
+            } catch (error) {
+                console.error("Error fetching data:", error);
+            }
+        };
+
+        fetchData();
+    }, [setUserData]);
+
     const handleDownloadExcel = () => {
         const filteredData = userData.map(({ show, ...rest }) => rest);
 
@@ -21,6 +127,7 @@ const User = () => {
         const blob = new Blob([s2ab(wbout)], {
             type: "application/octet-stream",
         });
+
         const url = URL.createObjectURL(blob);
         const a = document.createElement("a");
         a.href = url;
@@ -38,126 +145,252 @@ const User = () => {
         return buf;
     };
 
-    const columns = [
-        {
-            dataIndex: "show",
-        },
-        {
-            title: "Photo",
-            dataIndex: "photo",
-            render: (img) => {
-                return (
-                    <Link to={'/profile'}>
-                    <img
-                        src={img}
-                        alt='img'
-                        width={40}
-                        height={40}
-                        style={{ borderRadius: "50%",objectFit: "cover" }}
-                    />
-                    </Link>
-                );
-            },
-        },
-        {
-            title: "Name",
-            dataIndex: "name",
-        },
-        {
-            title: "Date of Birth",
-            dataIndex: "dateOfBirth",
-        },
-        {
-            title: "Phone",
-            dataIndex: "phone",
-        },
-        {
-            title: "Passport Series",
-            dataIndex: "series",
-        },
-        {
-            title: "Passport Image",
-            dataIndex: "passportImg",
-            render: (img) => {
-                return (
-                    <img src={img} aria-hidden='true' width={50} height={50} />
-                );
-            },
-        },
-        {
-            title: "Action",
-            key: "action",
-            render: () => (
-                <div
-                    style={{
-                        display: "flex",
-                        justifyContent: "space-between",
-                    }}>
-                    <Button
-                        type='primary'
-                        icon={<EditFilled />}
-                        style={{
-                            width: "35px",
-                            height: "35px",
-                            backgroundColor: "yellow",
-                            color: "white",
-                            marginRight: "10px",
-                            borderRadius: "50%",
-                        }}
-                    />
-                    <Button
-                        type='default'
-                        icon={<DeleteOutlined />}
-                        style={{
-                            width: "35px",
-                            height: "35px",
-                            backgroundColor: "red",
-                            marginRight: "10px",
-                            color: "white",
-                            borderRadius: "50%",
-                        }}
-                    />
-                    <Button
-                        type='dashed'
-                        style={{
-                            width: "35px",
-                            height: "35px",
-                            backgroundColor: "lightgreen",
-                            color: "white",
-                            borderRadius: "50%",
-                        }}>
-                        +
-                    </Button>
-                </div>
-            ),
-        },
-    ];
+    const handleInputChange = (e, field) => {
+        setEditedUserData({
+            ...editedUserData,
+            [field]: e.target.value || "",
+        });
+    };
+
+    const handleCheckboxChange = (status) => {
+        setSelectedStatuses((prevStatuses) =>
+            prevStatuses.includes(status)
+                ? prevStatuses.filter((s) => s !== status)
+                : [...prevStatuses, status]
+        );
+    };
+
+    const handleDeleteClick = (userId) => {
+        handleDelete(userId);
+        setDisabledButtons((prev) => ({
+            ...prev,
+            [userId]: false, // Change this to false if you want to enable the button
+        }));
+    };
+
+    const handleSubmitClick = (userId) => {
+        handleSubmit(userId);
+        setDisabledButtons((prev) => ({
+            ...prev,
+            [userId]: true,
+        }));
+    };
+
+    const filteredUserData = userData.filter(
+        (user) =>
+            selectedStatuses.length === 0 ||
+            selectedStatuses.includes(user.status)
+    );
 
     return (
         <div>
-            <div style={{ display: "flex", marginBottom: "20px" }}>
-                <select name='phone' id='phone' style={{ left: "50px" }}>
-                    <option value='5'>5</option>
-                    <option value='10'>10</option>
-                    <option value='15'>15</option>
-                    <option value='20'>20</option>
-                    <option value='50'>50</option>
-                    <option value='100'>100</option>
-                </select>
-                <button
-                    style={{
-                        marginLeft: "60%",
-                        marginRight: "10px",
-                        border: "none",
-                        backgroundColor: "inherit",
-                        color: "blue",
-                        paddingBottom: "20px",
-                    }}
-                    onClick={handleDownloadExcel}>
-                    Download Excel <DownloadOutlined />
-                </button>
+            <a
+                href='#'
+                onClick={handleDownloadExcel}
+                style={{ marginBottom: "10px" }}>
+                Download Excel
+            </a>
+            <div className='flex mt-2'>
+                <label htmlFor='accepted'>Accepted</label>
+                <input
+                    type='checkbox'
+                    id='accepted'
+                    onChange={() => handleCheckboxChange("accepted")}
+                    className='cursor-pointer'
+                />
+                <label htmlFor='pending'>Pending</label>
+                <input
+                    type='checkbox'
+                    id='pending'
+                    onChange={() => handleCheckboxChange("pending")}
+                    className='cursor-pointer'
+                />
+                <label htmlFor='denied'>Denied</label>
+                <input
+                    type='checkbox'
+                    id='denied'
+                    onChange={() => handleCheckboxChange("denied")}
+                    className='cursor-pointer'
+                />
             </div>
-            <Table columns={columns} dataSource={userData} />
+            <button
+                type='button'
+                className='ml-[80%] w-10 h-10 bg-[green] rounded-full text-white'
+                onClick={onOpen}>
+                +
+            </button>
+            <UserDrawer open={open} onClosed={onClose} />
+            <table className='mt-5'>
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th
+                            onClick={() => handleSort("name")}
+                            className='cursor-pointer'>
+                            Name
+                            {sortConfig?.key === "name" &&
+                            sortConfig?.direction === "ascending" ? (
+                                <UpOutlined />
+                            ) : (
+                                <DownOutlined />
+                            )}
+                        </th>
+                        <th
+                            onClick={() => handleSort("surname")}
+                            className='cursor-pointer'>
+                            Surname
+                            {sortConfig?.key === "surname" &&
+                            sortConfig?.direction === "ascending" ? (
+                                <UpOutlined />
+                            ) : (
+                                <DownOutlined />
+                            )}
+                        </th>
+                        <th
+                            onClick={() => handleSort("date_of_birth")}
+                            className='cursor-pointer'>
+                            Date Of Birth
+                            {sortConfig?.key === "date_of_birth" &&
+                            sortConfig?.direction === "ascending" ? (
+                                <UpOutlined />
+                            ) : (
+                                <DownOutlined />
+                            )}
+                        </th>
+                        <th>Phone</th>
+                        <th
+                            onClick={() => handleSort("role")}
+                            className='cursor-pointer'>
+                            Role
+                            {sortConfig?.key === "role" &&
+                            sortConfig?.direction === "ascending" ? (
+                                <UpOutlined />
+                            ) : (
+                                <DownOutlined />
+                            )}
+                        </th>
+                        <th
+                            onClick={() => handleSort("passport_series")}
+                            className='cursor-pointer'>
+                            Passport Series
+                            {sortConfig?.key === "passport_series" &&
+                            sortConfig?.direction === "ascending" ? (
+                                <UpOutlined />
+                            ) : (
+                                <DownOutlined />
+                            )}
+                        </th>
+                        <th
+                            onClick={() => handleSort("expiration_date")}
+                            className='cursor-pointer'>
+                            Expiration Date
+                            {sortConfig?.key === "expiration_date" &&
+                            sortConfig?.direction === "ascending" ? (
+                                <UpOutlined />
+                            ) : (
+                                <DownOutlined />
+                            )}
+                        </th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {filteredUserData.map((user) => (
+                        <tr key={user.id}>
+                            <td>{user.id}</td>
+                            <td>{user.name}</td>
+                            <td>{user.surname}</td>
+                            <td>
+                                {user.date_of_birth
+                                    ? user.date_of_birth.slice(0, 10)
+                                    : ""}
+                            </td>
+                            <td>{user.phone}</td>
+                            <td>{user.role}</td>
+                            <td>{user.passport_series}</td>
+                            <td>
+                                {user.expiration_date
+                                    ? user.expiration_date.slice(0, 10)
+                                    : ""}
+                            </td>
+                            <td className='flex'>
+                                <Button
+                                    onClick={() => handleEdit(user)}
+                                    type='primary'
+                                    icon={<EditFilled />}
+                                    style={{
+                                        backgroundColor: "yellow",
+                                        color: "white",
+                                        marginRight: "10px",
+                                        borderRadius: "50%",
+                                    }}
+                                />
+                                <button
+                                    className='border-none'
+                                    onClick={() => handleDeleteClick(user.id)}
+                                    disabled={disabledButtons[user.id]}>
+                                    ❌
+                                </button>
+                                <Button
+                                    type='default'
+                                    onClick={() => handleSubmitClick(user.id)}
+                                    className='border-none'
+                                    disabled={disabledButtons[user.id]}>
+                                    ✅
+                                </Button>
+                            </td>
+                        </tr>
+                    ))}
+                </tbody>
+            </table>
+            <Modal title='Edit User' open={isModalVisible} onOk={handleSave}>
+                <div className='flex flex-col gap-2'>
+                    <Input
+                        placeholder='Name'
+                        value={editedUserData.name || ""}
+                        onChange={(e) => handleInputChange(e, "name")}
+                    />
+                    <Input
+                        placeholder='Surname'
+                        value={editedUserData.surname || ""}
+                        onChange={(e) => handleInputChange(e, "surname")}
+                    />
+                    <Input
+                        placeholder='Date of Birth'
+                        value={editedUserData.date_of_birth || ""}
+                        onChange={(e) => handleInputChange(e, "date_of_birth")}
+                    />
+                    <Input
+                        placeholder='Phone'
+                        value={editedUserData.phone || ""}
+                        onChange={(e) => handleInputChange(e, "phone")}
+                    />
+                    <Input
+                        placeholder='Role'
+                        value={editedUserData.role || ""}
+                        onChange={(e) => handleInputChange(e, "role")}
+                    />
+                    <Input
+                        placeholder='Passport Series'
+                        value={editedUserData.passport_series || ""}
+                        onChange={(e) =>
+                            handleInputChange(e, "passport_series")
+                        }
+                    />
+                    <Input
+                        placeholder='Expiration Date'
+                        value={editedUserData.expiration_date || ""}
+                        onChange={(e) =>
+                            handleInputChange(e, "expiration_date")
+                        }
+                    />
+                    <Input
+                        placeholder='Status'
+                        value={editedUserData.status || ""}
+                        onChange={(e) => handleInputChange(e, "status")}
+                    />
+                </div>
+            </Modal>
         </div>
     );
 };

@@ -1,38 +1,56 @@
 import { useState } from "react";
-import { Drawer } from "antd";
+import { Drawer, Form } from "antd";
+import axios from "axios";
 
-const CoursesDrawer = ({ open, onClosed, onCreate }) => {
+const CoursesDrawer = ({ open, onClose, onCreate }) => {
     const [inputValue, setInputValue] = useState("");
 
     const handleInputChange = (e) => {
         setInputValue(e.target.value);
     };
-    const handleCreateClick = () => {
-        onCreate(inputValue);
+
+    const handleCreateClick = async () => {
+        const data = { name: inputValue };
+        try {
+            const res = await axios.post(
+                "http://localhost:3000/courses/create",
+                data
+            );
+            onCreate(res.data); 
+            console.log(res.data);
+
+            
+            window.location.reload();
+        } catch (err) {
+            console.error("Xato bor", err);
+        }
         setInputValue("");
     };
 
     return (
         <Drawer
-            title='Modul Yaratish'
+            title='Kurs Yaratish'
             placement='right'
-            onClose={onClosed}
-            open={open}
-            className='flex'>
-            <input
-                value={inputValue}
-                onChange={handleInputChange}
-                placeholder='Type here'
-                className='border-2 border-black p-1'
-                required
-            />
-            <br />
-            <br />
-            <button
-                className='bg-green-800 p-2 text-white ml-3 rounded-lg'
-                onClick={handleCreateClick}>
-                Create
-            </button>
+            onClose={onClose}
+            open={open}>
+            <Form onFinish={handleCreateClick}>
+                <label htmlFor='name'>Name:</label>
+                <input
+                    id='name'
+                    value={inputValue}
+                    onChange={handleInputChange}
+                    placeholder='Type here'
+                    className='border-2 border-black p-1'
+                    required
+                />
+                <br />
+                <br />
+                <button
+                    className='bg-green-800 p-2 text-white ml-3 rounded-lg'
+                    type='submit'>
+                    Create
+                </button>
+            </Form>
         </Drawer>
     );
 };
