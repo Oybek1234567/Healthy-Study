@@ -1,17 +1,18 @@
+import { DownOutlined, UpOutlined } from "@ant-design/icons";
 import axios from "axios";
 import { useEffect, useState } from "react";
-import { useSort } from "../../../hooks/useSort";
-import { DownOutlined, UpOutlined } from "@ant-design/icons";
+import { useSort } from "../../../../hooks/useSort";
 
-const Denied = () => {
+const Accepted = () => {
     const [data, setData] = useState([]);
     const [userData, setUserData] = useState([]);
+
     const { handleSort, sortConfig } = useSort(userData, setUserData);
     useEffect(() => {
         const handleGet = async () => {
             try {
                 const req = await axios.get(
-                    "http://localhost:3000/applications/denied"
+                    "http://localhost:3000/applications/accepted"
                 );
                 setData(req.data.users);
                 console.log(req.data);
@@ -62,48 +63,18 @@ const Denied = () => {
                             )}
                         </th>
                         <th>Phone</th>
-                        <th
-                            onClick={() => handleSort("role")}
-                            className='cursor-pointer'>
-                            Role
-                            {sortConfig?.key === "role" &&
-                            sortConfig?.direction === "ascending" ? (
-                                <UpOutlined />
-                            ) : (
-                                <DownOutlined />
-                            )}
-                        </th>
-                        <th
-                            onClick={() => handleSort("passport_series")}
-                            className='cursor-pointer'>
-                            Passport Series
-                            {sortConfig?.key === "passport_series" &&
-                            sortConfig?.direction === "ascending" ? (
-                                <UpOutlined />
-                            ) : (
-                                <DownOutlined />
-                            )}
-                        </th>
-                        <th
-                            onClick={() => handleSort("expiration_date")}
-                            className='cursor-pointer'>
-                            Expiration Date
-                            {sortConfig?.key === "expiration_date" &&
-                            sortConfig?.direction === "ascending" ? (
-                                <UpOutlined />
-                            ) : (
-                                <DownOutlined />
-                            )}
-                        </th>
-                        <th>Action</th>
+                    
                     </tr>
                 </thead>
                 <tbody>
                     {data.map((user) => (
                         <tr key={user.id}>
+                            <td>{user.id}</td>
                             <td>{user.name}</td>
                             <td>{user.surname}</td>
+                            <td>{user.date_of_birth ? user.date_of_birth.slice(0, 10) : ""}</td>
                             <td>{user.phone}</td>
+
                         </tr>
                     ))}
                 </tbody>
@@ -112,4 +83,4 @@ const Denied = () => {
     );
 };
 
-export default Denied;
+export default Accepted;

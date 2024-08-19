@@ -9,7 +9,7 @@ const UserDrawer = ({ open, onClosed }) => {
     const navigate = useNavigate();
 
     // Upload Img
-    // const props = {
+    // const props = {  
     //     name: "file",
     //     action: "https://660d2bd96ddfa2943b33731c.mockapi.io/api/upload",
     //     headers: {
@@ -164,8 +164,8 @@ const UserDrawer = ({ open, onClosed }) => {
                     name='passport_photo'
                     valuePropName='fileList'
                     getValueFromEvent={(e) => e && e.fileList}>
-                    <input type="file" name=""/>
-                        {/* <Button icon={<UploadOutlined />}>Upload</Button>    */}
+                    <input type='file' name='' />
+                    {/* <Button icon={<UploadOutlined />}>Upload</Button>    */}
                 </Form.Item>
                 <Form.Item>
                     <Button

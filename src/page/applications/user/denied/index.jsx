@@ -1,9 +1,9 @@
-import { DownOutlined, UpOutlined } from "@ant-design/icons";
 import axios from "axios";
 import { useEffect, useState } from "react";
-import { useSort } from "../../../hooks/useSort";
+import { useSort } from "../../../../hooks/useSort";
+import { DownOutlined, UpOutlined } from "@ant-design/icons";
 
-const UsersPending = () => {
+const Denied = () => {
     const [data, setData] = useState([]);
     const [userData, setUserData] = useState([]);
     const { handleSort, sortConfig } = useSort(userData, setUserData);
@@ -11,7 +11,7 @@ const UsersPending = () => {
         const handleGet = async () => {
             try {
                 const req = await axios.get(
-                    "http://localhost:3000/applications/pending"
+                    "http://localhost:3000/applications/denied"
                 );
                 setData(req.data.users);
                 console.log(req.data);
@@ -26,7 +26,7 @@ const UsersPending = () => {
         <div>
             <table>
                 <thead>
-                    <tr>
+                    <tr className="text-center">
                         <th>ID</th>
                         <th
                             onClick={() => handleSort("name")}
@@ -50,6 +50,9 @@ const UsersPending = () => {
                                 <DownOutlined />
                             )}
                         </th>
+                        <th>
+                            Phone
+                        </th>
                         <th
                             onClick={() => handleSort("date_of_birth")}
                             className='cursor-pointer'>
@@ -61,49 +64,16 @@ const UsersPending = () => {
                                 <DownOutlined />
                             )}
                         </th>
-                        <th>Phone</th>
-                        <th
-                            onClick={() => handleSort("role")}
-                            className='cursor-pointer'>
-                            Role
-                            {sortConfig?.key === "role" &&
-                            sortConfig?.direction === "ascending" ? (
-                                <UpOutlined />
-                            ) : (
-                                <DownOutlined />
-                            )}
-                        </th>
-                        <th
-                            onClick={() => handleSort("passport_series")}
-                            className='cursor-pointer'>
-                            Passport Series
-                            {sortConfig?.key === "passport_series" &&
-                            sortConfig?.direction === "ascending" ? (
-                                <UpOutlined />
-                            ) : (
-                                <DownOutlined />
-                            )}
-                        </th>
-                        <th
-                            onClick={() => handleSort("expiration_date")}
-                            className='cursor-pointer'>
-                            Expiration Date
-                            {sortConfig?.key === "expiration_date" &&
-                            sortConfig?.direction === "ascending" ? (
-                                <UpOutlined />
-                            ) : (
-                                <DownOutlined />
-                            )}
-                        </th>
-                        <th>Action</th>
                     </tr>
                 </thead>
                 <tbody>
                     {data.map((user) => (
                         <tr key={user.id}>
+                            <td>{user.id}</td>
                             <td>{user.name}</td>
                             <td>{user.surname}</td>
                             <td>{user.phone}</td>
+                            <td>{user.date_of_birth ? user.date_of_birth.slice(0, 10) : ""}</td>
                         </tr>
                     ))}
                 </tbody>
@@ -112,4 +82,4 @@ const UsersPending = () => {
     );
 };
 
-export default UsersPending;
+export default Denied;

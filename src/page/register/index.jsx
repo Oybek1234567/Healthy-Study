@@ -118,9 +118,11 @@ const App = () => {
                         { required: true, message: "Please select your role!" },
                     ]}>
                     <Select className='w-full'>
-                        <Option value='super'>Super</Option>
+                        <Option value='super'>Staff</Option>
                         <Option value='teacher'>O`qituvchi</Option>
                         <Option value='student'>Student</Option>
+                        <Option value='super'>Assistent</Option>
+                        <Option value='super'>Guest</Option>
                     </Select>
                 </Form.Item>
                 <Form.Item label='Passport Series' name='passport_series'>
@@ -133,12 +135,11 @@ const App = () => {
                     />
                 </Form.Item>
                 <Form.Item>
-                    <Button
-                        type='primary'
-                        htmlType='submit'
+                    <button
+                        type='submit'
                         className='w-14 h-10 rounded-sm bg-green-700 text-white mt-10'>
                         Submit
-                    </Button>
+                    </button>
                 </Form.Item>
             </Form>
         </>
