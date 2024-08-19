@@ -14,7 +14,7 @@
             const fetchData = async () => {
                 try {
                     const response = await axios.get(
-                        "http://localhost:3000/applications/all"
+                        "http://localhost:3000/users/all"
                     );
                     console.log("Fetched user data:", response.data.users);
                     setData(response.data.users || []);
@@ -120,9 +120,10 @@
                 <table>
                     <thead>
                         <tr>
+                            <th>ID</th>
                             <th>Name</th>
                             <th>Surname</th>
-                            <th>Date Of Birth</th>                            
+                            <th>Date Of Birth</th>
                             <th>Phone</th>
                             <th>Role</th>
                             <th>Passport Series</th>
@@ -133,6 +134,7 @@
                     <tbody>
                         {data.map((item) => (
                             <tr key={item.id}>
+                                <td>{item.id}</td>
                                 <td>{item.name}</td>
                                 <td>{item.surname}</td>
                                 <td>{item.date_of_birth ? item.date_of_birth.slice(0, 10) : "Undefined"}</td>

@@ -1,103 +1,20 @@
-import { DownOutlined, EditFilled, UpOutlined } from "@ant-design/icons";
-import { Button, Input, Modal } from "antd";
+import { DownOutlined, UpOutlined } from "@ant-design/icons";
+// import { Input, Modal } from "antd";
 import axios from "axios";
 import { useEffect, useState } from "react";
 import * as XLSX from "xlsx";
 import useDrawer from "../../../hooks/useDrawer";
 import UserDrawer from "./drawer";
 import { useSort } from "../../../hooks/useSort";
-import useDelete from "../../../hooks/useDelete";
-
 const User = () => {
     const [selectedStatuses, setSelectedStatuses] = useState([]);
     const { open, onOpen, onClose } = useDrawer();
-    const [userData, setUserData] = useState([]);
-    const [editedUserData, setEditedUserData] = useState({});
-    const [editRowKey, setEditRowKey] = useState(null);
-    const [isModalVisible, setIsModalVisible] = useState(false);
-    const [disabledButtons, setDisabledButtons] = useState({});
-
-    const handleSave = async () => {
-        const originalUser = userData.find(
-            (user) => user.id === editedUserData.id
-        );
-
-        if (!originalUser) {
-            alert("Foydalanuvchi topilmadi.");
-            return;
-        }
-
-        const updatedFields = Object.keys(editedUserData).reduce((acc, key) => {
-            if (editedUserData[key] !== originalUser[key]) {
-                acc[key] = editedUserData[key];
-            }
-            return acc;
-        }, {});
-
-        if (!Object.keys(updatedFields).length) {
-            alert("Hech qanday o'zgarishlar topilmadi.");
-            setEditRowKey(null);
-            setIsModalVisible(false);
-            return;
-        }
-
-        try {
-            const response = await axios.post(
-                `http://localhost:3000/applications/edit/${editedUserData.id}`,
-                updatedFields
-            );
-
-            alert(response.data.msg);
-
-            setUserData((prevData) =>
-                prevData.map((user) =>
-                    user.id === editedUserData.id
-                        ? { ...user, ...updatedFields }
-                        : user
-                )
-            );
-            setEditRowKey(null);
-            setIsModalVisible(false);
-        } catch (error) {
-            console.error("Foydalanuvchini tahrirlashda xato:", error.message);
-            alert(
-                "Foydalanuvchini tahrirlashda xatolik yuz berdi: " +
-                    error.message
-            );
-        }
-    };
-
-    const handleEdit = (user) => {
-        setEditRowKey(user.id);
-        setEditedUserData(user);
-        setIsModalVisible(true);
-    };
-
+    const [userData, setUserData] = useState([]);   
     // useSort
     const { handleSort, sortConfig } = useSort(userData, setUserData);
 
     // useDelete
-    const { handleDelete } = useDelete();
 
-    const handleSubmit = async (user) => {
-        const formattedUser = {
-            ...user,
-            phone: String(user.phone),
-        };
-
-        try {
-            const res = await axios.post(
-                "http://localhost:3000/users/create",
-                formattedUser
-            );
-            alert("Success");
-        } catch (error) {
-            console.error(
-                "Error posting data",
-                error.response ? error.response.data : error.message
-            );
-        }
-    };
 
     useEffect(() => {
         const fetchData = async () => {
@@ -144,14 +61,6 @@ const User = () => {
         }
         return buf;
     };
-
-    const handleInputChange = (e, field) => {
-        setEditedUserData({
-            ...editedUserData,
-            [field]: e.target.value || "",
-        });
-    };
-
     const handleCheckboxChange = (status) => {
         setSelectedStatuses((prevStatuses) =>
             prevStatuses.includes(status)
@@ -159,23 +68,6 @@ const User = () => {
                 : [...prevStatuses, status]
         );
     };
-
-    const handleDeleteClick = (userId) => {
-        handleDelete(userId);
-        setDisabledButtons((prev) => ({
-            ...prev,
-            [userId]: false, // Change this to false if you want to enable the button
-        }));
-    };
-
-    const handleSubmitClick = (userId) => {
-        handleSubmit(userId);
-        setDisabledButtons((prev) => ({
-            ...prev,
-            [userId]: true,
-        }));
-    };
-
     const filteredUserData = userData.filter(
         (user) =>
             selectedStatuses.length === 0 ||
@@ -291,7 +183,6 @@ const User = () => {
                                 <DownOutlined />
                             )}
                         </th>
-                        <th>Action</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -313,84 +204,11 @@ const User = () => {
                                     ? user.expiration_date.slice(0, 10)
                                     : ""}
                             </td>
-                            <td className='flex'>
-                                <Button
-                                    onClick={() => handleEdit(user)}
-                                    type='primary'
-                                    icon={<EditFilled />}
-                                    style={{
-                                        backgroundColor: "yellow",
-                                        color: "white",
-                                        marginRight: "10px",
-                                        borderRadius: "50%",
-                                    }}
-                                />
-                                <button
-                                    className='border-none'
-                                    onClick={() => handleDeleteClick(user.id)}
-                                    disabled={disabledButtons[user.id]}>
-                                    ❌
-                                </button>
-                                <Button
-                                    type='default'
-                                    onClick={() => handleSubmitClick(user.id)}
-                                    className='border-none'
-                                    disabled={disabledButtons[user.id]}>
-                                    ✅
-                                </Button>
-                            </td>
                         </tr>
                     ))}
                 </tbody>
             </table>
-            <Modal title='Edit User' open={isModalVisible} onOk={handleSave}>
-                <div className='flex flex-col gap-2'>
-                    <Input
-                        placeholder='Name'
-                        value={editedUserData.name || ""}
-                        onChange={(e) => handleInputChange(e, "name")}
-                    />
-                    <Input
-                        placeholder='Surname'
-                        value={editedUserData.surname || ""}
-                        onChange={(e) => handleInputChange(e, "surname")}
-                    />
-                    <Input
-                        placeholder='Date of Birth'
-                        value={editedUserData.date_of_birth || ""}
-                        onChange={(e) => handleInputChange(e, "date_of_birth")}
-                    />
-                    <Input
-                        placeholder='Phone'
-                        value={editedUserData.phone || ""}
-                        onChange={(e) => handleInputChange(e, "phone")}
-                    />
-                    <Input
-                        placeholder='Role'
-                        value={editedUserData.role || ""}
-                        onChange={(e) => handleInputChange(e, "role")}
-                    />
-                    <Input
-                        placeholder='Passport Series'
-                        value={editedUserData.passport_series || ""}
-                        onChange={(e) =>
-                            handleInputChange(e, "passport_series")
-                        }
-                    />
-                    <Input
-                        placeholder='Expiration Date'
-                        value={editedUserData.expiration_date || ""}
-                        onChange={(e) =>
-                            handleInputChange(e, "expiration_date")
-                        }
-                    />
-                    <Input
-                        placeholder='Status'
-                        value={editedUserData.status || ""}
-                        onChange={(e) => handleInputChange(e, "status")}
-                    />
-                </div>
-            </Modal>
+            
         </div>
     );
 };

@@ -22,9 +22,17 @@ import Timetable from "../page/timetable";
 import Login from "../page/register";
 import Tests from "../page/courses/module/test";
 import Success from "../page/register/success";
-import Accepted from "../page/applications/accepted";
-import UsersPending from "../page/applications/pending";
-import Denied from "../page/applications/denied";
+import Accepted from "../page/applications/user/accepted";
+import UsersPending from "../page/applications/user/pending";
+import Denied from "../page/applications/user/denied";
+import Super from "../page/statics/super";
+import Staff from "../page/statics/staff";
+import ModuleLeader from "../page/statics/module-leader";
+import Teacher from "../page/statics/teacher";
+import Assistant from "../page/statics/assistant";
+import Student from "../page/statics/student";
+import Guest from "../page/statics/guest";
+
 
 export const MenuList = [
     {
@@ -65,12 +73,12 @@ export const MenuList = [
     {
         id: 8,
         path: "/groups",
-        element: <Groups />
+        element: <Groups />,
     },
     {
         id: 9,
         path: "/timetable",
-        element: <Timetable />
+        element: <Timetable />,
     },
     {
         id: 10,
@@ -85,81 +93,122 @@ export const MenuList = [
     {
         id: 12,
         path: "/register",
-        element: <Register />
+        element: <Register />,
     },
     {
         id: 13,
         path: "/new",
-        element: <New />
+        element: <New />,
     },
     {
         id: 14,
         path: "/excisting",
-        element: <Excisting />
+        element: <Excisting />,
     },
     {
         id: 15,
         path: "/pending",
-        element: <Pending />
+        element: <Pending />,
     },
     {
         id: 16,
-        path: '/profile',
-        element: <Profile />
+        path: "/profile",
+        element: <Profile />,
     },
     {
         id: 17,
         path: "/courses",
-        element: <Courses />
+        element: <Courses />,
     },
     {
         id: 18,
-        path: '/rooms',
-        element: <Rooms />
+        path: "/rooms",
+        element: <Rooms />,
     },
     {
         id: 19,
-        path: '/new_room',
-        element: <NewRooms />
+        path: "/new_room",
+        element: <NewRooms />,
     },
     {
         id: 20,
-        path: '/modules',
-        element: <Modules />
+        path: "/modules",
+        element: <Modules />,
     },
     {
         id: 21,
-        path: '/existing_room',
-        element: <ExistingRoom />
+        path: "/existing_room",
+        element: <ExistingRoom />,
     },
     {
         id: 22,
-        path: '/login',
-        element: <Login />
+        path: "/login",
+        element: <Login />,
     },
     {
         id: 23,
         path: "/tests",
-        element: <Tests />
+        element: <Tests />,
     },
     {
         id: 24,
         path: "/success",
-        element: <Success />
+        element: <Success />,
     },
     {
         id: 26,
         path: "/accepted",
-        element: <Accepted/>
+        element: <Accepted />,
     },
     {
         id: 27,
         path: "user_pending",
-        element: <UsersPending/>
+        element: <UsersPending />,
     },
     {
         id: 28,
         path: "/denied",
-        element: <Denied />
+        element: <Denied />,
+    },
+    {
+        id: 29,
+        path: "/super",
+        element: <Super />,
+    },
+    {
+        id: 30,
+        path: "/staff",
+        element: <Staff />,
+    },
+    {
+        id: 31,
+        path: "/assistant",
+        element: <Assistant />,
+    },
+    {
+        id: 32,
+        path: "/module_leader",
+        element: <ModuleLeader />,
+    },
+    {
+        id: 33,
+        path: "/teacher",
+        element: <Teacher />,
+    },
+    {
+        id: 34,
+        path: "/assistant",
+        element: <Assistant />,
+    },
+    {
+        id: 35,
+        path: "student",
+        element: <Student />,
+    },
+    {
+        id: 36,
+        path: "/guest",
+        element: <Guest />,
     }
-]
+
+];
