@@ -2,7 +2,8 @@ import { DownOutlined, UpOutlined } from "@ant-design/icons";
 import axios from "axios";
 import { useEffect, useState } from "react";
 import { useSort } from "../../../../hooks/useSort";
-import { Button, Input, Modal } from "antd";
+import { Button, Input, Modal, Select } from "antd";
+import { Option } from "antd/es/mentions";
 
 const UsersPending = () => {
     const [data, setData] = useState([]);
@@ -209,7 +210,11 @@ const handleSaveClick = async () => {
                             </td>
                             <td>{user.role}</td>
                             <td>{user.passport_series}</td>
-                            <td>{user.expiration_date ? user.expiration_date.slice(0, 10) : ""}</td>
+                            <td>
+                                {user.expiration_date
+                                    ? user.expiration_date.slice(0, 10)
+                                    : ""}
+                            </td>
                             <td className='flex'>
                                 <button onClick={() => handleEditClick(user)}>
                                     ✏️
@@ -272,12 +277,17 @@ const handleSaveClick = async () => {
                             value={editUser.phone}
                             onChange={handleInputChange}
                         />
-                        <Input
-                            name='role'
-                            placeholder='Role'
+                        <Select
+                            className='w-full'
                             value={editUser.role}
-                            onChange={handleInputChange}
-                        />
+                            onChange={handleInputChange}>
+                            <Option value='super'>Staff</Option>
+                            <Option value='super'>Module Leader</Option>
+                            <Option value='teacher'>Teacher</Option>
+                            <Option value='super'>Assistent</Option>
+                            <Option value='student'>Student</Option>
+                            <Option value='super'>Guest</Option>
+                        </Select>
                         <Input
                             name='passport_series'
                             placeholder='Passport Series'
@@ -286,7 +296,7 @@ const handleSaveClick = async () => {
                         />
                         <Input
                             name='expiration_date'
-                            type="date"
+                            type='date'
                             placeholder='Expiration Date'
                             value={editUser.expiration_date}
                             onChange={handleInputChange}

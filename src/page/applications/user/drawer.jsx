@@ -130,10 +130,12 @@ const UserDrawer = ({ open, onClosed }) => {
                     rules={[
                         { required: true, message: "Please select your role!" },
                     ]}>
-                    <Select className='w-full' defaultValue={"Select role"}>
-                        <Option value='super'>Super</Option>
+                    <Select className='w-full'>
+                        <Option value='super'>Staff</Option>
                         <Option value='teacher'>O`qituvchi</Option>
                         <Option value='student'>Student</Option>
+                        <Option value='super'>Assistent</Option>
+                        <Option value='super'>Guest</Option>
                     </Select>
                 </Form.Item>
                 <Form.Item
