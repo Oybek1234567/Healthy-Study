@@ -26,31 +26,34 @@ export const menu = [
             {
                 id: 3,
                 title: "Yangi Foydalanuvchi",
+                label: "Submenu",
                 path: "/user",
                 icon: <UsergroupAddOutlined />,
-            },
-            {
-                id: 4,
-                title: "Guruh qo'shish",
-                path: "/register",
-                icon: <SolutionOutlined />,
-            },
-            {
-                id: 5,
-                title: "Accepted",
-                path: "/accepted",
-                icon: <UserOutlined />,
-            },
-            {
-                id: 6,
-                title: "Pending",
-                path: "/user_pending",
-                icon: <UsergroupAddOutlined />,
+                children: [
+                    {
+                        id: 4,
+                        title: "Accepted",
+                        path: "/accepted",
+                        icon: <UserOutlined />,
+                    },
+                    {
+                        id: 5,
+                        title: "Pending",
+                        path: "/user_pending",
+                        icon: <UsergroupAddOutlined />,
+                    },
+                    {
+                        id: 6,
+                        title: "Denied",
+                        path: "/denied",
+                        icon: <SolutionOutlined />,
+                    },
+                ]
             },
             {
                 id: 7,
-                title: "Denied",
-                path: "/denied",
+                title: "Guruh qo'shish",
+                path: "/register",
                 icon: <SolutionOutlined />,
             },
         ],

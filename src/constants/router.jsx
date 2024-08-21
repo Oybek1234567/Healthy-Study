@@ -132,7 +132,7 @@ export const MenuList = [
     },
     {
         id: 20,
-        path: "/modules",
+        path: "/courses/:id",
         element: <Modules />,
     },
     {
@@ -147,7 +147,7 @@ export const MenuList = [
     },
     {
         id: 23,
-        path: "/tests",
+        path: "/courses/:id/modules/:id",
         element: <Tests />,
     },
     {
