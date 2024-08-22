@@ -13,15 +13,14 @@ const ExamsDrawer = ({ open, onClosed, onCreate }) => {
             name: inputValue,
             weight: secondInput,
             tests_total: thirdInput,
-            course_id: moduleID,
+            module_id: moduleID,
         };
         try {
-             await axios.post(
+            await axios.post(
                 "http://localhost:3000/assignmenttypes/create",
                 data
             );
             console.log(moduleID);
-
             onCreate(data.name, data.weight, data.total);
             alert("Yaratildi");
         } catch (err) {
@@ -44,13 +43,20 @@ const ExamsDrawer = ({ open, onClosed, onCreate }) => {
         setThirdInput(e.target.value);
     };
 
+    const handleReload = () => {
+        window.location.reload();
+    };
     return (
         <Drawer
             title='Imtihon Yaratish'
             placement='right'
             onClose={onClosed}
             open={open}>
-            <Form onFinish={handlePost}>
+            <Form
+                onFinish={() => {
+                    handlePost();
+                    handleReload()
+                }}>
                 <label htmlFor='name'>Name</label>
                 <input
                     name='name'
@@ -64,6 +70,7 @@ const ExamsDrawer = ({ open, onClosed, onCreate }) => {
                 <br />
                 <label htmlFor='weight'>Weight</label>
                 <input
+                    name='weight'
                     type='number'
                     value={thirdInput}
                     onChange={handleThirdInputChange}
@@ -83,6 +90,7 @@ const ExamsDrawer = ({ open, onClosed, onCreate }) => {
                 />
                 <button
                     type='submit'
+                    onClick={handleReload}
                     className='bg-green-800 p-2 mt-3 text-white ml-3 rounded-lg'>
                     Create
                 </button>

@@ -43,10 +43,9 @@ const Modules = () => {
 
     const handleSave = async () => {
         try {
-            
             alert("Kurs muvaffaqiyatli yangilandi");
             setShowEditModal(false);
-            window.location.reload()
+            window.location.reload();
             console.log(newName, newStudent, newLength);
             await axios.post(
                 `http://localhost:3000/modules/edit/${editModule.id}`,
@@ -57,7 +56,7 @@ const Modules = () => {
                     },
                 }
             );
-            
+
             setModules((prev) =>
                 prev.map((c) =>
                     c.id === editModule.id
@@ -82,10 +81,9 @@ const Modules = () => {
                         : c
                 )
             );
-
         } catch (error) {
             console.error(error);
-            alert("Failed")
+            alert("Failed");
         }
     };
 
@@ -107,7 +105,6 @@ const Modules = () => {
             const updatedCourses = module.filter((c) => c.id !== module.id);
             setModules(updatedCourses);
             setFilteredCourses(updatedCourses);
-            
         } catch (error) {
             console.error(error);
         }
@@ -131,7 +128,7 @@ const Modules = () => {
         onClose();
     };
     console.log(courseName);
-    
+
     return (
         <div>
             <h1 className='absolute text-4xl'>

@@ -1,15 +1,15 @@
 import axios from "axios";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { Button, ButtonGroup, Dropdown, Modal } from "react-bootstrap";
 import { Link, useLocation, useParams } from "react-router-dom";
 import { Tabs } from "antd";
 import Exams from "./exams";
 import Themes from "./subjects";
 import Lessons from "./lessons";
+import Report from "./report";
 
 const Tests = () => {
     const [modules, setModules] = useState([]);
-    const [data, setData] = useState([]);
     const [editModule, setEditModule] = useState(null);
     const [filteredCourses, setFilteredCourses] = useState([]);
     const [showEditModal, setShowEditModal] = useState(false);
@@ -22,27 +22,11 @@ const Tests = () => {
     console.log(location.state);
     const courseName = location.state?.courseName;
     const moduleName = location.state?.moduleName;
+    console.log(location.state);
 
     const handleBack = () => {
         window.history.back();
     };
-    useEffect(() => {
-        const fetchData = async () => {
-            try {
-                const req = await axios.get(
-                    `http://localhost:3000/assignments/all/${id}`
-                );
-                setData(req.data.assignments);
-                setModules(req.data.assignments);
-                setFilteredCourses(req.data.assignments);
-            } catch (error) {
-                console.error(error);
-            }
-        };
-
-        fetchData();
-    }, [id]);
-
     const handleSave = async () => {
         try {
             alert("Kurs muvaffaqiyatli yangilandi");
@@ -129,29 +113,20 @@ const Tests = () => {
                 <a href='/courses' className='hover:text-black'>
                     Kurslar /
                 </a>
-                <button onClick={handleBack}>
-                    {courseName.charAt(0).toUpperCase() + courseName.slice(1)} /
-                </button>
+                <button onClick={handleBack}>{courseName} /</button>
                 <button href='/modules' className='hover:text-black'>
-                    <p style={{ display: "none" }}>/</p>{" "}
-                    {moduleName.charAt(0).toUpperCase() + moduleName.slice(1)}
+                    <p style={{ display: "none" }}>/</p> {moduleName}
                 </button>
             </h1>
             <div className='absolute flex flex-wrap gap-4 mt-8 p-4'>
                 {filteredCourses.map((module) => (
                     <div key={module.id}>
-                        <Link
-                            to={`/courses/${id}/modules/${module.id}`}
-                            state={{
-                                courseName,
-                                moduleName: module.name,
-                            }}
-                            className='flex flex-wrap gap-2 mt-8 p-4 text-xl w-[300px] border-4 border-black hover:text-black'>
+                        <div className='flex flex-wrap gap-2 mt-8 p-4 text-xl w-[300px] border-4 border-black hover:text-black'>
                             <p>Modul ID: {module.id}</p>
                             <p>Modul nomi: {module.name}</p>
                             <p>Max № studentlar: {module.max_students}</p>
                             <p>Darslar davomiyligi: {module.length}</p>
-                        </Link>
+                        </div>
                         <Dropdown as={ButtonGroup}>
                             <Dropdown.Toggle
                                 split
@@ -240,7 +215,7 @@ const Tests = () => {
                     {
                         label: "Lesson Report Types",
                         key: "reports",
-                        children: <Lessons />,
+                        children: <Report />,
                     },
                 ]}
                 size='large'

@@ -9,11 +9,11 @@ const SubjectsDrawer = ({ open, onClosed, onCreate }) => {
     const handlePost = async () => {
         const data = {
             name: inputValue,
-            course_id: moduleID,
+            module_id: moduleID,
         };
         try {
             const res = await axios.post(
-                "http://localhost:3000/modules/create",
+                "http://localhost:3000/subjects/create",
                 data
             );
             console.log(moduleID);
@@ -31,13 +31,19 @@ const SubjectsDrawer = ({ open, onClosed, onCreate }) => {
         setInputValue(e.target.value);
     };
 
+    const handleReload = () => {
+        window.location.reload();
+    }
     return (
         <Drawer
             title='Mavzu Yaratish'
             placement='right'
             onClose={onClosed}
             open={open}>
-            <Form onFinish={handlePost}>
+            <Form onFinish={() => {
+                handlePost();
+                handleReload()
+            }}>
                 <label htmlFor='name'>Name</label>
                 <input
                     name='name'
