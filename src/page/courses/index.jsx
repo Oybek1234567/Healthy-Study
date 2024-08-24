@@ -117,6 +117,16 @@ const NewCourses = () => {
                             <p className='absolute -translate-x-[130px] mt-[120px] w-7 h-5 bg-[green] text-center text-white rounded-sm'>
                                 {course.id}
                             </p>
+                            <p
+                                className={`absolute translate-x-[110px] mt-[110px] w-14 pt-1 pb-1 text-center text-white rounded-sm ${
+                                    course.status === "active"
+                                        ? "bg-green-500"
+                                        : "bg-red-500"
+                                }`}>
+                                {course.status === "active"
+                                    ? "Active"
+                                    : "Deleted"}
+                            </p>
                         </Link>
 
                         <Dropdown as={ButtonGroup}>
@@ -133,7 +143,7 @@ const NewCourses = () => {
                                 <Dropdown.Item
                                     onClick={() => {
                                         handleDelete(course);
-                                        window.location.reload()
+                                        window.location.reload();
                                     }}>
                                     Delete
                                 </Dropdown.Item>

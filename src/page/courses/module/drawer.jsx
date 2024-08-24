@@ -7,13 +7,11 @@ const ModulesDrawer = ({ open, onClosed, onCreate }) => {
     const { id: courseID } = useParams();  
     const [inputValue, setInputValue] = useState("");
     const [secondInput, setSecondInput] = useState("");
-    const [thirdInput, setThirdInput] = useState("");
 
     const handlePost = async () => {
         const data = {
             name: inputValue,
             max_students: secondInput,
-            length: thirdInput,
             course_id: courseID,
         };
         try {
@@ -23,7 +21,7 @@ const ModulesDrawer = ({ open, onClosed, onCreate }) => {
             );
             console.log(courseID);
 
-            onCreate(data.name, data.weight, data.count);
+            onCreate(data.name, data.weight);
             console.log(res.data);
             alert("Yaratildi");
         } catch (err) {
@@ -31,7 +29,6 @@ const ModulesDrawer = ({ open, onClosed, onCreate }) => {
         }
         setInputValue("");
         setSecondInput("");
-        setThirdInput("");
     };
 
     const handleInputChange = (e) => {
@@ -40,10 +37,6 @@ const ModulesDrawer = ({ open, onClosed, onCreate }) => {
 
     const handleSecondInputChange = (e) => {
         setSecondInput(e.target.value);
-    };
-
-    const handleThirdInputChange = (e) => {
-        setThirdInput(e.target.value);
     };
 
     return (
@@ -75,17 +68,6 @@ const ModulesDrawer = ({ open, onClosed, onCreate }) => {
                     placeholder='Type here'
                     id='weight'
                     className='w-full mt-3 mb-3 border-2 border-black'
-                />
-                <label htmlFor='count' className='w-1/2'>
-                    Darslar davomiyligi
-                </label>
-                <input
-                    type='number'
-                    value={thirdInput}
-                    onChange={handleThirdInputChange}
-                    className='w-full mt-3 border-2 border-black'
-                    placeholder='Type here'
-                    id='count'
                 />
                 <button
                     type='submit'

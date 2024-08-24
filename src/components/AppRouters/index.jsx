@@ -133,17 +133,13 @@ const AppRouters = () => {
                 </Sider>
                 <Layout
                     style={{
-                        marginLeft: collapsed ? "80px" : "210px",
+                        marginLeft: "210px",
                         transition: "margin-left 0.2s",
                     }}>
                     <Header
                         style={{
                             padding: 0,
                             background: colorBgContainer,
-                            position: "fixed",
-                            width: `calc(100% - ${
-                                collapsed ? "80px" : "210px"
-                            })`,
                             zIndex: 1,
                         }}>
                         <Button
@@ -169,8 +165,9 @@ const AppRouters = () => {
                     </Header>
                     <Content
                         style={{
+                            backgroundColor: "white",
                             overflowY: "scroll",
-                            margin: "80px 16px 24px 16px",
+                            margin: "30px 16px 24px 16px",
                             marginLeft: "110px",
                             padding: 24,
                             minHeight: 280,

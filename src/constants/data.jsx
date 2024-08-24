@@ -48,7 +48,7 @@ export const menu = [
                         path: "/denied",
                         icon: <SolutionOutlined />,
                     },
-                ]
+                ],
             },
             {
                 id: 7,
@@ -105,8 +105,8 @@ export const menu = [
                 title: "Guest",
                 path: "/guest",
                 icon: <UsergroupAddOutlined />,
-            }
-        ]
+            },
+        ],
     },
     {
         id: 17,
@@ -116,16 +116,16 @@ export const menu = [
     },
     {
         id: 18,
+        title: "Xonalar",
+        path: "/rooms",
+        icon: <FundOutlined />,
+    },
+    {
+        id: 19,
         title: "Guruhlar",
         path: "/groups",
         icon: <UsergroupAddOutlined />,
         children: [
-            {
-                id: 19,
-                title: "Yangi",
-                path: "/new",
-                icon: <SolutionOutlined />,
-            },
             {
                 id: 20,
                 title: "Kutilayotgan",
@@ -140,58 +140,39 @@ export const menu = [
             },
         ],
     },
+
     {
         id: 22,
-        title: "Xonalar",
-        path: "/rooms",
-        icon: <FundOutlined />,
-        children: [
-            {
-                id: 23,
-                title: "Yangi",
-                path: "/new_room",
-                icon: <SolutionOutlined />,
-            },
-            {
-                id: 24,
-                title: "Mavjud",
-                path: "/existing_room",
-                icon: <FileDoneOutlined />,
-            },
-        ],
-    },
-    {
-        id: 25,
         title: "Dars jadvali",
         path: "/timetable",
         icon: <FileDoneOutlined />,
     },
     {
-        id: 26,
+        id: 23,
         title: "Hisobotlar",
         path: "/reports",
         icon: <UnorderedListOutlined />,
         children: [
             {
-                id: 27,
+                id: 24,
                 title: "Education",
                 path: "/education",
                 icon: <SolutionOutlined />,
             },
             {
-                id: 28,
+                id: 25,
                 title: "Revenue",
                 path: "/revenue",
                 icon: <DollarOutlined />,
             },
             {
-                id: 29,
+                id: 26,
                 title: "Expense",
                 path: "/expense",
                 icon: <ShoppingOutlined />,
             },
             {
-                id: 30,
+                id: 27,
                 title: "Map",
                 path: "/map",
                 icon: <FundOutlined />,
@@ -199,7 +180,7 @@ export const menu = [
         ],
     },
     {
-        id: 31,
+        id: 28,
         title: "Registratsiya",
         path: "/login",
         icon: <FundOutlined />,

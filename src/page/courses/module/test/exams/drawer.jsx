@@ -13,16 +13,15 @@ const ExamsDrawer = ({ open, onClosed, onCreate }) => {
             name: inputValue,
             weight: secondInput,
             tests_total: thirdInput,
-            course_id: moduleID,
+            module_id: moduleID,
         };
         try {
-             await axios.post(
+            await axios.post(       
                 "http://localhost:3000/assignmenttypes/create",
                 data
             );
             console.log(moduleID);
-
-            onCreate(data.name, data.weight, data.total);
+            onCreate(data.name, data.weight, data.tests_total);
             alert("Yaratildi");
         } catch (err) {
             console.error("Xato bor", err);
@@ -44,13 +43,20 @@ const ExamsDrawer = ({ open, onClosed, onCreate }) => {
         setThirdInput(e.target.value);
     };
 
+    const handleReload = () => {
+        window.location.reload();
+    };
     return (
         <Drawer
             title='Imtihon Yaratish'
             placement='right'
             onClose={onClosed}
             open={open}>
-            <Form onFinish={handlePost}>
+            <Form
+                onFinish={() => {
+                    handlePost();
+                    handleReload()
+                }}>
                 <label htmlFor='name'>Name</label>
                 <input
                     name='name'
@@ -64,9 +70,10 @@ const ExamsDrawer = ({ open, onClosed, onCreate }) => {
                 <br />
                 <label htmlFor='weight'>Weight</label>
                 <input
+                    name='weight'
                     type='number'
-                    value={thirdInput}
-                    onChange={handleThirdInputChange}
+                    value={secondInput}
+                    onChange={handleSecondInputChange}
                     className='w-full mt-3 p-1 border-2 border-black'
                     placeholder='Type here'
                     id='weight'
@@ -75,14 +82,15 @@ const ExamsDrawer = ({ open, onClosed, onCreate }) => {
                 <input
                     type='number'
                     name='tests_total'
-                    value={secondInput}
-                    onChange={handleSecondInputChange}
+                    value={thirdInput}
+                    onChange={handleThirdInputChange}
                     placeholder='Type here'
                     id='tests_total'
                     className='w-full mt-3 mb-3 p-1 border-2 border-black'
                 />
                 <button
                     type='submit'
+                    onClick={handleReload}
                     className='bg-green-800 p-2 mt-3 text-white ml-3 rounded-lg'>
                     Create
                 </button>
