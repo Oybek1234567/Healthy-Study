@@ -16,12 +16,12 @@ const ExamsDrawer = ({ open, onClosed, onCreate }) => {
             module_id: moduleID,
         };
         try {
-            await axios.post(
+            await axios.post(       
                 "http://localhost:3000/assignmenttypes/create",
                 data
             );
             console.log(moduleID);
-            onCreate(data.name, data.weight, data.total);
+            onCreate(data.name, data.weight, data.tests_total);
             alert("Yaratildi");
         } catch (err) {
             console.error("Xato bor", err);
@@ -72,8 +72,8 @@ const ExamsDrawer = ({ open, onClosed, onCreate }) => {
                 <input
                     name='weight'
                     type='number'
-                    value={thirdInput}
-                    onChange={handleThirdInputChange}
+                    value={secondInput}
+                    onChange={handleSecondInputChange}
                     className='w-full mt-3 p-1 border-2 border-black'
                     placeholder='Type here'
                     id='weight'
@@ -82,8 +82,8 @@ const ExamsDrawer = ({ open, onClosed, onCreate }) => {
                 <input
                     type='number'
                     name='tests_total'
-                    value={secondInput}
-                    onChange={handleSecondInputChange}
+                    value={thirdInput}
+                    onChange={handleThirdInputChange}
                     placeholder='Type here'
                     id='tests_total'
                     className='w-full mt-3 mb-3 p-1 border-2 border-black'

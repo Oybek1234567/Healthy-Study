@@ -7,7 +7,6 @@ import Modules from "../page/courses/module/module";
 import Dashboard from "../page/dashboard/dashboard";
 import Groups from "../page/groups";
 import Excisting from "../page/groups/excisting";
-import New from "../page/groups/new";
 import Pending from "../page/groups/pending";
 import Education from "../page/reports/education";
 import Expense from "../page/reports/expense";
@@ -15,8 +14,6 @@ import Map from "../page/reports/map";
 import Reports from "../page/reports/reports";
 import Revenue from "../page/reports/revenue";
 import Rooms from "../page/rooms";
-import ExistingRoom from "../page/rooms/existing_room";
-import NewRooms from "../page/rooms/new_room";
 import Statics from "../page/statics/statics";
 import Timetable from "../page/timetable";
 import Login from "../page/register";
@@ -32,7 +29,6 @@ import Teacher from "../page/statics/teacher";
 import Assistant from "../page/statics/assistant";
 import Student from "../page/statics/student";
 import Guest from "../page/statics/guest";
-
 
 export const MenuList = [
     {
@@ -97,118 +93,102 @@ export const MenuList = [
     },
     {
         id: 13,
-        path: "/new",
-        element: <New />,
-    },
-    {
-        id: 14,
         path: "/excisting",
         element: <Excisting />,
     },
     {
-        id: 15,
+        id: 14,
         path: "/pending",
         element: <Pending />,
     },
     {
-        id: 16,
+        id: 15,
         path: "/profile",
         element: <Profile />,
     },
     {
-        id: 17,
+        id: 16,
         path: "/courses",
         element: <Courses />,
     },
     {
-        id: 18,
+        id: 17,
         path: "/rooms",
         element: <Rooms />,
     },
     {
-        id: 19,
-        path: "/new_room",
-        element: <NewRooms />,
-    },
-    {
-        id: 20,
+        id: 18,
         path: "/courses/:id",
         element: <Modules />,
     },
     {
-        id: 21,
-        path: "/existing_room",
-        element: <ExistingRoom />,
-    },
-    {
-        id: 22,
+        id: 19,
         path: "/login",
         element: <Login />,
     },
     {
-        id: 23,
+        id: 20,
         path: "/courses/:id/modules/:id",
         element: <Tests />,
     },
     {
-        id: 24,
+        id: 21,
         path: "/success",
         element: <Success />,
     },
     {
-        id: 26,
+        id: 22,
         path: "/accepted",
         element: <Accepted />,
     },
     {
-        id: 27,
+        id: 23,
         path: "user_pending",
         element: <UsersPending />,
     },
     {
-        id: 28,
+        id: 24,
         path: "/denied",
         element: <Denied />,
     },
     {
-        id: 29,
+        id: 25,
         path: "/super",
         element: <Super />,
     },
     {
-        id: 30,
+        id: 26,
         path: "/staff",
         element: <Staff />,
     },
     {
-        id: 31,
+        id: 27,
         path: "/assistant",
         element: <Assistant />,
     },
     {
-        id: 32,
+        id: 28,
         path: "/module_leader",
         element: <ModuleLeader />,
     },
     {
-        id: 33,
+        id: 29,
         path: "/teacher",
         element: <Teacher />,
     },
     {
-        id: 34,
+        id: 30,
         path: "/assistant",
         element: <Assistant />,
     },
     {
-        id: 35,
+        id: 31,
         path: "student",
         element: <Student />,
     },
     {
-        id: 36,
+        id: 32,
         path: "/guest",
         element: <Guest />,
-    }
-
+    },
 ];

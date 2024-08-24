@@ -1,28 +1,37 @@
 import axios from "axios";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Button, ButtonGroup, Dropdown, Modal } from "react-bootstrap";
-import { Link, useLocation, useParams } from "react-router-dom";
+import { useLocation } from "react-router-dom";
 import { Tabs } from "antd";
 import Exams from "./exams";
 import Themes from "./subjects";
 import Lessons from "./lessons";
 import Report from "./report";
+import LessonSubjects from "./lesson_subjects";
 
 const Tests = () => {
     const [modules, setModules] = useState([]);
     const [editModule, setEditModule] = useState(null);
-    const [filteredCourses, setFilteredCourses] = useState([]);
     const [showEditModal, setShowEditModal] = useState(false);
     const [newName, setNewName] = useState("");
     const [newStudent, setNewStudent] = useState("");
     const [newLength, setNewLength] = useState("");
-    const [selectedStatus, setSelectedStatus] = useState("all");
-    const { id } = useParams();
     const location = useLocation();
-    console.log(location.state);
     const courseName = location.state?.courseName;
     const moduleName = location.state?.moduleName;
-    console.log(location.state);
+    const [activeTabKey, setActiveTabKey] = useState("lessons");
+
+    useEffect(() => {
+        const storedTabKey = localStorage.getItem("activeTabKey");
+        if (storedTabKey) {
+            setActiveTabKey(storedTabKey);
+        }
+    }, []);
+
+    const handleTabChange = (key) => {
+        setActiveTabKey(key);
+        localStorage.setItem("activeTabKey", key);
+    };
 
     const handleBack = () => {
         window.history.back();
@@ -44,18 +53,6 @@ const Tests = () => {
             );
 
             setModules((prev) =>
-                prev.map((c) =>
-                    c.id === editModule.id
-                        ? {
-                              ...c,
-                              name: newName,
-                              max_students: newStudent,
-                              length: newLength,
-                          }
-                        : c
-                )
-            );
-            setFilteredCourses((prev) =>
                 prev.map((c) =>
                     c.id === editModule.id
                         ? {
@@ -90,20 +87,8 @@ const Tests = () => {
             );
             const updatedCourses = module.filter((c) => c.id !== module.id);
             setModules(updatedCourses);
-            setFilteredCourses(updatedCourses);
         } catch (error) {
             console.error(error);
-        }
-    };
-
-    const handleStatusChange = (status) => {
-        setSelectedStatus(status);
-        if (status === "all") {
-            setFilteredCourses(modules);
-        } else {
-            setFilteredCourses(
-                modules.filter((course) => course.status === status)
-            );
         }
     };
 
@@ -119,7 +104,7 @@ const Tests = () => {
                 </button>
             </h1>
             <div className='absolute flex flex-wrap gap-4 mt-8 p-4'>
-                {filteredCourses.map((module) => (
+                {modules.map((module) => (
                     <div key={module.id}>
                         <div className='flex flex-wrap gap-2 mt-8 p-4 text-xl w-[300px] border-4 border-black hover:text-black'>
                             <p>Modul ID: {module.id}</p>
@@ -147,14 +132,7 @@ const Tests = () => {
                     </div>
                 ))}
             </div>
-            <select
-                name='course'
-                onChange={(e) => handleStatusChange(e.target.value)}
-                className='absolute ml-[50%] mt-2 border-2 border-black'>
-                <option value='all'>All</option>
-                <option value='active'>Active</option>
-                <option value='deleted'>Deleted</option>
-            </select>
+
             <Modal show={showEditModal} onHide={() => setShowEditModal(false)}>
                 <Modal.Header closeButton>
                     <Modal.Title>Edit Course</Modal.Title>
@@ -196,6 +174,8 @@ const Tests = () => {
 
             <Tabs
                 type='card'
+                activeKey={activeTabKey}
+                onChange={handleTabChange}
                 items={[
                     {
                         label: "Assignment Types",
@@ -211,6 +191,11 @@ const Tests = () => {
                         label: "Lessons",
                         key: "lessons",
                         children: <Lessons />,
+                    },
+                    {
+                        label: "Lesson Subjects",
+                        key: "lesson_subjects",
+                        children: <LessonSubjects />,
                     },
                     {
                         label: "Lesson Report Types",

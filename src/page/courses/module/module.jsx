@@ -210,12 +210,6 @@ const Modules = () => {
                         value={newStudent}
                         onChange={(e) => setNewStudent(e.target.value)}
                     />
-                    <input
-                        type='number'
-                        className='border-2 border-black w-full'
-                        value={newLength}
-                        onChange={(e) => setNewLength(e.target.value)}
-                    />
                 </Modal.Body>
                 <Modal.Footer>
                     <Button

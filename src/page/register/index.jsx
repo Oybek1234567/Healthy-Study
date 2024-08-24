@@ -118,11 +118,11 @@ const App = () => {
                         { required: true, message: "Please select your role!" },
                     ]}>
                     <Select className='w-full'>
-                        <Option value='super'>Staff</Option>
-                        <Option value='teacher'>O`qituvchi</Option>
-                        <Option value='student'>Student</Option>
-                        <Option value='super'>Assistent</Option>
-                        <Option value='super'>Guest</Option>
+                        <option value='staff'>Staff</option>
+                        <option value='teacher'>O`qituvchi</option>
+                        <option value='student'>Student</option>
+                        <option value='assistant'>Assistent</option>
+                        <option value='guest'>Guest</option>
                     </Select>
                 </Form.Item>
                 <Form.Item label='Passport Series' name='passport_series'>
