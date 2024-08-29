@@ -24,6 +24,7 @@ const ModulesDrawer = ({ open, onClosed, onCreate }) => {
             onCreate(data.name, data.weight);
             console.log(res.data);
             alert("Yaratildi");
+            window.location.reload()
         } catch (err) {
             console.error("Xato bor", err);
         }

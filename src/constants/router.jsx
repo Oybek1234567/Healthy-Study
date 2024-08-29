@@ -1,5 +1,4 @@
 import Applications from "../page/applications";
-import Register from "../page/applications/register";
 import User from "../page/applications/user";
 import Profile from "../page/applications/user/profile";
 import Courses from "../page/courses";
@@ -14,7 +13,6 @@ import Map from "../page/reports/map";
 import Reports from "../page/reports/reports";
 import Revenue from "../page/reports/revenue";
 import Rooms from "../page/rooms";
-import Statics from "../page/statics/statics";
 import Timetable from "../page/timetable";
 import Login from "../page/register";
 import Tests from "../page/courses/module/test";
@@ -29,7 +27,9 @@ import Teacher from "../page/statics/teacher";
 import Assistant from "../page/statics/assistant";
 import Student from "../page/statics/student";
 import Guest from "../page/statics/guest";
-
+import AssignmentTypes from "../page/courses/module/test/exams/assignments";
+import SubjectTests from "../page/courses/module/test/subjects/test";
+import AllStatics from "../page/statics/all";
 export const MenuList = [
     {
         id: 1,
@@ -38,157 +38,157 @@ export const MenuList = [
     },
     {
         id: 2,
-        path: "/static",
-        element: <Statics />,
-    },
-    {
-        id: 3,
         path: "/reports",
         element: <Reports />,
     },
     {
-        id: 4,
+        id: 3,
         path: "/education",
         element: <Education />,
     },
     {
-        id: 5,
+        id: 4,
         path: "/revenue",
         element: <Revenue />,
     },
     {
-        id: 6,
+        id: 5,
         path: "/expense",
         element: <Expense />,
     },
     {
-        id: 7,
+        id: 6,
         path: "/map",
         element: <Map />,
     },
     {
-        id: 8,
+        id: 7,
         path: "/groups",
         element: <Groups />,
     },
     {
-        id: 9,
+        id: 8,
         path: "/timetable",
         element: <Timetable />,
     },
     {
-        id: 10,
+        id: 9,
         path: "/applications",
         element: <Applications />,
     },
     {
-        id: 11,
+        id: 10,
         path: "/user",
         element: <User />,
     },
     {
-        id: 12,
-        path: "/register",
-        element: <Register />,
-    },
-    {
-        id: 13,
+        id: 11,
         path: "/excisting",
         element: <Excisting />,
     },
     {
-        id: 14,
+        id: 12,
         path: "/pending",
         element: <Pending />,
     },
     {
-        id: 15,
+        id: 13,
         path: "/profile",
         element: <Profile />,
     },
     {
-        id: 16,
+        id: 14,
         path: "/courses",
         element: <Courses />,
     },
     {
-        id: 17,
+        id: 15,
         path: "/rooms",
         element: <Rooms />,
     },
     {
-        id: 18,
+        id: 16,
         path: "/courses/:id",
         element: <Modules />,
     },
     {
-        id: 19,
+        id: 17,
         path: "/login",
         element: <Login />,
     },
     {
-        id: 20,
+        id: 18,
         path: "/courses/:id/modules/:id",
         element: <Tests />,
     },
     {
-        id: 21,
+        id: 19,
         path: "/success",
         element: <Success />,
     },
     {
-        id: 22,
+        id: 20,
         path: "/accepted",
         element: <Accepted />,
     },
     {
-        id: 23,
-        path: "user_pending",
+        id: 21,
+        path: "/user_pending",
         element: <UsersPending />,
     },
     {
-        id: 24,
+        id: 22,
         path: "/denied",
         element: <Denied />,
     },
     {
-        id: 25,
+        id: 23,
         path: "/super",
         element: <Super />,
     },
     {
-        id: 26,
+        id: 24,
         path: "/staff",
         element: <Staff />,
     },
     {
-        id: 27,
+        id: 25,
         path: "/assistant",
         element: <Assistant />,
     },
     {
-        id: 28,
+        id: 26,
         path: "/module_leader",
         element: <ModuleLeader />,
     },
     {
-        id: 29,
+        id: 27,
         path: "/teacher",
         element: <Teacher />,
     },
     {
-        id: 30,
-        path: "/assistant",
-        element: <Assistant />,
-    },
-    {
-        id: 31,
-        path: "student",
+        id: 28,
+        path: "/student",
         element: <Student />,
     },
     {
-        id: 32,
+        id: 29,
         path: "/guest",
         element: <Guest />,
+    },
+    {
+        id: 30,
+        path: "/modules/:moduleID/assignments/:assignmentID",
+        element: <AssignmentTypes />,
+    },
+    {
+        id: 31,
+        path: "/modules/:moduleID/subjects/:id",
+        element: <SubjectTests />,
+    },
+    {
+        id: 32,
+        path: "/all_statics",
+        element: <AllStatics />,
     },
 ];

@@ -67,7 +67,7 @@ const Denied = () => {
                     </tr>
                 </thead>
                 <tbody>
-                    {data.map((user) => (
+                    {data && data.map((user) => (
                         <tr key={user.id}>
                             <td>{user.id}</td>
                             <td>{user.name}</td>

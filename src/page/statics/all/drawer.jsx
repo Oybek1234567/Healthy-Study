@@ -9,7 +9,7 @@ const UserDrawer = ({ open, onClosed }) => {
     const navigate = useNavigate();
 
     // Upload Img
-    // const props = {  
+    // const props = {
     //     name: "file",
     //     action: "https://660d2bd96ddfa2943b33731c.mockapi.io/api/upload",
     //     headers: {
@@ -46,7 +46,7 @@ const UserDrawer = ({ open, onClosed }) => {
             console.log("Request data: ", request);
 
             const res = await axios.post(
-                "http://localhost:3000/applications/create",
+                "http://localhost:3000/users/create",
                 request
             );
 
@@ -58,7 +58,7 @@ const UserDrawer = ({ open, onClosed }) => {
         }
     };
     return (
-        <Drawer title='Register' onClose={onClosed} open={open} >
+        <Drawer title='Register' onClose={onClosed} open={open}>
             <Form form={form} onFinish={onFinish}>
                 <Form.Item
                     label='Phone'
@@ -132,10 +132,11 @@ const UserDrawer = ({ open, onClosed }) => {
                     ]}>
                     <Select className=' '>
                         <Option value='super'>Staff</Option>
-                        <Option value='teacher'>O`qituvchi</Option>
+                        <Option value='teacher'>Teacher</Option>
                         <Option value='student'>Student</Option>
-                        <Option value='super'>Assistent</Option>
-                        <Option value='super'>Guest</Option>
+                        <Option value='module_leader'>Module Leader</Option>
+                        <Option value='assistant'>Assistant</Option>
+                        <Option value='guest'>Guest</Option>
                     </Select>
                 </Form.Item>
                 <Form.Item
@@ -156,10 +157,7 @@ const UserDrawer = ({ open, onClosed }) => {
                             required: false,
                         },
                     ]}>
-                    <Input
-                        type='date'
-                        className='border-2 border-black'
-                    />
+                    <Input type='date' className='border-2 border-black' />
                 </Form.Item>
                 <Form.Item
                     label='Upload Image'
@@ -182,4 +180,4 @@ const UserDrawer = ({ open, onClosed }) => {
     );
 };
 
-export default UserDrawer;
+export default UserDrawer

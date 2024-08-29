@@ -6,13 +6,11 @@ const ExamsDrawer = ({ open, onClosed, onCreate }) => {
     const { id: moduleID } = useParams();
     const [inputValue, setInputValue] = useState("");
     const [secondInput, setSecondInput] = useState("");
-    const [thirdInput, setThirdInput] = useState("");
 
     const handlePost = async () => {
         const data = {
             name: inputValue,
             weight: secondInput,
-            tests_total: thirdInput,
             module_id: moduleID,
         };
         try {
@@ -21,14 +19,13 @@ const ExamsDrawer = ({ open, onClosed, onCreate }) => {
                 data
             );
             console.log(moduleID);
-            onCreate(data.name, data.weight, data.tests_total);
+            onCreate(data.name, data.weight);
             alert("Yaratildi");
         } catch (err) {
             console.error("Xato bor", err);
         }
         setInputValue("");
         setSecondInput("");
-        setThirdInput("");
     };
 
     const handleInputChange = (e) => {
@@ -37,10 +34,6 @@ const ExamsDrawer = ({ open, onClosed, onCreate }) => {
 
     const handleSecondInputChange = (e) => {
         setSecondInput(e.target.value);
-    };
-
-    const handleThirdInputChange = (e) => {
-        setThirdInput(e.target.value);
     };
 
     const handleReload = () => {
@@ -77,16 +70,6 @@ const ExamsDrawer = ({ open, onClosed, onCreate }) => {
                     className='w-full mt-3 p-1 border-2 border-black'
                     placeholder='Type here'
                     id='weight'
-                />
-                <label htmlFor='tests_total'>Tests total</label>
-                <input
-                    type='number'
-                    name='tests_total'
-                    value={thirdInput}
-                    onChange={handleThirdInputChange}
-                    placeholder='Type here'
-                    id='tests_total'
-                    className='w-full mt-3 mb-3 p-1 border-2 border-black'
                 />
                 <button
                     type='submit'

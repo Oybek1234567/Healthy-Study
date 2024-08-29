@@ -140,7 +140,7 @@ const Modules = () => {
                 </span>
             </h1>
             <div className='absolute flex flex-wrap gap-4 mt-8 p-4'>
-                {filteredCourses.map((module) => (
+                {filteredCourses && filteredCourses.map((module) => (
                     <div key={module.id}>
                         <Link
                             to={`/courses/${id}/modules/${module.id}`}

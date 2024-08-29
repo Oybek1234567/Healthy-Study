@@ -19,11 +19,11 @@ const ReportsDrawer = ({ open, onClosed, onCreate }) => {
         setLoading(true);
 
         try {
+            window.location.reload()
             const res = await axios.post(
                 "http://localhost:3000/lessonreporttypes/create",
                 data
             );
-
             console.log(moduleID);
             console.log(res.data);  
             
@@ -32,7 +32,6 @@ const ReportsDrawer = ({ open, onClosed, onCreate }) => {
             message.success("Yaratildi");
         } catch (err) {
             console.error("Xato bor", err);
-            message.error("Xatolik yuz berdi");
         } finally {
             setLoading(false);
             setInputValue("");

@@ -9,12 +9,11 @@ import { useSort } from "../../../hooks/useSort";
 const User = () => {
     const [selectedStatuses, setSelectedStatuses] = useState([]);
     const { open, onOpen, onClose } = useDrawer();
-    const [userData, setUserData] = useState([]);   
+    const [userData, setUserData] = useState([]);
     // useSort
     const { handleSort, sortConfig } = useSort(userData, setUserData);
 
     // useDelete
-
 
     useEffect(() => {
         const fetchData = async () => {
@@ -82,7 +81,7 @@ const User = () => {
                 style={{ marginBottom: "10px" }}>
                 Download Excel
             </a>
-            <div className='flex mt-2'>
+            <div className='flex mt-2 text-xl gap-3'>
                 <label htmlFor='accepted'>Accepted</label>
                 <input
                     type='checkbox'
@@ -107,7 +106,7 @@ const User = () => {
             </div>
             <button
                 type='button'
-                className='ml-[80%] w-10 h-10 bg-[green] rounded-full text-white'
+                className='ml-[95%] w-10 h-10 bg-[green] rounded-full text-white'
                 onClick={onOpen}>
                 +
             </button>
@@ -186,7 +185,7 @@ const User = () => {
                     </tr>
                 </thead>
                 <tbody>
-                    {filteredUserData.map((user) => (
+                    {filteredUserData && filteredUserData.map((user) => (
                         <tr key={user.id}>
                             <td>{user.id}</td>
                             <td>{user.name}</td>
@@ -208,7 +207,6 @@ const User = () => {
                     ))}
                 </tbody>
             </table>
-            
         </div>
     );
 };

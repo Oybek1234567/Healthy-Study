@@ -1,0 +1,310 @@
+import { useEffect, useState } from "react";
+import { Drawer, Form } from "antd";
+import axios from "axios";
+
+const ExistingDrawer = ({ open, onClosed, onCreate }) => {
+    const [inputValue, setInputValue] = useState("");
+    const [teachers, setTeachers] = useState([]);
+    const [assistants, setAssistants] = useState([]);
+    const [rooms, setRooms] = useState([]);
+    const [courses, setCourses] = useState([]);
+    const [modules, setModules] = useState([]);
+    const [selectedTeacher, setSelectedTeacher] = useState("");
+    const [selectedAssistant, setSelectedAssistant] = useState("");
+    const [selectedCourse, setSelectedCourse] = useState("");
+    const [date, setDate] = useState("");
+    const [selectedModule, setSelectedModule] = useState("");
+    const [when, setWhen] = useState("");
+    const [selectedRoom, setSelectedRoom] = useState("");
+    const [time, setTime] = useState("");
+
+    useEffect(() => {
+        const getTeachers = async () => {
+            try {
+                const res = await axios.get(
+                    "http://localhost:3000/users/teachers"
+                );
+                setTeachers(res.data.users);
+            } catch (err) {
+                console.error("Error fetching teachers", err);
+            }
+        };
+        getTeachers();
+    }, []);
+
+    useEffect(() => {
+        const getAssistants = async () => {
+            try {
+                const res = await axios.get(
+                    "http://localhost:3000/users/assistants"
+                );
+                setAssistants(res.data.users);
+            } catch (err) {
+                console.error("Error fetching assistants", err);
+            }
+        };
+        getAssistants();
+    }, []);
+
+    useEffect(() => {
+        const getRooms = async () => {
+            try {
+                const res = await axios.get("http://localhost:3000/rooms/all");
+                setRooms(res.data.rooms);
+            } catch (err) {
+                console.error("Error fetching rooms", err);
+            }
+        };
+        getRooms();
+    }, []);
+
+    useEffect(() => {
+        const getCourses = async () => {
+            try {
+                const req = await axios.get(
+                    "http://localhost:3000/courses/all"
+                );
+                console.log(req.data.courses);
+                setCourses(req.data.courses);
+            } catch (err) {
+                console.error(err);
+            }
+        };
+        getCourses();
+    }, []);
+
+    useEffect(() => {
+        const getModules = async (courseId) => {
+            if (courseId) {
+                try {
+                    const res = await axios.get(
+                        `http://localhost:3000/modules/all/${courseId}`
+                    );
+                    setModules(res.data.modules);
+                } catch (err) {
+                    console.error("Error fetching modules", err);
+                }
+            }
+        };
+
+        getModules(selectedCourse);
+    }, [selectedCourse]);
+
+    const handlePost = async () => {
+        const data = {
+            name: inputValue,
+            teacher_id: selectedTeacher,
+            assistant_id: selectedAssistant,
+            starting_date: date,
+            module_id: selectedModule,
+            days: when,
+            room_id: selectedRoom,
+            time: time,
+            course_id: courses,
+        };
+        try {
+            alert("Created successfully");
+            window.location.reload()    
+         const req = await axios.post(
+                "http://localhost:3000/groupenrolements/create",
+                data
+            );
+            if (onCreate) {
+                onCreate(
+                    data.name,
+                    data.teacher_id,
+                    data.assistant_id,
+                    data.starting_date,
+                    data.module_id,
+                    data.days,
+                    data.room_id,
+                    data.course_id,
+                    data.time
+                )
+            }
+
+            console.log(req.data);
+
+        } catch (err) {
+            console.error("Error creating group", err);
+        }
+        setInputValue("");
+        setSelectedTeacher("");
+        setSelectedAssistant("");
+        setSelectedRoom("");
+        setSelectedModule("");
+    };
+
+    const handleInputChange = (e) => {
+        setInputValue(e.target.value);
+    };
+
+    const handleTeacherChange = (e) => {
+        setSelectedTeacher(e.target.value);
+    };
+
+    const handleAssistantChange = (e) => {
+        setSelectedAssistant(e.target.value);
+    };
+
+    const handleDate = (e) => {
+        setDate(e.target.value);
+    };
+
+    const handleCourse = (e) => {
+        setSelectedCourse(e.target.value);
+    };
+    const handleModuleChange = (e) => {
+        setSelectedModule(e.target.value);
+    };
+
+    const handleWhen = (e) => {
+        setWhen(e.target.value);
+    };
+
+    const handleRoomChange = (e) => {
+        setSelectedRoom(e.target.value);
+    };
+
+    const handleTime = (e) => {
+        setTime(e.target.value);
+    };
+
+    return (
+        <Drawer
+            title='Create Group'
+            placement='right'
+            onClose={onClosed}
+            open={open}>
+            <Form onFinish={handlePost}>
+                <label htmlFor='name'>Group Name</label>
+                <input
+                    name='name'
+                    id='name'
+                    value={inputValue}
+                    onChange={handleInputChange}
+                    placeholder='Type here'
+                    className='w-full mt-3 border-2 border-black'
+                />
+                <br />
+                <br />
+                <label htmlFor='course' className='mt-2'>
+                    Course
+                </label>
+                <select
+                    name='course'
+                    value={selectedCourse}
+                    onChange={handleCourse}
+                    id='course'
+                    className='w-full mt-2 h-8 bg-gray-50 rounded-md'>
+                    <option value=''>Select Course</option>
+                    {courses.map((item) => (
+                        <option key={item.id} value={item.id}>
+                            {item.name}
+                        </option>
+                    ))}
+                </select>
+                <label htmlFor='module_id'>Module</label>
+                <select
+                    name='module_id'
+                    id='module_id'
+                    value={selectedModule}
+                    onChange={handleModuleChange}
+                    className='w-full mt-2 h-8 bg-gray-50 rounded-md'>
+                    <option value=''>Select Module</option>
+                    {modules.map((module) => (
+                        <option key={module.id} value={module.id}>
+                            {module.name}
+                        </option>
+                    ))}
+                </select>
+                <label htmlFor='teacher_id'>Teacher</label>
+                <select
+                    name='teacher_id'
+                    value={selectedTeacher}
+                    onChange={handleTeacherChange}
+                    id='teacher_id'
+                    className='w-full mt-2 h-8 bg-gray-50 rounded-md'>
+                    <option value=''>Select Teacher</option>
+                    {teachers.map((teacher) => (
+                        <option key={teacher.id} value={teacher.id}>
+                            {teacher.name} {teacher.surname}
+                        </option>
+                    ))}
+                </select>
+                <label htmlFor='assistant_id' className='mt-2'>
+                    Assistant
+                </label>
+                <select
+                    name='assistant_id'
+                    value={selectedAssistant}
+                    onChange={handleAssistantChange}
+                    id='assistant_id'
+                    className='w-full mt-2 h-8 bg-gray-50 rounded-md'>
+                    <option value='select'>Select Assistant</option>
+                    {assistants.map((assistant) => (
+                        <option key={assistant.id} value={assistant.id}>
+                            {assistant.name} {assistant.surname}
+                        </option>
+                    ))}
+                </select>
+                <label htmlFor='room_id' className='mt-2'>
+                    Room
+                </label>
+                <select
+                    name='room_id'
+                    id='room_id'
+                    value={selectedRoom}
+                    onChange={handleRoomChange}
+                    className='w-full mt-2 h-8 bg-gray-50 rounded-md'>
+                    <option value=''>Select Room</option>
+                    {rooms.map((room) => (
+                        <option key={room.id} value={room.id}>
+                            {room.name}
+                        </option>
+                    ))}
+                </select>
+                <label htmlFor='when' className='mt-2'>
+                    Days
+                </label>
+                <select
+                    name='when'
+                    id='when'
+                    value={when}
+                    onChange={handleWhen}
+                    className='w-full mt-2 h-8 bg-gray-50 rounded-md'>
+                    <option value='juft'>Even</option>
+                    <option value='toq'>Odd</option>
+                </select>
+                <label htmlFor='time' className='mt-2'>
+                    Time
+                </label>
+                <input
+                    type='time'
+                    name='time'
+                    value={time}
+                    onChange={handleTime}
+                    className='w-full mt-3 border-2 border-black'
+                />
+                <label htmlFor='starting_date' className='mt-2'>
+                    Starting Date
+                </label>
+                <input
+                    type='date'
+                    name='starting_date'
+                    value={date}
+                    onChange={handleDate}
+                    className='w-full mt-3 border-2 border-black'
+                />
+
+                <button
+                    type='submit'
+                    className='bg-green-800 p-2 mt-3 text-white ml-3 rounded-lg'>
+                    Create
+                </button>
+            </Form>
+        </Drawer>
+    );
+};
+
+export default ExistingDrawer;
