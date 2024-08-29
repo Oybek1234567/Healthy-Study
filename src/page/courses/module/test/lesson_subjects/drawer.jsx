@@ -9,7 +9,6 @@ const LessonSubjectsDrawer = ({ open, onClosed, onCreate }) => {
     const [checkedSubjects, setCheckedSubjects] = useState([]);
     const [lesson, setLesson] = useState([]);
     const [subject, setSubject] = useState([]);
-    const [nameValue, setNameValue] = useState("")
     useEffect(() => {
         const handleGetLesson = async () => {
             try {
@@ -50,44 +49,21 @@ const LessonSubjectsDrawer = ({ open, onClosed, onCreate }) => {
         console.log(data);
         
         try {
-            window.location.reload()
+            handleReload();
             const res = await axios.post(
                 "http://localhost:3000/lessonunits/create",
                 data
             );
 
-            onCreate(data);
+            onCreate(data.lesson_id, data.module_id, data.selected_subjects);
             console.log(res.data);
             alert("Yaratildi");
             setInputValue("");
             setCheckedSubjects([]); 
-            handleReload();
         } catch (err) {
             console.error("Xato bor", err);
         }
     };
-
-    const handleLessonCreate = () => {
-        const data = {
-            name: nameValue,
-            module_id: moduleID,
-        };
-        try {
-            axios.post(
-                "http://localhost:3000/lessons/create",
-                data
-            );
-            alert("Yaratildi");
-        } catch (err) {
-            console.error("Xato bor", err);
-        }
-        setInputValue("");
-    };
-
-    const handleNameChange = (e) => {
-        setNameValue(e.target.value);
-    };
-
     const handleInputChange = (e) => {
         setInputValue(e.target.value);
     };
@@ -114,9 +90,6 @@ const LessonSubjectsDrawer = ({ open, onClosed, onCreate }) => {
             open={open}>
             <Form onFinish={handlePost} className='flex flex-col space-y-4 p-4'>
                 <div className='flex flex-col space-y-2'>
-                    <label htmlFor="name">Name:</label>
-                    <input type="text" name="name"  className="p-2 border rounded-lg" value={nameValue} onChange={handleNameChange}/>
-                    <button className="p-2 rounded-lg bg-[green] w-1/4 text-white" onClick={handleLessonCreate}>Create</button>
                     <label htmlFor='name' className='text-xl font-semibold'>
                         Lesson
                     </label>
@@ -124,7 +97,8 @@ const LessonSubjectsDrawer = ({ open, onClosed, onCreate }) => {
                         value={inputValue}
                         onChange={handleInputChange}
                         className='p-2 border rounded-lg'>
-                        {lesson.map((c) => (
+                        <option value="lesson">Change lesson</option>
+                        {lesson && lesson.map((c) => (
                             <option key={c.id} value={c.id}>
                                 {c.name}
                             </option>
@@ -134,7 +108,7 @@ const LessonSubjectsDrawer = ({ open, onClosed, onCreate }) => {
                 <div className='flex flex-col space-y-2'>
                     <label className='text-xl font-semibold'>Subjects</label>
                     <div className='flex flex-wrap flex-col space-x-4'>
-                        {subject.map((item) => (
+                        {subject && subject.map((item) => (
                             <label
                                 key={item.id}
                                 className='flex items-center justify-center gap-2 space-x-2'>

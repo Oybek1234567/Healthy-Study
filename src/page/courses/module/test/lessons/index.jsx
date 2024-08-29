@@ -101,7 +101,7 @@ const Lessons = () => {
                     </tr>
                 </thead>
                 <tbody>
-                    {data.map((item, index) => (
+                    {data && data.map((item, index) => (
                         <tr key={item.id}>
                             <td>{index + 1}</td>
                             <td>{item.name}</td>

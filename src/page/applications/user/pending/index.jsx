@@ -197,7 +197,7 @@ const handleSaveClick = async () => {
                     </tr>
                 </thead>
                 <tbody>
-                    {data.map((user) => (
+                    {data && data.map((user) => (
                         <tr key={user.id}>
                             <td>{user.id}</td>
                             <td>{user.name}</td>
@@ -266,6 +266,7 @@ const handleSaveClick = async () => {
                             onChange={handleInputChange}
                         />
                         <Input
+                            type="date"
                             name='date_of_birth'
                             placeholder='Date of Birth'
                             value={editUser.date_of_birth}
@@ -301,12 +302,7 @@ const handleSaveClick = async () => {
                             value={editUser.expiration_date}
                             onChange={handleInputChange}
                         />
-                        <Input
-                            name='status'
-                            placeholder='Status'
-                            value={editUser.status}
-                            onChange={handleInputChange}
-                        />
+
                     </div>
                 </Modal>
             )}

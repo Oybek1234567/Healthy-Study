@@ -104,7 +104,7 @@ const Tests = () => {
                 </button>
             </h1>
             <div className='absolute flex flex-wrap gap-4 mt-8 p-4'>
-                {modules.map((module) => (
+                {modules && modules.map((module) => (
                     <div key={module.id}>
                         <div className='flex flex-wrap gap-2 mt-8 p-4 text-xl w-[300px] border-4 border-black hover:text-black'>
                             <p>Modul ID: {module.id}</p>

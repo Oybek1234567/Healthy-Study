@@ -63,18 +63,20 @@ const Accepted = () => {
                             )}
                         </th>
                         <th>Phone</th>
-                    
                     </tr>
                 </thead>
                 <tbody>
-                    {data.map((user) => (
+                    {data && data.map((user) => (
                         <tr key={user.id}>
                             <td>{user.id}</td>
                             <td>{user.name}</td>
                             <td>{user.surname}</td>
-                            <td>{user.date_of_birth ? user.date_of_birth.slice(0, 10) : ""}</td>
+                            <td>
+                                {user.date_of_birth
+                                    ? user.date_of_birth.slice(0, 10)
+                                    : ""}
+                            </td>
                             <td>{user.phone}</td>
-
                         </tr>
                     ))}
                 </tbody>

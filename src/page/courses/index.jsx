@@ -104,7 +104,7 @@ const NewCourses = () => {
         <>
             <div className='flex gap-4 flex-wrap'>
                 <h1 className='absolute text-4xl'>Kurslar</h1>
-                {(filteredCourses ?? []).map((course, index) => (
+                {filteredCourses && (filteredCourses ?? []).map((course, index) => (
                     <div key={index}>
                         <Link
                             to={`/courses/${course.id}`}
@@ -171,7 +171,7 @@ const NewCourses = () => {
                     onClose={onClose}
                     onCreate={handleCreate}
                 />
-                <Modal
+                <Modal  
                     show={showEditModal}
                     onHide={() => setShowEditModal(false)}>
                     <Modal.Header closeButton>

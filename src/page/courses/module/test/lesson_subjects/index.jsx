@@ -1,19 +1,16 @@
 import { useEffect, useState } from "react";
-import useDrawer from "../../../../../hooks/useDrawer";
-import LessonsDrawer from "./drawer";
-import axios from "axios";
 import { useParams } from "react-router-dom";
-import { Button, Dropdown, Modal, Space, Table } from "antd";
+import axios from "axios";
+import { Modal, Button, Table, Select } from "antd";
 import { DeleteOutlined } from "@ant-design/icons";
+import LessonSubjectsDrawer from "./drawer";
+import useDrawer from "../../../../../hooks/useDrawer";
 
 const LessonSubjects = () => {
-    const [filteredLessons, setFilteredLessons] = useState([]);
     const [lessons, setLessons] = useState([]);
-    const [editLesson, setEditLesson] = useState(null);
+    const [editLessonData, setEditLessonData] = useState([]);
     const [showEditModal, setShowEditModal] = useState(false);
-    const [newLessonID, setNewLessonID] = useState("");
-    const [selectedStatus, setSelectedStatus] = useState("all");
-    const [lessonUnits, setLessonUnits] = useState([]);
+    const { open, onOpen, onClose } = useDrawer();
     const { id: moduleID } = useParams();
 
     useEffect(() => {
@@ -21,10 +18,8 @@ const LessonSubjects = () => {
             try {
                 const response = await axios.get(
                     `http://localhost:3000/lessonunits/all/${moduleID}`
-                );
-                const lessonUnits = response.data.lesson_units;
-                setLessons(lessonUnits);
-                setFilteredLessons(lessonUnits);
+                );  
+                setLessons(response.data.lesson_units);
             } catch (error) {
                 console.error(error);
             }
@@ -33,228 +28,166 @@ const LessonSubjects = () => {
         fetchData();
     }, [moduleID]);
 
-    // handleSave
-    const handleSave = async () => {
-        try {
-            await axios.post(
-                `http://localhost:3000/lessonunits/edit/${editLesson.id}`,
-                { lesson_id: newLessonID },
-                {
-                    headers: {
-                        "Content-Type": "application/json",
-                    },
-                }
-            );
-            const updatedLessons = lessons.map((lesson) =>
-                lesson.id === editLesson.id
-                    ? { ...lesson, lesson_id: newLessonID }
-                    : lesson
-            );
-            setLessons(updatedLessons);
-            setFilteredLessons(updatedLessons);
-            setShowEditModal(false);
-            alert("Lesson successfully updated");
-        } catch (error) {
-            console.error(error);
-            alert("Failed to update lesson");
-        }
-    };
-
-    // handleEdit
-    const handleEdit = (lesson) => {
-        setEditLesson(lesson);
-        setNewLessonID(lesson.lesson_id);
-        setLessonUnits(lessons.filter((l) => l.lesson_id === lesson.lesson_id));
+    const handleEdit = (lessonName) => {
+        const filteredData = lessons.filter(
+            (lesson) => lesson.lesson_name === lessonName
+        );
+        setEditLessonData(filteredData);
         setShowEditModal(true);
     };
-    
 
-    // handleDeleteLesson
-    const handleDeleteLesson = async (lesson) => {
+    const handleDeleteSubject = async (lessonName, subjectName, index) => {
         try {
-            alert("Lesson deleted");
-            console.log(lesson.lesson_id);
-            console.log(lesson.id);
-            
+            const unit_id = editLessonData[index].id;
+            console.log(unit_id);
             
             await axios.post(
-                `http://localhost:3000/lessonunits/delete/${lesson.lesson_id}` 
+                `http://localhost:3000/lessonunits/delete/${unit_id}`,
             );
-            const updatedLessons = lessons.filter((l) => l.id !== lesson.id);
-            setLessons(updatedLessons);
-            setFilteredLessons(updatedLessons);
         } catch (error) {
             console.error(error);
-            console.log("Failed to delete lesson");
+            alert("Failed to delete subject");
         }
-    };
+        setLessons((prevLessons) =>
+            prevLessons.filter(
+                (lesson) =>
+                    lesson.lesson_name !== lessonName ||
+                    lesson.unit_name !== subjectName
+            )
+        );
 
-
-
-    // handleDelete
-    const handleDelete = async (lesson) => {
-        try {
-            alert("Lesson deleted");
-            await axios.post(
-                `http://localhost:3000/lessonunits/delete/${lesson.id}` 
-            ); 
-            const updatedLessons = lessons.filter((l) => l.id !== lesson.id);
-            setLessons(updatedLessons);
-            setFilteredLessons(updatedLessons); 
-        } catch (error) {
-            console.error(error);
-            console.log("Failed to delete lesson");
-        }
-    };
-
-
-
-    // handleStatusChange
-    const handleStatusChange = (status) => {
-        setSelectedStatus(status);
-        if (status === "all") {
-            setFilteredLessons(lessons);
-        } else {
-            setFilteredLessons(
-                lessons.filter((lesson) => lesson.status === status)
-            );
-        }
-    };
-
-    const getGroupedLessons = (lessons) => {
-        const grouped = lessons.reduce((acc, lesson) => {
-            const existingLesson = acc.find(
-                (item) => item.lesson_id === lesson.lesson_id
-            );
-            if (existingLesson) {
-                existingLesson.unit_ids.push(lesson.unit_id);
-            } else {
-                acc.push({
-                    lesson_id: lesson.lesson_id,
-                    unit_ids: [lesson.unit_id],
-                });
-            }
-            return acc;
-        }, []);
-
-        grouped.forEach((lesson) => {
-            lesson.unit_ids = [...new Set(lesson.unit_ids)];
+        setEditLessonData((prevData) => {
+            const newData = [...prevData];
+            newData.splice(index, 1);
+            return newData;
         });
-
-        return grouped;
     };
-
-    const menuItems = (lesson) => [
-        {
-            key: "edit",
-            label: "Edit",
-            onClick: () => handleEdit(lesson),
-        },
-        {
-            key: "Delete Lesson",
-            label: "Delete Lesson",
-            onClick: () => handleDeleteLesson(lesson),
-        }
-    ];
-
-    const { open, onOpen, onClose } = useDrawer();
-
-    const columns = [
-        {
-            title: "Name",
-            dataIndex: "lesson_id",
-            key: "lesson_id",
-        },
-        {
-            title: "Subject",
-            dataIndex: "unit_id",
-            key: "unit_id",
-        },
-        {
-            title: "Action",
-            key: "action",
-            render: (record) => (
-                <DeleteOutlined
-                    onClick={() => handleDelete(record)} 
-                    style={{ cursor: "pointer", color: "red" }}
-                />
-            ),
-        },
-    ];
-
-
-
-    const groupedFilteredLessons = getGroupedLessons(filteredLessons);
 
     return (
         <div>
-            <button
-                className='absolute w-14 h-14 -translate-y-[200px] ml-[94%] bg-green-700 rounded-full text-white'
-                type='button'
-                onClick={() => onOpen()}>
-                +
-            </button>
-            <LessonsDrawer open={open} onClosed={onClose} />
             <table className='absolute'>
                 <thead>
                     <tr className='text-center'>
                         <th>№</th>
-                        <th>Name</th>
-                        <th>Subject</th>
+                        <th>Lesson</th>
+                        <th>Subjects</th>
                         <th>Action</th>
                     </tr>
                 </thead>
                 <tbody>
-                    {groupedFilteredLessons.map((item, index) => (
-                        <tr key={`${item.lesson_id}-${index}-${Math.random()}`}>
-                            <td>{index + 1}</td>
-                            <td>{item.lesson_id}</td>
-                            <td>{item.unit_ids.join(", ")}</td>
-                            <td>
-                                <Dropdown
-                                    trigger={["click"]}
-                                    menu={{ items: menuItems(item) }}>
-                                    <a onClick={(e) => e.preventDefault()}>
-                                        <Space>
-                                            <p className='rotate-90 text-4xl cursor-pointer'>
-                                                ...
-                                            </p>
-                                        </Space>
-                                    </a>
-                                </Dropdown>
-                            </td>
-                        </tr>
-                    ))}
+                    {lessons && lessons
+                        .reduce((acc, curr) => {
+                            const index = acc.findIndex(
+                                (item) => item.lesson_name === curr.lesson_name
+                            );
+                            if (index === -1) {
+                                acc.push({
+                                    ...curr,
+                                    subjects: new Set([curr.unit_name]),
+                                });
+                            } else {
+                                acc[index].subjects.add(curr.unit_name);
+                            }
+                            return acc;
+                        }, [])
+                        .map((item, index) => (
+                            <tr
+                                key={`${
+                                    item.lesson_name
+                                }-${index}-${Math.random()}`}>
+                                <td>{index + 1}</td>
+                                <td>{item.lesson_name}</td>
+                                <td>{[...item.subjects].join(", ")}</td>
+                                <td>
+                                    <Button
+                                        type='link'
+                                        onClick={() =>
+                                            handleEdit(item.lesson_name)
+                                        }>
+                                        Edit
+                                    </Button>
+                                </td>
+                            </tr>
+                        ))}
                 </tbody>
             </table>
+
+            <button
+                className='absolute w-14 h-14 -translate-y-[200px] ml-[94%] bg-green-700 rounded-full text-white'
+                type='button'
+                onClick={onOpen}>
+                +
+            </button>
+            <LessonSubjectsDrawer open={open} onClosed={onClose} />
+
             <select
                 name='lessons'
-                onChange={(e) => handleStatusChange(e.target.value)}
                 className='-translate-y-[200px] ml-[75%] w-1/12 text-xl'>
                 <option value='all'>All</option>
                 <option value='active'>Active</option>
                 <option value='deleted'>Deleted</option>
             </select>
+
             <Modal
                 open={showEditModal}
                 onCancel={() => setShowEditModal(false)}
-                footer={[
-                    <Button
-                        key='cancel'
-                        onClick={() => setShowEditModal(false)}>
-                        Close
-                    </Button>,
-                    <Button key='save' type='primary' onClick={handleSave}>
-                        Save Changes
-                    </Button>,
-                ]}>
+                footer={null}>
                 <h2>Edit Lesson</h2>
+
+                <Select
+                    placeholder='Select Lesson'
+                    style={{ width: "100%", marginBottom: "20px" }}
+                    onChange={(value) => handleEdit(value)}>
+                    {lessons && lessons
+                        .map((item) => item.lesson_name)
+                        .filter(
+                            (value, index, self) =>
+                                self.indexOf(value) === index
+                        )
+                        .map((lesson_name) => (
+                            <Select.Option
+                                key={lesson_name}
+                                value={lesson_name}>
+                                {lesson_name}
+                            </Select.Option>
+                        ))}
+                </Select>
+
                 <Table
-                    dataSource={lessonUnits}
-                    columns={columns}
+                    columns={[
+                        {
+                            title: "Lesson",
+                            dataIndex: "lesson_name",
+                            key: "lesson_name",
+                        },
+                        {
+                            title: "Subject",
+                            dataIndex: "unit_name",
+                            key: "unit_name",
+                            render: (text, record, index) => (
+                                <div>
+                                    {text}
+                                    <Button
+                                        type='link'
+                                        icon={<DeleteOutlined />}
+                                        onClick={() =>
+                                            handleDeleteSubject(
+                                                record.lesson_name,
+                                                text,
+                                                index
+                                            )
+                                        }
+                                    />
+                                </div>
+                            ),
+                        },
+                    ]}
+                    dataSource={editLessonData}
                     pagination={false}
                     rowKey={(record) =>
-                        `${record.lesson_id}-${record.unit_id}-${Math.random()}`
+                        `${record.lesson_name}-${
+                            record.unit_name
+                        }-${Math.random()}`
                     }
                 />
             </Modal>

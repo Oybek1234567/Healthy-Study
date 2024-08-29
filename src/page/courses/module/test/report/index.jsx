@@ -125,7 +125,7 @@ const Report = () => {
             </button>
             <ReportsDrawer open={open} onClosed={onClose} />
             <div className='absolute flex gap-4 flex-wrap'>
-                {filteredReports.map((report) => (
+                {filteredReports && filteredReports.map((report) => (
                     <div key={report.id}>
                         <div className='flex flex-col cursor-pointer mt-20 justify-center items-center w-[300px] h-40 border-4 border-black hover:text-black'>
                             <p>Name: {report.name}</p>
