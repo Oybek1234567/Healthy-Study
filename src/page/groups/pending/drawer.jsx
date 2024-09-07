@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { Drawer, Form } from "antd";
 import axios from "axios";
+import Select from "react-select";
 
 const ExistingDrawer = ({ open, onClosed, onCreate }) => {
     const [inputValue, setInputValue] = useState("");
@@ -14,9 +15,12 @@ const ExistingDrawer = ({ open, onClosed, onCreate }) => {
     const [selectedCourse, setSelectedCourse] = useState("");
     const [date, setDate] = useState("");
     const [selectedModule, setSelectedModule] = useState("");
-    const [when, setWhen] = useState("");
+    const [days, setDays] = useState([]);
     const [selectedRoom, setSelectedRoom] = useState("");
     const [time, setTime] = useState("");
+
+    const [options, setOptions] = useState([]);
+    const [selectedOption, setSelectedOption] = useState([]);
 
     useEffect(() => {
         const getTeachers = async () => {
@@ -64,7 +68,6 @@ const ExistingDrawer = ({ open, onClosed, onCreate }) => {
                 const req = await axios.get(
                     "http://localhost:3000/courses/all"
                 );
-                console.log(req.data.courses);
                 setCourses(req.data.courses);
             } catch (err) {
                 console.error(err);
@@ -86,9 +89,26 @@ const ExistingDrawer = ({ open, onClosed, onCreate }) => {
                 }
             }
         };
-
         getModules(selectedCourse);
     }, [selectedCourse]);
+
+    useEffect(() => {
+        const handleGetDays = async () => {
+            try {
+                const res = await axios.get("http://localhost:3000/days/all");
+                setDays(res.data.days);
+                setOptions(
+                    res.data.days.map((day) => ({
+                        value: day.id,
+                        label: day.name,
+                    }))
+                );
+            } catch (err) {
+                console.error("Error fetching days", err);
+            }
+        };
+        handleGetDays();
+    }, []);
 
     const handlePost = async () => {
         const data = {
@@ -97,15 +117,16 @@ const ExistingDrawer = ({ open, onClosed, onCreate }) => {
             assistant_id: selectedAssistant,
             starting_date: date,
             module_id: selectedModule,
-            days: when,
+            days: selectedOption.map((option) => ({id: option.value})),
             room_id: selectedRoom,
             time: time,
-            course_id: courses,
+            course_id: selectedCourse,
         };
         try {
+            console.log(data);
             alert("Created successfully");
-            window.location.reload()    
-         const req = await axios.post(
+            window.location.reload()
+              await axios.post(
                 "http://localhost:3000/groupenrolements/create",
                 data
             );
@@ -120,11 +141,8 @@ const ExistingDrawer = ({ open, onClosed, onCreate }) => {
                     data.room_id,
                     data.course_id,
                     data.time
-                )
-            }
-
-            console.log(req.data);
-
+                );
+            } 
         } catch (err) {
             console.error("Error creating group", err);
         }
@@ -133,6 +151,7 @@ const ExistingDrawer = ({ open, onClosed, onCreate }) => {
         setSelectedAssistant("");
         setSelectedRoom("");
         setSelectedModule("");
+        setSelectedOption([]);  
     };
 
     const handleInputChange = (e) => {
@@ -154,12 +173,13 @@ const ExistingDrawer = ({ open, onClosed, onCreate }) => {
     const handleCourse = (e) => {
         setSelectedCourse(e.target.value);
     };
+
     const handleModuleChange = (e) => {
         setSelectedModule(e.target.value);
     };
 
-    const handleWhen = (e) => {
-        setWhen(e.target.value);
+    const handleWhen = (selectedOptions) => {
+        setSelectedOption(selectedOptions);
     };
 
     const handleRoomChange = (e) => {
@@ -267,15 +287,14 @@ const ExistingDrawer = ({ open, onClosed, onCreate }) => {
                 <label htmlFor='when' className='mt-2'>
                     Days
                 </label>
-                <select
-                    name='when'
-                    id='when'
-                    value={when}
+                <Select
+                    className='w-full mt-2'
                     onChange={handleWhen}
-                    className='w-full mt-2 h-8 bg-gray-50 rounded-md'>
-                    <option value='juft'>Even</option>
-                    <option value='toq'>Odd</option>
-                </select>
+                    value={selectedOption}
+                    options={options}
+                    isMulti={true}
+                />
+
                 <label htmlFor='time' className='mt-2'>
                     Time
                 </label>
@@ -296,7 +315,6 @@ const ExistingDrawer = ({ open, onClosed, onCreate }) => {
                     onChange={handleDate}
                     className='w-full mt-3 border-2 border-black'
                 />
-
                 <button
                     type='submit'
                     className='bg-green-800 p-2 mt-3 text-white ml-3 rounded-lg'>

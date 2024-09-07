@@ -5,7 +5,6 @@ import Courses from "../page/courses";
 import Modules from "../page/courses/module/module";
 import Dashboard from "../page/dashboard/dashboard";
 import Groups from "../page/groups";
-import Excisting from "../page/groups/excisting";
 import Pending from "../page/groups/pending";
 import Education from "../page/reports/education";
 import Expense from "../page/reports/expense";
@@ -30,6 +29,8 @@ import Guest from "../page/statics/guest";
 import AssignmentTypes from "../page/courses/module/test/exams/assignments";
 import SubjectTests from "../page/courses/module/test/subjects/test";
 import AllStatics from "../page/statics/all";
+import Excisting from "../page/groups/excisting";
+import Page from "../page/groups/excisting/page";
 export const MenuList = [
     {
         id: 1,
@@ -191,4 +192,9 @@ export const MenuList = [
         path: "/all_statics",
         element: <AllStatics />,
     },
+    {
+        id: 33,
+        path: "/excisting/:id",
+        element: <Page />,
+    }
 ];

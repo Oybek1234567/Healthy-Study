@@ -1,19 +1,33 @@
 import { DownOutlined, UpOutlined } from "@ant-design/icons";
-// import { Input, Modal } from "antd";
 import axios from "axios";
 import { useEffect, useState } from "react";
 import * as XLSX from "xlsx";
 import useDrawer from "../../../hooks/useDrawer";
 import UserDrawer from "./drawer";
-import { useSort } from "../../../hooks/useSort";
+
 const User = () => {
     const [selectedStatuses, setSelectedStatuses] = useState([]);
     const { open, onOpen, onClose } = useDrawer();
     const [userData, setUserData] = useState([]);
-    // useSort
-    const { handleSort, sortConfig } = useSort(userData, setUserData);
+    const [sortConfig, setSortConfig] = useState(null);
 
-    // useDelete
+    const handleSort = (key) => {
+        let direction = "ascending";
+
+        if (sortConfig?.key === key && sortConfig.direction === "ascending") {
+            direction = "descending";
+        }
+
+        setSortConfig({ key, direction });
+
+        const sortedData = [...userData].sort((a, b) => {
+            if (a[key] < b[key]) return direction === "ascending" ? -1 : 1;
+            if (a[key] > b[key]) return direction === "ascending" ? 1 : -1;
+            return 0;
+        });
+
+        setUserData(sortedData);
+    };
 
     useEffect(() => {
         const fetchData = async () => {
@@ -28,7 +42,7 @@ const User = () => {
         };
 
         fetchData();
-    }, [setUserData]);
+    }, []);
 
     const handleDownloadExcel = () => {
         const filteredData = userData.map(({ show, ...rest }) => rest);
@@ -60,6 +74,7 @@ const User = () => {
         }
         return buf;
     };
+
     const handleCheckboxChange = (status) => {
         setSelectedStatuses((prevStatuses) =>
             prevStatuses.includes(status)
@@ -67,6 +82,7 @@ const User = () => {
                 : [...prevStatuses, status]
         );
     };
+
     const filteredUserData = userData.filter(
         (user) =>
             selectedStatuses.length === 0 ||
@@ -185,26 +201,27 @@ const User = () => {
                     </tr>
                 </thead>
                 <tbody>
-                    {filteredUserData && filteredUserData.map((user) => (
-                        <tr key={user.id}>
-                            <td>{user.id}</td>
-                            <td>{user.name}</td>
-                            <td>{user.surname}</td>
-                            <td>
-                                {user.date_of_birth
-                                    ? user.date_of_birth.slice(0, 10)
-                                    : ""}
-                            </td>
-                            <td>{user.phone}</td>
-                            <td>{user.role}</td>
-                            <td>{user.passport_series}</td>
-                            <td>
-                                {user.expiration_date
-                                    ? user.expiration_date.slice(0, 10)
-                                    : ""}
-                            </td>
-                        </tr>
-                    ))}
+                    {filteredUserData &&
+                        filteredUserData.map((user) => (
+                            <tr key={user.id}>
+                                <td>{user.id}</td>
+                                <td>{user.name}</td>
+                                <td>{user.surname}</td>
+                                <td>
+                                    {user.date_of_birth
+                                        ? user.date_of_birth.slice(0, 10)
+                                        : ""}
+                                </td>
+                                <td>{user.phone}</td>
+                                <td>{user.role}</td>
+                                <td>{user.passport_series}</td>
+                                <td>
+                                    {user.expiration_date
+                                        ? user.expiration_date.slice(0, 10)
+                                        : ""}
+                                </td>
+                            </tr>
+                        ))}
                 </tbody>
             </table>
         </div>

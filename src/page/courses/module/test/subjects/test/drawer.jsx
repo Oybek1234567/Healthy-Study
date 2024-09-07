@@ -120,7 +120,10 @@ const TestsDrawer = ({ open, onClosed, onCreate }) => {
                     rules={[
                         { required: true, message: "Please select the level" },
                     ]}>
-                    <Select>
+                    <Select rules=
+                        {[
+                        {required: true, message: "Please select the level"}
+                    ]}>
                         <Option value='a1'>A1</Option>
                         <Option value='a2'>A2</Option>
                         <Option value='b1'>B1</Option>
