@@ -1,8 +1,7 @@
-import { Form, Input, Button, Select } from "antd";
+import { Form, Input, Select } from "antd";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
-
-const { Option } = Select;
+ 
 
 const App = () => {
     const navigate = useNavigate();

@@ -55,6 +55,7 @@ const ModulesDrawer = ({ open, onClosed, onCreate }) => {
                     onChange={handleInputChange}
                     placeholder='Type here'
                     className='w-full mt-3 border-2 border-black'
+                    required
                 />
                 <br />
                 <br />
@@ -69,6 +70,7 @@ const ModulesDrawer = ({ open, onClosed, onCreate }) => {
                     placeholder='Type here'
                     id='weight'
                     className='w-full mt-3 mb-3 border-2 border-black'
+                    required
                 />
                 <button
                     type='submit'

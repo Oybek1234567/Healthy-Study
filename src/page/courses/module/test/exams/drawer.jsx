@@ -48,7 +48,7 @@ const ExamsDrawer = ({ open, onClosed, onCreate }) => {
             <Form
                 onFinish={() => {
                     handlePost();
-                    handleReload()
+                    handleReload();
                 }}>
                 <label htmlFor='name'>Name</label>
                 <input
@@ -58,6 +58,7 @@ const ExamsDrawer = ({ open, onClosed, onCreate }) => {
                     onChange={handleInputChange}
                     placeholder='Type here'
                     className='w-full mt-3 p-1 border-2 border-black'
+                    required
                 />
                 <br />
                 <br />
@@ -70,10 +71,10 @@ const ExamsDrawer = ({ open, onClosed, onCreate }) => {
                     className='w-full mt-3 p-1 border-2 border-black'
                     placeholder='Type here'
                     id='weight'
+                    required
                 />
                 <button
-                    type='submit'
-                    onClick={handleReload}
+                    type='submit' 
                     className='bg-green-800 p-2 mt-3 text-white ml-3 rounded-lg'>
                     Create
                 </button>

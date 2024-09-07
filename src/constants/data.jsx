@@ -125,13 +125,13 @@ export const menu = [
         children: [
             {
                 id: 19,
-                title: "Kutilayotgan",
+                title: "Mavjud",
                 path: "/excisting",
                 icon: <FileDoneOutlined />,
             },
             {
                 id: 20,
-                title: "Mavjud",
+                title: "Kutilayotgan",
                 path: "/pending",
                 icon: <FileDoneOutlined />,
             },

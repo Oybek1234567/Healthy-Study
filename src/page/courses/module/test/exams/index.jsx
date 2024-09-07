@@ -27,9 +27,9 @@ const Exams = () => {
                 const req = await axios.get(
                     `http://localhost:3000/assignmenttypes/all/${id}`
                 );
-                setExams(req.data.assignments);
-                setFilteredExams(req.data.assignments);
-                console.log(req.data.assignments);
+                setExams(req.data.assignmenttypes);
+                setFilteredExams(req.data.assignmenttypes);
+                console.log(req.data.assignmenttypes);
             } catch (error) {
                 console.error(error);
             }

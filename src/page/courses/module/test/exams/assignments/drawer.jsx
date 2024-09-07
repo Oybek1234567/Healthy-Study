@@ -40,10 +40,17 @@ const AssignmentsDrawer = ({ open, onClosed, onCreate }) => {
                             className='border-2 border-black'
                             value={input}
                             onChange={(e) => setInput(e.target.value)}
+                            required
                         />
                     </Form.Item>
 
-                    <Form.Item>
+                    <Form.Item
+                        rules={[
+                            {
+                                required: true,
+                                message: "Please, fill this input!",
+                            },
+                        ]}>
                         <Button
                             type='primary'
                             htmlType='submit'

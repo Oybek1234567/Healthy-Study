@@ -1,7 +1,9 @@
 import { useEffect, useState } from "react";
-import { Drawer, Form } from "antd";
+import { Drawer, Form, Button, Checkbox, Select } from "antd";
 import axios from "axios";
 import { useParams } from "react-router-dom";
+
+const { Option } = Select;
 
 const LessonSubjectsDrawer = ({ open, onClosed, onCreate }) => {
     const { id: moduleID } = useParams();
@@ -9,6 +11,8 @@ const LessonSubjectsDrawer = ({ open, onClosed, onCreate }) => {
     const [checkedSubjects, setCheckedSubjects] = useState([]);
     const [lesson, setLesson] = useState([]);
     const [subject, setSubject] = useState([]);
+    const [form] = Form.useForm();
+
     useEffect(() => {
         const handleGetLesson = async () => {
             try {
@@ -17,7 +21,7 @@ const LessonSubjectsDrawer = ({ open, onClosed, onCreate }) => {
                 );
                 setLesson(req.data.lessons);
             } catch (error) {
-                console.error("Xato bor:", error);
+                console.error("Error:", error);
             }
         };
 
@@ -34,22 +38,21 @@ const LessonSubjectsDrawer = ({ open, onClosed, onCreate }) => {
                 );
                 setSubject(req.data.units);
             } catch (error) {
-                console.error("Xato bor:", error);
+                console.error("Error:", error);
             }
         };
         handleGetSubject();
-    }, []);
+    }, [moduleID]);
 
-    const handlePost = async () => {
+    const handlePost = async (values) => {
         const data = {
-            lesson_id: inputValue,
+            lesson_id: values.lesson,
             module_id: moduleID,
-            selected_subjects: checkedSubjects, 
+            selected_subjects: checkedSubjects,
         };
         console.log(data);
-        
+
         try {
-            handleReload();
             const res = await axios.post(
                 "http://localhost:3000/lessonunits/create",
                 data
@@ -57,79 +60,94 @@ const LessonSubjectsDrawer = ({ open, onClosed, onCreate }) => {
 
             onCreate(data.lesson_id, data.module_id, data.selected_subjects);
             console.log(res.data);
-            alert("Yaratildi");
+            alert("Created successfully");
             setInputValue("");
-            setCheckedSubjects([]); 
+            setCheckedSubjects([]);
+            form.resetFields(); // Reset form fields after successful submission
         } catch (err) {
-            console.error("Xato bor", err);
+            console.error("Error:", err);
         }
     };
-    const handleInputChange = (e) => {
-        setInputValue(e.target.value);
+
+    const handleInputChange = (value) => {
+        setInputValue(value);
     };
 
     const handleCheckboxChange = (id) => {
         setCheckedSubjects((prevCheckedSubjects) => {
-            if (prevCheckedSubjects.includes(id)) { 
+            if (prevCheckedSubjects.includes(id)) {
                 return prevCheckedSubjects.filter((item) => item !== id);
-            } else { 
+            } else {
                 return [...prevCheckedSubjects, id];
             }
         });
     };
 
-    const handleReload = () => {
-        window.location.reload();
-    };
-
     return (
         <Drawer
-            title='Dars Yaratish'
+            title='Create Lesson'
             placement='right'
             onClose={onClosed}
             open={open}>
-            <Form onFinish={handlePost} className='flex flex-col space-y-4 p-4'>
-                <div className='flex flex-col space-y-2'>
-                    <label htmlFor='name' className='text-xl font-semibold'>
-                        Lesson
-                    </label>
-                    <select
+            <Form
+                form={form}
+                onFinish={handlePost}
+                className='flex flex-col space-y-4 p-4'>
+                <Form.Item
+                    name='lesson'
+                    label='Lesson'
+                    rules={[
+                        { required: true, message: "Please select a lesson!" },
+                    ]}>
+                    <Select
                         value={inputValue}
                         onChange={handleInputChange}
-                        className='p-2 border rounded-lg'>
-                        <option value="lesson">Change lesson</option>
-                        {lesson && lesson.map((c) => (
-                            <option key={c.id} value={c.id}>
-                                {c.name}
-                            </option>
-                        ))}
-                    </select>
-                </div>
-                <div className='flex flex-col space-y-2'>
-                    <label className='text-xl font-semibold'>Subjects</label>
+                        >
+                        <Option value=''>Select a lesson</Option>
+                        {lesson &&
+                            lesson.map((c) => (
+                                <Option key={c.id} value={c.id}>
+                                    {c.name}
+                                </Option>
+                            ))}
+                    </Select>
+                </Form.Item>
+
+                <Form.Item
+                    name='subjects'
+                    label='Subjects'
+                    rules={[
+                        {
+                            required: true,
+                            message: "Please select at least one subject!",
+                        },
+                    ]}>
                     <div className='flex flex-wrap flex-col space-x-4'>
-                        {subject && subject.map((item) => (
-                            <label
-                                key={item.id}
-                                className='flex items-center justify-center gap-2 space-x-2'>
-                                <input
-                                    type='checkbox'
-                                    checked={checkedSubjects.includes(item.id)}
-                                    onChange={() =>
-                                        handleCheckboxChange(item.id)
-                                    }
-                                    className='form-checkbox'
-                                />
-                                <span>{item.name}</span>
-                            </label>
-                        ))}
+                        {subject &&
+                            subject.map((item) => (
+                                <Form.Item
+                                    key={item.id}
+                                    valuePropName='checked'>
+                                    <Checkbox
+                                        checked={checkedSubjects.includes(
+                                            item.id
+                                        )}
+                                        onChange={() =>
+                                            handleCheckboxChange(item.id)
+                                        }>
+                                        {item.name}
+                                    </Checkbox>
+                                </Form.Item>
+                            ))}
                     </div>
-                </div>
-                <button
-                    type='submit'
+                </Form.Item>
+
+                <Button
+                    type='primary'
+                    htmlType='submit'
                     className='bg-green-800 p-2 mt-3 text-white rounded-lg hover:bg-green-700'>
                     Create
-                </button>
+                </Button>
             </Form>
         </Drawer>
     );

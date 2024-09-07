@@ -32,22 +32,22 @@ const CoursesDrawer = ({ open, onClose, onCreate }) => {
             title='Kurs Yaratish'
             placement='right'
             onClose={onClose}
-            open={open}>
+            open={open} >
             <Form onFinish={handleCreateClick}>
-                <label htmlFor='name'>Name:</label>
+                <label htmlFor='name' className="mr-5">Name:</label>
                 <input
                     id='name'
                     value={inputValue}
                     onChange={handleInputChange}
                     placeholder='Type here'
-                    className='border-2 border-black p-1'
+                    className='border-2 border-black p-1 w-[80%]'
                     required
                 />
                 <br />
                 <br />
                 <button
-                    className='bg-green-800 p-2 text-white ml-3 rounded-lg'
-                    type='submit'>
+                    className='bg-green-800 p-2 w-full text-white ml-3 rounded-lg'
+                    type='submit' >
                     Create
                 </button>
             </Form>

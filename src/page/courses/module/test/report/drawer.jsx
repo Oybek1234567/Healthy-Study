@@ -51,9 +51,7 @@ const ReportsDrawer = ({ open, onClosed, onCreate }) => {
             title="Dars bo'yicha hisobot turi Yaratish"
             placement='right'
             onClose={onClosed}
-            open={open}
-
-        >
+            open={open}>
             <Form onFinish={handlePost}>
                 <Form.Item
                     label='Name'
@@ -65,6 +63,9 @@ const ReportsDrawer = ({ open, onClosed, onCreate }) => {
                         value={inputValue}
                         onChange={handleInputChange}
                         placeholder='Type here'
+                        rules={[
+                            { required: true, message: "Please input the name!" },
+                        ]}
                     />
                 </Form.Item>
                 <Form.Item

@@ -40,10 +40,11 @@ const SubjectsDrawer = ({ open, onClosed, onCreate }) => {
             placement='right'
             onClose={onClosed}
             open={open}>
-            <Form onFinish={() => {
-                handlePost();
-                handleReload()
-            }}>
+            <Form
+                onFinish={() => {
+                    handlePost();
+                    handleReload();
+                }}>
                 <label htmlFor='name'>Name</label>
                 <input
                     name='name'
@@ -52,6 +53,7 @@ const SubjectsDrawer = ({ open, onClosed, onCreate }) => {
                     onChange={handleInputChange}
                     placeholder='Type here'
                     className='w-full mt-3 border-2 border-black'
+                    required
                 />
                 <button
                     type='submit'
