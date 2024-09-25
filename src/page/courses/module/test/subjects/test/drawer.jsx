@@ -1,46 +1,63 @@
 import { Drawer, Form, Input, Button, Select, notification } from "antd";
 import axios from "axios";
+import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
-
-const { Option } = Select;
 
 const TestsDrawer = ({ open, onClosed, onCreate }) => {
     const { id: unitId } = useParams();
     const [form] = Form.useForm();
+    const [data, setData] = useState([]);
+    useEffect(() => {
+        const fetchData = async () => {
+            try {
+                const req = await axios.get(
+                    `http://localhost:3000/questionlevels/all/${unitId}`
+                );
+                setData(req.data.question_levels);
+            } catch (error) {
+                console.error("Error fetching data:", error);
+            }
+        };
+        if (unitId) {
+            fetchData();
+        }
+    }, [unitId]);
 
     const handlePost = async (values) => {
         const data = {
             ...values,
-            unit_id: unitId,
+            unit_id: +unitId,
         };
+        
+        
         try {
-        await axios.post(
-                "http://localhost:3000/questions/create",
-                data
-            );
+            await axios.post("http://localhost:3000/questions/create", data);
+            console.log("Posted data:", data);
             
             if (typeof onCreate === "function") {
                 onCreate(
-                    data.question,
                     data.first,
+                    data.question,
                     data.second,
                     data.third,
                     data.fourth,
-                    data.level,
+                    data.level_id,
                     data.unit_id
                 );
             } else {
                 console.error("onCreate is not a function");
             }
+
             notification.success({ message: "Created successfully" });
             form.resetFields();
-            window.location.reload();
+            console.log(data);
+            
+            // window.location.reload();
         } catch (err) {
             console.error("Error:", err);
             notification.error({ message: "Failed to create" });
         }
     };
-
 
     return (
         <Drawer open={open} onClose={onClosed}>
@@ -62,12 +79,12 @@ const TestsDrawer = ({ open, onClosed, onCreate }) => {
                 </Form.Item>
 
                 <Form.Item
-                    label='First answer'
-                    name='first'
+                    label='True answer'
+                    name='true'
                     rules={[
                         {
                             required: true,
-                            message: "Please enter the right answer",
+                            message: "Please enter the first answer",
                         },
                     ]}>
                     <Input />
@@ -108,28 +125,18 @@ const TestsDrawer = ({ open, onClosed, onCreate }) => {
                     ]}>
                     <Input />
                 </Form.Item>
-                <Form.Item label="True Answer" name={"right"} rules={
-                    [{ required: true, message: "Please enter the right answer" }]
-                }>
-                    <Input/>
-                </Form.Item>
-
                 <Form.Item
                     label='Level'
-                    name='level'
+                    name='level_id'
                     rules={[
                         { required: true, message: "Please select the level" },
                     ]}>
-                    <Select rules=
-                        {[
-                        {required: true, message: "Please select the level"}
-                    ]}>
-                        <Option value='a1'>A1</Option>
-                        <Option value='a2'>A2</Option>
-                        <Option value='b1'>B1</Option>
-                        <Option value='b2'>B2</Option>
-                        <Option value='c1'>C1</Option>
-                        <Option value='c2'>C2</Option>
+                    <Select>
+                        {data.map((item) => (
+                            <Select.Option key={item.id} value={item.id}>
+                                {item.name}
+                            </Select.Option>
+                        ))}
                     </Select>
                 </Form.Item>
 

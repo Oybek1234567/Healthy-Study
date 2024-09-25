@@ -13,6 +13,8 @@ const Existing = () => {
     const [openLesson, setOpenLesson] = useState(false)
     const [student, setStudent] = useState("");
     const [filter, setFilter] = useState("active");
+    const [studentIndex, setStudentIndex] = useState(null);
+
 
     useEffect(() => {
         const fetchData = async () => {
@@ -38,8 +40,8 @@ const Existing = () => {
             const req = await axios.get(
                 `http://localhost:3000/groupstudents/all/${id}`
             );
-            console.log(req.data.group_student);
             setStudents(req.data.group_student);
+            console.log(req.data.group_student);
             setOpenModal(true);
         } catch (error) {
             console.error(error);
@@ -58,27 +60,29 @@ const Existing = () => {
             console.error(error);
         }
     }
-    const handleSetStudent = async () => {
-        const firstStudent = students[0];
-
-        const groupId = firstStudent.group_id;
+    const handleSetStudent = async (index) => {
+        const firstStudent = students[index];
+        console.log(students);
+        const groupId = firstStudent.group_id;  
         const data = {
-            group_id: groupId,
             user_id: +student,
         };
 
         try {
             const req = await axios.post(
-                "http://localhost:3000/groupstudents/create",
+                `http://localhost:3000/groupstudents/create/${groupId}`,
                 data
             );
             setStudents(req.data.group_students);
+            console.log(firstStudent);
+
             alert("Student added");
             setStudent("");
         } catch (error) {
             console.error(error);
         }
     };
+
 
     const handleDelete = async (id) => {
         try {
@@ -160,12 +164,7 @@ const handleFinish = async () => {
                         <th className='py-3 px-6 text-left text-gray-600 font-semibold'>
                             Assistant
                         </th>
-                        <th className='py-3 px-6 text-left text-gray-600 font-semibold'>
-                            Course
-                        </th>
-                        <th className='py-3 px-6 text-left text-gray-600 font-semibold'>
-                            Module
-                        </th>
+                         
                         <th className='py-3 px-6 text-left text-gray-600 font-semibold'>
                             Room
                         </th>
@@ -217,12 +216,7 @@ const handleFinish = async () => {
                             <td className='py-4 px-6 text-gray-800'>
                                 {item.assistant_name}
                             </td>
-                            <td className='py-4 px-6 text-gray-800'>
-                                {item.course_name}
-                            </td>
-                            <td className='py-4 px-6 text-gray-800'>
-                                {item.module_name}
-                            </td>
+                             
                             <td className='py-4 px-6 text-gray-800'>
                                 {item.room_name}
                             </td>
@@ -301,7 +295,7 @@ const handleFinish = async () => {
                     className='border-2 border-black'
                 />
                 <button
-                    onClick={handleSetStudent}
+                    onClick={() =>  handleSetStudent(studentIndex)}
                     className='w-14 h-8 bg-green-400 text-white rounded-lg ml-10'>
                     Add
                 </button>
@@ -353,9 +347,10 @@ const handleFinish = async () => {
                                         {item.student_name}
                                     </td>
                                     <td
-                                        onClick={() =>
-                                            handleDeleteStudent(item.id)
-                                        }
+                                        onClick={() => {
+                                            handleDeleteStudent(item.id);
+                                            setStudentIndex(index); 
+                                        }}
                                         style={{
                                             padding: "8px",
                                             cursor: "pointer",

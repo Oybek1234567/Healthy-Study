@@ -1,6 +1,6 @@
 import axios from "axios";
 import { useEffect, useState } from "react";
-import { Link, useLocation, useParams } from "react-router-dom";
+import {  Link, useLocation, useParams } from "react-router-dom";
 import useDrawer from "../../../../../../hooks/useDrawer";
 import AssignmentsDrawer from "./drawer";
 import { Dropdown, Space, Modal, Button } from "antd";
@@ -10,7 +10,7 @@ const AssignmentTypes = () => {
     const [newName, setNewName] = useState("");
     const [editItem, setEditItem] = useState(null);
     const { open, onOpen, onClose } = useDrawer();
-    const { assignmentID, moduleID, examID } = useParams();
+    const { assignmentID, moduleID } = useParams();
     const location = useLocation();
     const moduleName = location.state?.moduleName;
     const courseName = location.state?.courseName;
@@ -130,26 +130,36 @@ const AssignmentTypes = () => {
                     </tr>
                 </thead>
                 <tbody>
-                    {data && data.map((item, index) => (
-                        <tr key={item.id}>
-                            <td>{index + 1}</td>
-                            <td>{item.name}</td>
-                            <td>{item.weight}</td>
-                            <td>
-                                <Dropdown
-                                    menu={{ items: menuItems(item) }}
-                                    trigger={["click"]}>
-                                    <a onClick={(e) => e.preventDefault()}>
-                                        <Space>
-                                            <p className='rotate-90 text-4xl cursor-pointer'>
-                                                ...
-                                            </p>
-                                        </Space>
-                                    </a>
-                                </Dropdown>
-                            </td>
-                        </tr>
-                    ))}
+                    {data &&
+                        data.map((item, index) => (
+                            <tr key={item.id}>
+                                <td>{index + 1}</td>
+                                <td>
+                                    <Link
+                                        to={`/modules/${moduleID}/types/${assignmentID}/assignments/${item.id}`} state={{ moduleID, typeId: item.id }}>
+                                        {item.name}
+                                    </Link>
+                                </td>
+                                <td>
+                                    {item.weight
+                                        ? String(item.weight).slice(0, 4)
+                                        : ""}
+                                </td>
+                                <td>
+                                    <Dropdown
+                                        menu={{ items: menuItems(item) }}
+                                        trigger={["click"]}>
+                                        <a onClick={(e) => e.preventDefault()}>
+                                            <Space>
+                                                <p className='rotate-90 text-4xl cursor-pointer'>
+                                                    ...
+                                                </p>
+                                            </Space>
+                                        </a>
+                                    </Dropdown>
+                                </td>
+                            </tr>
+                        ))}
                 </tbody>
             </table>
             <Modal

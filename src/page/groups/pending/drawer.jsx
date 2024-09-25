@@ -4,7 +4,7 @@ import axios from "axios";
 import Select from "react-select";
 
 const ExistingDrawer = ({ open, onClosed, onCreate }) => {
-    const [inputValue, setInputValue] = useState("");
+    
     const [teachers, setTeachers] = useState([]);
     const [assistants, setAssistants] = useState([]);
     const [rooms, setRooms] = useState([]);
@@ -112,7 +112,6 @@ const ExistingDrawer = ({ open, onClosed, onCreate }) => {
 
     const handlePost = async () => {
         const data = {
-            name: inputValue,
             teacher_id: selectedTeacher,
             assistant_id: selectedAssistant,
             starting_date: date,
@@ -132,7 +131,6 @@ const ExistingDrawer = ({ open, onClosed, onCreate }) => {
             );
             if (onCreate) {
                 onCreate(
-                    data.name,
                     data.teacher_id,
                     data.assistant_id,
                     data.starting_date,
@@ -146,16 +144,11 @@ const ExistingDrawer = ({ open, onClosed, onCreate }) => {
         } catch (err) {
             console.error("Error creating group", err);
         }
-        setInputValue("");
         setSelectedTeacher("");
         setSelectedAssistant("");
         setSelectedRoom("");
         setSelectedModule("");
         setSelectedOption([]);  
-    };
-
-    const handleInputChange = (e) => {
-        setInputValue(e.target.value);
     };
 
     const handleTeacherChange = (e) => {
@@ -197,15 +190,6 @@ const ExistingDrawer = ({ open, onClosed, onCreate }) => {
             onClose={onClosed}
             open={open}>
             <Form onFinish={handlePost}>
-                <label htmlFor='name'>Group Name</label>
-                <input
-                    name='name'
-                    id='name'
-                    value={inputValue}
-                    onChange={handleInputChange}
-                    placeholder='Type here'
-                    className='w-full mt-3 border-2 border-black'
-                />
                 <br />
                 <br />
                 <label htmlFor='course' className='mt-2'>

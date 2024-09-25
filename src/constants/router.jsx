@@ -2,7 +2,6 @@ import Applications from "../page/applications";
 import User from "../page/applications/user";
 import Profile from "../page/applications/user/profile";
 import Courses from "../page/courses";
-import Modules from "../page/courses/module/module";
 import Dashboard from "../page/dashboard/dashboard";
 import Groups from "../page/groups";
 import Pending from "../page/groups/pending";
@@ -31,6 +30,11 @@ import SubjectTests from "../page/courses/module/test/subjects/test";
 import AllStatics from "../page/statics/all";
 import Excisting from "../page/groups/excisting";
 import Page from "../page/groups/excisting/page";
+import LessonReports from "../page/groups/excisting/lesson_reports";
+import Assignments from "../page/groups/excisting/assignments";
+import ModulesTab from "../page/courses/module";
+import AssignmentLevels from "../page/courses/module/test/exams/assignments/levels";
+import Exams from "../page/exams";
 export const MenuList = [
     {
         id: 1,
@@ -84,7 +88,7 @@ export const MenuList = [
     },
     {
         id: 11,
-        path: "/excisting",
+        path: "/groups/excisting",
         element: <Excisting />,
     },
     {
@@ -110,7 +114,7 @@ export const MenuList = [
     {
         id: 16,
         path: "/courses/:id",
-        element: <Modules />,
+        element: <ModulesTab />,
     },
     {
         id: 17,
@@ -179,7 +183,7 @@ export const MenuList = [
     },
     {
         id: 30,
-        path: "/modules/:moduleID/assignments/:assignmentID",
+        path: "/modules/:moduleID/types/:assignmentID",
         element: <AssignmentTypes />,
     },
     {
@@ -196,5 +200,25 @@ export const MenuList = [
         id: 33,
         path: "/excisting/:id",
         element: <Page />,
+    },
+    {
+        id: 34,
+        path: "excisting/:id/lesson_reports/:lessonReportId",
+        element: <LessonReports />,
+    },
+    {
+        id: 35,
+        path: "excisting/:id/assignmenttypes/:assignmentId",
+        element: <Assignments />,
+    },
+    {
+        id: 36,
+        path: "modules/:moduleID/types/:assignmentID/assignments/:id",
+        element: <AssignmentLevels />,
+    },
+    {
+        id: 37,
+        path: "/exams",
+        element: <Exams />,
     }
 ];

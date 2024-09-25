@@ -1,8 +1,8 @@
 import { useEffect, useState } from "react";
 import { Link, Route, Routes, useLocation, useParams } from "react-router-dom";
-import useDrawer from "../../../hooks/useDrawer";
+import useDrawer from "../../../../hooks/useDrawer";
 import ModulesDrawer from "./drawer";
-import Tests from "./test";
+import Tests from "../test";
 import axios from "axios";
 import Button from "react-bootstrap/Button";
 import Dropdown from "react-bootstrap/Dropdown";
@@ -131,48 +131,41 @@ const Modules = () => {
 
     return (
         <div>
-            <h1 className='absolute text-4xl'>
-                <Link to='/courses' className='hover:text-black'>
-                    Kurslar /
-                </Link>
-                <span className='hover:text-black'>
-                    {courseName.charAt(0).toUpperCase() + courseName.slice(1)}
-                </span>
-            </h1>
             <div className='absolute flex flex-wrap gap-4 mt-8 p-4'>
-                {filteredCourses && filteredCourses.map((module) => (
-                    <div key={module.id}>
-                        <Link
-                            to={`/courses/${id}/modules/${module.id}`}
-                            state={{
-                                courseName,
-                                moduleName: module.name,
-                            }}
-                            className='flex flex-wrap gap-2 mt-8 p-4 text-xl w-[300px] border-4 border-black hover:text-black'>
-                            <p>Modul ID: {module.id}</p>
-                            <p>Modul nomi: {module.name}</p>
-                            <p>Max № studentlar: {module.max_students}</p>
-                            <p>Darslar davomiyligi: {module.length}</p>
-                        </Link>
-                        <Dropdown as={ButtonGroup}>
-                            <Dropdown.Toggle
-                                split
-                                variant='none'
-                                id='dropdown-split-basic'
-                            />
-                            <Dropdown.Menu>
-                                <Dropdown.Item
-                                    onClick={() => handleEdit(module)}>
-                                    Edit
-                                </Dropdown.Item>
-                                <Dropdown.Item
-                                    onClick={() => handleDelete(module)}>
-                                    Delete
-                                </Dropdown.Item>
-                            </Dropdown.Menu>
-                        </Dropdown>
-                    </div>
-                ))}
+                {filteredCourses &&
+                    filteredCourses.map((module) => (
+                        <div key={module.id}>
+                            <Link
+                                to={`/courses/${id}/modules/${module.id}`}
+                                state={{
+                                    courseName,
+                                    moduleName: module.name,
+                                }}
+                                className='flex flex-wrap gap-2 mt-8 p-4 text-xl w-[300px] border-4 border-black hover:text-black'>
+                                <p>Modul ID: {module.id}</p>
+                                <p>Modul nomi: {module.name}</p>
+                                <p>Max № studentlar: {module.max_students}</p>
+                                <p>Darslar davomiyligi: {module.length}</p>
+                            </Link>
+                            <Dropdown as={ButtonGroup}>
+                                <Dropdown.Toggle
+                                    split
+                                    variant='none'
+                                    id='dropdown-split-basic'
+                                />
+                                <Dropdown.Menu>
+                                    <Dropdown.Item
+                                        onClick={() => handleEdit(module)}>
+                                        Edit
+                                    </Dropdown.Item>
+                                    <Dropdown.Item
+                                        onClick={() => handleDelete(module)}>
+                                        Delete
+                                    </Dropdown.Item>
+                                </Dropdown.Menu>
+                            </Dropdown>
+                        </div>
+                    ))}
             </div>
             <button
                 className='absolute w-10 h-10 ml-[70%] bg-green-700 rounded-full text-white'

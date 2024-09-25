@@ -137,7 +137,7 @@ const Exams = () => {
                     filteredExams.map((item) => (
                         <div key={item.id}>
                             <Link
-                                to={`/modules/${id}/assignments/${item.id}`}
+                                to={`/modules/${id}/types/${item.id}`}
                                 state={{
                                     courseName: courseName,
                                     moduleName: moduleName,
