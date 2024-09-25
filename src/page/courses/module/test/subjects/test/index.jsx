@@ -1,221 +1,186 @@
-import axios from "axios";
 import { useEffect, useState } from "react";
-import TestsDrawer from "./drawer";
 import useDrawer from "../../../../../../hooks/useDrawer";
-import { Button, Dropdown, Modal, Space, Select, notification } from "antd";
-import { useParams } from "react-router-dom";
-
-const { Option } = Select;
+import { useLocation, useParams } from "react-router-dom";
+import axios from "axios";
+import { Button, Modal, Tabs, Input } from "antd";
+import TestsDrawer from "./drawer";
 
 const SubjectTests = () => {
     const { open, onOpen, onClose } = useDrawer();
-    const [showEditModal, setShowEditModal] = useState(false);
     const [data, setData] = useState([]);
-    const [filteredData, setFilteredData] = useState([]);
-    const [editSubject, setEditSubject] = useState(null);
-    const [newName, setNewName] = useState("");
-    const [newRightAnswer, setNewRightAnswer] = useState("");
-    const [newLevel, setNewLevel] = useState("");
-    const [selectedLevel, setSelectedLevel] = useState("all");
+    const [item, setItem] = useState([]);
+    const [selectedLevelId, setSelectedLevelId] = useState(null);
+    const [editingQuestionId, setEditingQuestionId] = useState(null);
+    const [editedQuestionText, setEditedQuestionText] = useState("");
+    const [showModal, setShowModal] = useState(false);
     const { id } = useParams();
+    const location = useLocation();
+    const { moduleId } = location.state;
 
     useEffect(() => {
         const fetchData = async () => {
             try {
                 const req = await axios.get(
-                    `http://localhost:3000/questions/all/${id}`
+                    `http://localhost:3000/questionlevels/all/${moduleId}`
                 );
-                setData(req.data.data);
-                filterData(selectedLevel, req.data.data);
+                setData(req.data.question_levels);
+                console.log(req.data);
             } catch (error) {
                 console.error("Error fetching data:", error);
             }
         };
 
         fetchData();
-    }, [id, selectedLevel]);
+    }, [moduleId]);
 
-    const filterData = (level, data) => {
-        if (level === "all") {
-            setFilteredData(data);
-        } else {
-            setFilteredData(data.filter((item) => item.level === level));
+    const handleTabChange = async (key) => {
+        const index = Number(key);
+        const selectedLevel = data[index];
+        if (selectedLevel) {
+            setSelectedLevelId(selectedLevel.id);
+
+            try {
+                const req = await axios.post(
+                    `http://localhost:3000/questions/all/${+id}`,
+                    {
+                        level_id: selectedLevel.id,
+                    }
+                );
+                setItem(req.data.data || []);
+                console.log("Selected Level Questions:", req.data.data);
+            } catch (err) {
+                console.error("Error fetching questions:", err);
+            }
         }
     };
 
-    const handleSave = async () => {
-        if (!newName || !newLevel || !newRightAnswer) {
-            notification.error({ message: "Please fill in all fields" });
-            return;
-        }
+    const handleEditClick = (questionId, questionText) => {
+        setEditingQuestionId(questionId);
+        setEditedQuestionText(questionText);
+        setShowModal(true);
+    };
+
+    const handleSaveClick = async () => {
         try {
             await axios.post(
-                `http://localhost:3000/questions/edit/${id}`,
+                `http://localhost:3000/questions/edit/${editingQuestionId}`,
                 {
-                    question: newName,
-                    level: newLevel,
-                    isRight: newRightAnswer,
-                },
-                {
-                    headers: {
-                        "Content-Type": "application/json",
-                    },
+                    question: editedQuestionText,
                 }
             );
-            setShowEditModal(false);
-            notification.success({ message: "Subject successfully updated" });
-        } catch (error) {
-            console.error("Failed to update subject:", error);
-            notification.error({ message: "Failed to update subject" });
-        }
-    };
-
-    const handleEdit = (item) => {
-        setEditSubject(item);
-        setNewName(item.question);
-        setNewLevel(item.level);
-        setNewRightAnswer(
-            item.options.find((option) => option.isRight === "right")?.option ||
-                ""
-        );
-        setShowEditModal(true);
-    };
-
-
-    const handleDelete = async (test) => {
-        try {
-            const response = await axios.post(
-                `http://localhost:3000/questions/delete/${test.id}`
+            setItem((prevQuestions) =>
+                prevQuestions.map((q) =>
+                    q.id === editingQuestionId
+                        ? { ...q, question: editedQuestionText }
+                        : q
+                )
             );
-            console.log(response); 
-            const newData = data.filter((item) => item.id !== test.id);
-            setData(newData);
-            filterData(selectedLevel, newData);
-            notification.success({ message: "Question successfully deleted" });
+            setShowModal(false);
+            console.log("Question updated successfully");
         } catch (error) {
-            console.error(error);
-            notification.error({ message: "Failed to delete question" });
+            console.error("Error updating question:", error);
         }
     };
 
-    const menuItems = (item) => [
-        {
-            key: "edit",
-            label: "Edit",
-            onClick: () => handleEdit(item),
-        },
-        {
-            key: "delete",
-            label: "Delete",
-            onClick: () => handleDelete(item),
-        },
-    ];
-
-    const handleLevelChange = (value) => {
-        setSelectedLevel(value);
-        filterData(value, data);
+    const handleDeleteClick = async (questionId) => {
+        try {
+            await axios.post(`http://localhost:3000/questions/delete/${questionId}`);
+            setItem((prevQuestions) =>
+                prevQuestions.filter((q) => q.id !== questionId)
+            );
+            console.log("Question deleted successfully");
+        } catch (error) {
+            console.error("Error deleting question:", error);
+        }
     };
 
     return (
         <div>
-            <select
-                value={selectedLevel}
-                onChange={(e) => handleLevelChange(e.target.value)}
-                className='w-[20%] mt-2 h-8 bg-gray-50 rounded-md'>
-                <option value='all'>All</option>
-                <option value='A1'>A1</option>
-                <option value='A2'>A2</option>
-                <option value='B1'>B1</option>
-                <option value='B2'>B2</option>
-                <option value='C1'>C1</option>
-                <option value='C2'>C2</option>
-            </select>
             <Button
                 className='bg-green-700 w-10 h-10 rounded-full text-white ml-[95%]'
                 onClick={onOpen}>
                 +
             </Button>
             <TestsDrawer open={open} onClosed={onClose} />
-            <div className='w-full mt-4'>
-                {(filteredData || []).map((item, index) => (
-                    <div
-                        key={item.id}
-                        className='mb-6 p-4 border border-gray-300 rounded-lg'>
-                        <p className='text-lg font-semibold'>{item.level}</p>
-                        <p className='text-xl'>
-                            <span>{index + 1}.</span> {item.question}
-                        </p>
-                        <div className='flex flex-wrap gap-4 mt-4'>
-                            {item.options.map((option) => (
-                                <div key={option.id} className='flex gap-2'>
-                                    <input
-                                        type='radio'
-                                        name={`question-${item.id}`}
-                                        id={`option-${option.id}`}
-                                        checked={option.isRight === "right"}
-                                        readOnly
-                                    />
-                                    <label htmlFor={`option-${option.id}`}>
-                                        {option.option}
-                                    </label>
-                                </div>
-                            ))}
-                        </div>
-                        <Dropdown
-                            menu={{ items: menuItems(item) }}
-                            placement='bottomRight'
-                            trigger={["click"]}>
-                            <a onClick={(e) => e.preventDefault()}>
-                                <Space className=''>
-                                    <Button
-                                        type='text'
-                                        className='rotate-90 text-2xl mt-10 p-3'>
-                                        ...
-                                    </Button>
-                                </Space>
-                            </a>
-                        </Dropdown>
-                    </div>
-                ))}
-            </div>
 
+            {/* Tabs for each question level */}
+            <Tabs defaultActiveKey='0' onChange={handleTabChange}>
+                {data.map((level, index) => (
+                    <Tabs.TabPane tab={level.name} key={index.toString()}>
+                        {item.length > 0 ? (
+                            <>
+                                {item.map((question, qIndex) => (
+                                    <div
+                                        key={qIndex}
+                                        className='mb-6 p-4 border border-gray-300 rounded-lg'>
+                                        <p className='text-xl'>
+                                            {qIndex + 1}. {question.question}
+                                        </p>
+
+                                        <div className='flex flex-wrap gap-4 mt-4'>
+                                            {question.options.map((option) => (
+                                                <div
+                                                    key={option.id}
+                                                    className='flex gap-2'>
+                                                    <input
+                                                        type='radio'
+                                                        name={`question-${question.id}`}
+                                                        id={`option-${option.id}`}
+                                                        checked={
+                                                            option.isRight ===
+                                                            "right"
+                                                        }
+                                                        readOnly
+                                                    />
+                                                    <label
+                                                        htmlFor={`option-${option.id}`}>
+                                                        {option.option}
+                                                    </label>
+                                                </div>
+                                            ))}
+                                        </div>
+
+                                        {/* Edit va Delete tugmalari */}
+                                        <div className='flex gap-4 mt-4'>
+                                            <Button
+                                                onClick={() =>
+                                                    handleEditClick(
+                                                        question.id,
+                                                        question.question
+                                                    )
+                                                }>
+                                                Edit
+                                            </Button>
+                                            <Button
+                                                danger
+                                                onClick={() =>
+                                                    handleDeleteClick(
+                                                        question.id
+                                                    )
+                                                }>
+                                                🚯
+                                            </Button>
+                                        </div>
+                                    </div>
+                                ))}
+                            </>
+                        ) : (
+                            <p>Bu level uchun savollar mavjud emas.</p>
+                        )}
+                    </Tabs.TabPane>
+                ))}
+            </Tabs>
+
+            {/* Modal for editing question */}
             <Modal
-                open={showEditModal}
-                onCancel={() => setShowEditModal(false)}
-                footer={[
-                    <Button
-                        key='cancel'
-                        onClick={() => setShowEditModal(false)}>
-                        Close
-                    </Button>,
-                    <Button key='save' type='primary' onClick={handleSave}>
-                        Save Changes
-                    </Button>,
-                ]}>
-                <h2>Edit Subject</h2>
-                <input
-                    type='text'
-                    className='border-2 border-black w-full mt-2 mb-3 h-10 pl-1'
-                    value={newName}
-                    onChange={(e) => setNewName(e.target.value)}
+                title='Savolni tahrirlash'
+                open={showModal}
+                onCancel={() => setShowModal(false)}
+                onOk={handleSaveClick}>
+                <Input
+                    value={editedQuestionText}
+                    onChange={(e) => setEditedQuestionText(e.target.value)}
                 />
-                <input
-                    type='text'
-                    className='border border-black w-full mt-2 mb-3 h-10 pl-1'
-                    value={newRightAnswer}
-                    onChange={(e) => setNewRightAnswer(e.target.value)}
-                />
-                <Select
-                    value={newLevel}
-                    onChange={setNewLevel}
-                    style={{ width: "100%" }}>
-                    <Option value='A1'>A1</Option>
-                    <Option value='A2'>A2</Option>
-                    <Option value='B1'>B1</Option>
-                    <Option value='B2'>B2</Option>
-                    <Option value='C1'>C1</Option>
-                    <Option value='C2'>C2</Option>
-                </Select>
             </Modal>
         </div>
     );

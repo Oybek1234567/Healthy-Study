@@ -1,36 +1,31 @@
-import { EditFilled } from "@ant-design/icons";
-import { Tabs, Modal } from "antd";
+import { Tabs } from "antd";
 import axios from "axios";
 import { useEffect, useState } from "react";
-import { useLocation } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
+import useDrawer from "../../../hooks/useDrawer";
+import ExcistingGroupDrawer from "./modal";
 
 const Page = () => {
+    const { open, onOpen, onClose } = useDrawer();
     const location = useLocation();
     const { name, moduleId, groupId } = location.state;
-    const [report, setReport] = useState([]);
     const [data, setData] = useState([]);
-    const [reportData, setReportData] = useState([]);
-    const [editingColumn, setEditingColumn] = useState(null);
-    const [editedScores, setEditedScores] = useState({}); 
-    const [isModalVisible, setIsModalVisible] = useState(false); 
+    const [assignments, setAssignments] = useState([]);
+    const [attendance, setAttendance] = useState([]);
+    const [lesson, setLesson] = useState([]);
     const [activeTabKey, setActiveTabKey] = useState(
         localStorage.getItem("activeTabKey") || "1"
-    ); // For main tabs
-    const [activeReportTabKey, setActiveReportTabKey] = useState(
-        localStorage.getItem("activeReportTabKey") || "1"
-    ); // For report tabs
+    );
 
     useEffect(() => {
         const fetchData = async () => {
             try {
-                const req = await axios.get(
+                const assignmentTypes = await axios.get(
                     `http://localhost:3000/assignmenttypes/all/${moduleId}`
                 );
-                setData(req.data.assignmenttypes);
-                const reportReq = await axios.get(
-                    `http://localhost:3000/lessonreporttypes/all/${moduleId}`
-                );
-                setReport(reportReq.data.lesson_report_types);
+                setAssignments(assignmentTypes.data.assignmenttypes);
+                console.log(assignmentTypes.data.assignmenttypes);
+                
             } catch (error) {
                 console.error("Error fetching data:", error);
             }
@@ -39,125 +34,40 @@ const Page = () => {
         fetchData();
     }, [groupId, moduleId]);
 
-    const handleTabChange = async (reportKey) => {
-        setActiveReportTabKey(reportKey);  
-        localStorage.setItem("activeReportTabKey", reportKey); 
-
-        const reportItem = report.find(
-            (item) => `report-${item.id}` === reportKey
-        );
-
-        if (reportItem) {
+    useEffect(() => {
+        const handleGetAssignments = async () => {
             try {
-                const response = await axios.post(
-                    `http://localhost:3000/lessonreportsbyuser/all/${groupId}`,
-                    { id: reportItem.id }
+                const lessonReports = await axios.get(
+                    `http://localhost:3000/lessonreporttypes/all/${moduleId}`
                 );
-                
-                setReportData(
-                    Array.isArray(response.data.data) ? response.data.data : []
-                );
-                console.log(response.data.data);
+                setLesson(lessonReports.data.lesson_report_types);
+                console.log(lessonReports.data.lesson_report_types);
             } catch (error) {
-                console.error("Error fetching report data:", error);
+                console.error("Error fetching data:", error);
             }
-        }
-    };
+        };
+        handleGetAssignments();
+    }, [moduleId]);
 
-    // Handle Edit Icon Click
-    const handleEditClick = (columnIndex) => {
-        setEditingColumn(columnIndex); // Set the column being edited
-        const initialScores = {};
-        reportData.forEach((item) => {
-            const scoreItem = item.score[columnIndex];
-            if (scoreItem) {
-                initialScores[scoreItem.id] = scoreItem.score;
+    useEffect(() => {
+        const handleGetAttendance = async () => {
+            try {
+                const response = await axios.get(
+                    `http://localhost:3000/groupattendance/all/${groupId}`
+                );
+                setAttendance(response.data.data);
+            } catch (error) {
+                console.error("Error fetching data:", error);
             }
-        });
-        setEditedScores(initialScores); // Set initial score values
-        setIsModalVisible(true); // Open the modal
-    };
+        };
+        handleGetAttendance();
+    }, [groupId]);
 
-    const handleInputChange = (id, value) => {
-        setEditedScores((prev) => ({ ...prev, [id]: value }));
-    };
-
-    const handleSaveClick = async () => {
-        try {
-            const updatedScores = Object.entries(editedScores).map(
-                ([id, score]) => ({
-                    id,
-                    score,
-                })
-            );
-
-            await Promise.all(
-                updatedScores.map((item) =>
-                    axios.post(
-                        `http://localhost:3000/lessonreportsbyuser/edit/${item.id}`,
-                        { score: item.score }
-                    ).then(() => window.location.reload())   
-                )
-            );
-
-            setIsModalVisible(false);
-            console.log("Scores saved successfully");
-        } catch (error) {
-            console.error("Error saving scores:", error);
-        }
-    };
-
+    // `lesson` ma'lumotlarini olish uchun yangi useEffect qo'shamiz
     const handleMainTabChange = (key) => {
         setActiveTabKey(key);
-        localStorage.setItem("activeTabKey", key); 
+        localStorage.setItem("activeTabKey", key);
     };
-
-    const assignmentItems = data.map((dataItem, dataIndex) => ({
-        label: dataItem.name,
-        key: `data-${dataIndex}`,
-        children: (
-            <div>
-                <p>{dataItem.name}</p>
-            </div>
-        ),
-    }));
-
-    const reportItems = report.map((reportItem) => {
-        return {
-            label: reportItem.name,
-            key: `report-${reportItem.id}`,
-            children: (
-                <table style={{ borderCollapse: "collapse" }}>
-                    <thead>
-                        <tr style={{ textAlign: "center" }}>
-                            <th>User Name</th>
-                            {[...Array(7)].map((_, i) => (
-                                <th key={i}>
-                                    <EditFilled
-                                        onClick={() => handleEditClick(i)}
-                                    />
-                                </th>
-                            ))}
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {reportData.map((item, index) => (
-                            <tr key={index}>
-                                <td>{item.student_name}</td>
-                                {item.score.map((scoreItem) => (
-                                    <td key={scoreItem.id}>
-                                        <p className='border-black w-[60px]'>
-                                            {scoreItem.score || "-"}
-                                        </p>
-                                    </td>
-                                ))}
-                            </tr>
-                        ))}
-                    </tbody>
-                </table>
-            ),
-        };
-    });
 
     return (
         <div
@@ -179,62 +89,69 @@ const Page = () => {
                     size='small'
                     style={{ flex: 1 }}>
                     <Tabs.TabPane tab='Assignments' key='1'>
-                        <Tabs
-                            defaultActiveKey='1'
-                            type='card'
-                            size='large'
-                            style={{ width: "100%" }}>
-                            {assignmentItems.map((item) => (
-                                <Tabs.TabPane tab={item.label} key={item.key}>
-                                    {item.children}
-                                </Tabs.TabPane>
+                        <div className='flex gap-6'>
+                            {assignments.map((item) => (
+                                <Link
+                                    to={`/excisting/${groupId}/assignmenttypes/${item.id}`} 
+                                    state={{ groupId, assignment_type_id: item.id }}
+                                    key={item.key}
+                                    className='flex cursor-pointer mt-10 justify-center items-center w-[300px] h-40 border-4 border-black hover:text-black text-2xl'>
+                                    {item.name}
+                                </Link>
                             ))}
-                        </Tabs>
+                        </div>
                     </Tabs.TabPane>
                     <Tabs.TabPane tab='Lesson Reports' key='2'>
-                        <Tabs
-                            activeKey={activeReportTabKey}
-                            onChange={handleTabChange}
-                            type='card'
-                            size='large'
-                            style={{ width: "100%" }}>
-                            {reportItems.map((item) => (
-                                <Tabs.TabPane tab={item.label} key={item.key}>
-                                    {item.children}
-                                </Tabs.TabPane>
+                        <div className='flex gap-4 flex-wrap'>
+                            {lesson.map((item) => (
+                                <Link
+                                    to={`/excisting/${groupId}/lesson_reports/${item.id}`}
+                                    state={{
+                                        groupId,
+                                        lesson_report_type_id: item.id,
+                                    }}
+                                    key={item.id}
+                                    className='flex cursor-pointer mt-10 justify-center items-center w-[300px] h-40 border-4 border-black hover:text-black'>
+                                    <p className='text-3xl'>{item.name}</p>
+                                </Link>
                             ))}
-                        </Tabs>
+                        </div>
+                    </Tabs.TabPane>
+                    <Tabs.TabPane tab='Attendance' key='3'>
+                        <button
+                            className='w-10 h-10  mb-4 ml-[94%] bg-[green] text-white rounded-full border-2 border-black'
+                            onClick={onOpen}>
+                            +
+                        </button>
+                        <ExcistingGroupDrawer open={open} onClose={onClose} />
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Name</th>
+                                    <th>Attendance</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {attendance.map((item) => (
+                                    <tr key={item.id}>
+                                        <td>{item.student_name}</td>
+                                        <td className='flex gap-4'>
+                                            {item.attendance.map((item) => (
+                                                <p key={item.id}>
+                                                    {item.isAttended ===
+                                                    "attended"
+                                                        ? "✅"
+                                                        : "❌"}
+                                                </p>
+                                            ))}
+                                        </td>
+                                    </tr>
+                                ))}
+                            </tbody>
+                        </table>
                     </Tabs.TabPane>
                 </Tabs>
             </div>
-            <Modal
-                title='Edit Scores'
-                visible={isModalVisible}
-                onOk={handleSaveClick}
-                onCancel={() => setIsModalVisible(false)}
-                okText='Save'
-                cancelText='Cancel'>
-                {reportData.map((item, idx) => {
-                    const scoreItem = item.score[editingColumn];
-                    return scoreItem ? (
-                        <div key={scoreItem.id} className=''>
-                            <p className='border-black w-full'>
-                                {scoreItem.group_lesson_id} / {idx + 1}
-                            </p>
-                            <input
-                                className='border w-full mb-3 h-9'
-                                value={editedScores[scoreItem.id] || ""}
-                                onChange={(e) =>
-                                    handleInputChange(
-                                        scoreItem.id,
-                                        e.target.value
-                                    )
-                                }
-                            />
-                        </div>
-                    ) : null;
-                })}
-            </Modal>
         </div>
     );
 };

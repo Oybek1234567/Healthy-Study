@@ -293,7 +293,6 @@ const handleNewSave = async () => {
             <table className='table-auto w-full mt-10 shadow-md rounded overflow-hidden'>
                 <thead>
                     <tr className='bg-gray-200 text-gray-700'>
-                        <th className='p-4 text-left'>Group Name</th>
                         <th className='p-4 text-left'>Students</th>
                         <th className='p-4 text-left'>Courses</th>
                         <th className='p-4 text-left'>Modules</th>
@@ -309,7 +308,6 @@ const handleNewSave = async () => {
                 <tbody>
                     {data.map((item) => (
                         <tr key={item.id} className='bg-white border-b'>
-                            <td className='p-4'>{item.name}</td>
                             <td className='p-4'>
                                 <div className='flex items-center'>
                                     <button

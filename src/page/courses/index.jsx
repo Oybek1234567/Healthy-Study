@@ -1,5 +1,5 @@
 import { Link, Route, Routes, useNavigate } from "react-router-dom";
-import Modules from "./module/module";
+import Modules from "./module/tab_1/module";
 import useDrawer from "../../hooks/useDrawer";
 import { useState, useEffect } from "react";
 import CoursesDrawer from "./drawer";

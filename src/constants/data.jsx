@@ -126,7 +126,7 @@ export const menu = [
             {
                 id: 19,
                 title: "Mavjud",
-                path: "/excisting",
+                path: "/groups/excisting",
                 icon: <FileDoneOutlined />,
             },
             {
@@ -139,36 +139,42 @@ export const menu = [
     },
     {
         id: 21,
+        title: "Exams",
+        path: "/exams",
+        icon: <FundOutlined />
+    },
+    {
+        id: 22,
         title: "Dars jadvali",
         path: "/timetable",
         icon: <FileDoneOutlined />,
     },
     {
-        id: 22,
+        id: 23,
         title: "Hisobotlar",
         path: "/reports",
         icon: <UnorderedListOutlined />,
         children: [
             {
-                id: 23,
+                id: 24,
                 title: "Education",
                 path: "/education",
                 icon: <SolutionOutlined />,
             },
             {
-                id: 24,
+                id: 25,
                 title: "Revenue",
                 path: "/revenue",
                 icon: <DollarOutlined />,
             },
             {
-                id: 25,
+                id: 26,
                 title: "Expense",
                 path: "/expense",
                 icon: <ShoppingOutlined />,
             },
             {
-                id: 26,
+                id: 27,
                 title: "Map",
                 path: "/map",
                 icon: <FundOutlined />,
@@ -176,7 +182,7 @@ export const menu = [
         ],
     },
     {
-        id: 27,
+        id: 28,
         title: "Registratsiya",
         path: "/login",
         icon: <FundOutlined />,

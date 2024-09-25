@@ -13,6 +13,8 @@ const Subjects = () => {
     const [newName, setNewName] = useState("");
     const [selectedStatus, setSelectedStatus] = useState("all");
     const { id } = useParams();
+    console.log(id);
+    
 
     useEffect(() => {
         const fetchData = async () => {
@@ -128,7 +130,7 @@ const Subjects = () => {
                         <tr key={item.id}>
                             <td>{index + 1}</td>
                             <td>
-                                <Link to={`/modules/${id}/subjects/${item.id}`}>
+                                <Link to={`/modules/${id}/subjects/${item.id}`} state={{ moduleId: id}}>
                                     {item.name}
                                 </Link>
                             </td>
