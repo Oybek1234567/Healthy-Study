@@ -183,8 +183,8 @@ export const menu = [
     },
     {
         id: 28,
-        title: "Registratsiya",
-        path: "/login",
-        icon: <FundOutlined />,
-    },
+        title: "Logout",
+        path: "/logout",
+        icon: <UserOutlined />,
+    }
 ];

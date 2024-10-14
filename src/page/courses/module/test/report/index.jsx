@@ -14,35 +14,31 @@ const Report = () => {
     const [newWeight, setNewWeight] = useState("");
     const [selectedStatus, setSelectedStatus] = useState("all");
     const { id } = useParams();
+    const { open, onOpen, onClose } = useDrawer();
 
+    // Ma'lumotlarni olish uchun funktsiya
     useEffect(() => {
         const fetchData = async () => {
             try {
-                const req = await axios.get(
+                const response = await axios.get(
                     `http://localhost:3000/lessonreporttypes/all/${id}`
                 );
-                setReports(req.data.lesson_report_types);
-                setFilteredReports(req.data.lesson_report_types);
+                setReports(response.data.lesson_report_types);
+                setFilteredReports(response.data.lesson_report_types);
             } catch (error) {
                 console.error(error);
             }
         };
-
         fetchData();
     }, [id]);
 
+    // O'zgartirishlarni saqlash uchun funktsiya
     const handleSave = async () => {
         try {
-            window.location.reload()
-            alert("Subject successfully updated");
             await axios.post(
                 `http://localhost:3000/lessonreporttypes/edit/${editReport.id}`,
                 { name: newName, weight: newWeight },
-                {
-                    headers: {
-                        "Content-Type": "application/json",
-                    },
-                }
+                { headers: { "Content-Type": "application/json" } }
             );
 
             const updatedReports = reports.map((report) =>
@@ -54,14 +50,14 @@ const Report = () => {
             setReports(updatedReports);
             setFilteredReports(updatedReports);
             setShowEditModal(false);
-
-            alert("Course updated successfully");
+            alert("Mavzu muvaffaqiyatli yangilandi");
         } catch (error) {
             console.error(error);
-            alert("Failed to update course");
+            alert("Mavzuni yangilashda xatolik");
         }
     };
 
+    // Tahrirlash uchun funktsiya
     const handleEdit = (report) => {
         setEditReport(report);
         setNewName(report.name);
@@ -69,69 +65,70 @@ const Report = () => {
         setShowEditModal(true);
     };
 
+    // O'chirish uchun funktsiya
     const handleDelete = async (report) => {
         try {
-            window.location.reload()
-            alert("Course deleted successfully");
             await axios.post(
                 `http://localhost:3000/lessonreporttypes/delete/${report.id}`
             );
-
             const updatedReports = reports.filter((c) => c.id !== report.id);
 
             setReports(updatedReports);
             setFilteredReports(updatedReports);
-
-            alert("Course deleted successfully");
+            alert("Kurs muvaffaqiyatli o'chirildi");
         } catch (error) {
             console.error(error);
-            alert("Failed to delete course");
+            alert("Kursni o'chirishda xatolik");
         }
     };
 
+    // Holat o'zgarishini boshqarish
     const handleStatusChange = (status) => {
         setSelectedStatus(status);
-        if (status === "all") {
-            setFilteredReports(reports);
-        } else {
-            setFilteredReports(
-                reports.filter((report) => report.status === status)
-            );
-        }
+        setFilteredReports(
+            status === "all"
+                ? reports
+                : reports.filter((report) => report.status === status)
+        );
     };
 
+    // Dropdown menyusi uchun elementlar
     const menuItems = (report) => [
-        {
-            key: "edit",
-            label: "Edit",
-            onClick: () => handleEdit(report),
-        },
+        { key: "edit", label: "Tahrirlash", onClick: () => handleEdit(report) },
         {
             key: "delete",
-            label: "Delete",
+            label: "O'chirish",
             onClick: () => handleDelete(report),
         },
     ];
 
-    const { open, onOpen, onClose } = useDrawer();
-
     return (
-        <div>
+        <div className='relative p-6'>
+            <select
+                name='lessons'
+                onChange={(e) => handleStatusChange(e.target.value)}
+                className=' w-1/6 text-xl border border-black rounded-md'>
+                <option value='all'>Hammasi</option>
+                <option value='active'>Faol</option>
+                <option value='deleted'>O`chirilgan</option>
+            </select>
             <button
-                className='absolute w-14 h-14 -translate-y-[200px] ml-[94%] bg-green-700 rounded-full text-white'
-                type='button'
-                onClick={() => onOpen()}>
+                className='absolute top-0 right-0 w-14 h-14 bg-green-700 text-2xl text-white rounded-full shadow-lg'
+                onClick={onOpen}>
                 +
             </button>
             <ReportsDrawer open={open} onClosed={onClose} />
-            <div className='absolute flex gap-4 flex-wrap'>
-                {filteredReports && filteredReports.map((report) => (
-                    <div key={report.id}>
-                        <div className='flex flex-col cursor-pointer mt-20 justify-center items-center w-[300px] h-40 border-4 border-black hover:text-black'>
-                            <p>Name: {report.name}</p>
-                            <p>Weight: {report.weight}</p>
-                        </div>
+            <div className='flex flex-wrap gap-6 mt-6'>
+                {filteredReports.map((report) => (
+                    <div
+                        key={report.id}
+                        className='flex flex-col w-72 h-40 p-4 border-4 border-gray-300 rounded-lg transition-colors duration-300 hover:bg-gray-100'>
+                        <p className='text-2xl font-semibold'>
+                            Nom: {report.name}
+                        </p>
+                        <p className='text-xl font-semibold'>Og`irlik: {report.weight}</p>
                         <Dropdown
+                            className="mt-4"
                             menu={{ items: menuItems(report) }}
                             trigger={["click"]}>
                             <a onClick={(e) => e.preventDefault()}>
@@ -145,14 +142,6 @@ const Report = () => {
                     </div>
                 ))}
             </div>
-            <select
-                name='lessons'
-                onChange={(e) => handleStatusChange(e.target.value)}
-                className=' -translate-y-[200px] ml-[75%] w-1/12 text-xl'>
-                <option value='all'>All</option>
-                <option value='active'>Active</option>
-                <option value='deleted'>Deleted</option>
-            </select>
             <Modal
                 open={showEditModal}
                 onCancel={() => setShowEditModal(false)}
@@ -160,25 +149,28 @@ const Report = () => {
                     <Button
                         key='cancel'
                         onClick={() => setShowEditModal(false)}>
-                        Close
+                        Yopish
                     </Button>,
                     <Button key='save' type='primary' onClick={handleSave}>
-                        Save Changes
+                        O'zgarishlarni saqlash
                     </Button>,
-                ]}>
-                <h2>Edit Report</h2>
-                <div className='flex flex-col gap-2'>
+                ]}
+                className='w-96'>
+                <h2 className='text-xl font-bold mb-4'>Tahrirlash</h2>
+                <div className='flex flex-col gap-4'>
                     <input
                         type='text'
-                        className='border-2 border-black w-full'
+                        className='border-2 border-gray-300 p-2 rounded-md w-full'
                         value={newName}
                         onChange={(e) => setNewName(e.target.value)}
+                        placeholder='Mavzu nomini kiriting'
                     />
                     <input
                         type='number'
-                        className='border-2 border-black w-full'
+                        className='border-2 border-gray-300 p-2 rounded-md w-full'
                         value={newWeight}
                         onChange={(e) => setNewWeight(e.target.value)}
+                        placeholder="Og'irlikni kiriting"
                     />
                 </div>
             </Modal>

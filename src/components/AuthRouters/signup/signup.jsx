@@ -1,9 +1,8 @@
-import { Form, Input, Select } from "antd";
+import { Form, Input } from "antd";
 import axios from "axios";
-import { useNavigate } from "react-router-dom";
- 
+import { Link, useNavigate } from "react-router-dom";
 
-const App = () => {
+const Signup = () => {
     const navigate = useNavigate();
 
     const onFinish = async (values) => {
@@ -30,6 +29,8 @@ const App = () => {
                     },
                 }
             );
+            alert("Foydalanuvchi ro'yxatdan o'tdi!")
+            window.location.reload();
 
             if (res.data) {
                 navigate("/success");
@@ -44,8 +45,9 @@ const App = () => {
     };
 
     return (
-        <>
-            <Form onFinish={onFinish}>
+        <div className='mt-10 mb-10 max-w-lg mx-auto bg-white shadow-2xl border-2 border-gray-300 rounded-lg p-8'>
+            <h2 className='text-2xl font-semibold text-center mb-6'>Sign Up</h2>
+            <Form layout='vertical' onFinish={onFinish}>
                 <Form.Item
                     label='Phone'
                     name='phone'
@@ -57,7 +59,7 @@ const App = () => {
                     ]}>
                     <Input
                         type='number'
-                        className='border-2 border-black'
+                        className='border-gray-300 focus:ring focus:ring-green-200 focus:border-green-500 w-full px-3 py-2 rounded-md'
                         autoComplete='new-password'
                     />
                 </Form.Item>
@@ -76,7 +78,7 @@ const App = () => {
                         },
                     ]}>
                     <Input.Password
-                        className='border-2 border-black'
+                        className='border-gray-300 focus:ring focus:ring-green-200 focus:border-green-500 w-full px-3 py-2 rounded-md'
                         autoComplete='new-password'
                     />
                 </Form.Item>
@@ -86,7 +88,7 @@ const App = () => {
                     rules={[
                         { required: true, message: "Please input your name!" },
                     ]}>
-                    <Input className='border-2 border-black' />
+                    <Input className='border-gray-300 focus:ring focus:ring-green-200 focus:border-green-500 w-full px-3 py-2 rounded-md' />
                 </Form.Item>
                 <Form.Item
                     label='Surname'
@@ -97,7 +99,10 @@ const App = () => {
                             message: "Please input your surname!",
                         },
                     ]}>
-                    <Input type='text' className='border-2 border-black' />
+                    <Input
+                        type='text'
+                        className='border-gray-300 focus:ring focus:ring-green-200 focus:border-green-500 w-full px-3 py-2 rounded-md'
+                    />
                 </Form.Item>
                 <Form.Item
                     label='Date Of Birth'
@@ -108,7 +113,23 @@ const App = () => {
                             message: "Please select your birthday!",
                         },
                     ]}>
-                    <Input type='date' className='border-2 border-black' />
+                    <Input
+                        type='date'
+                        className='border-gray-300 focus:ring focus:ring-green-200 focus:border-green-500 w-full px-3 py-2 rounded-md'
+                    />
+                </Form.Item>
+
+                <Form.Item label='Passport Series' name='passport_series'>
+                    <Input
+                        type='text'
+                        className='border-gray-300 focus:ring focus:ring-green-200 focus:border-green-500 w-full px-3 py-2 rounded-md'
+                    />
+                </Form.Item>
+                <Form.Item label='Expiration Date' name='expiration_date'>
+                    <Input
+                        type='date'
+                        className='w-full border-gray-300 focus:ring focus:ring-green-200 focus:border-green-500 px-3 py-2 rounded-md'
+                    />
                 </Form.Item>
                 <Form.Item
                     label='Role'
@@ -116,33 +137,24 @@ const App = () => {
                     rules={[
                         { required: true, message: "Please select your role!" },
                     ]}>
-                    <Select className='w-full'>
-                        <option value='staff'>Staff</option>
-                        <option value='teacher'>O`qituvchi</option>
+                    <select className='w-full border-gray-300 border-2 focus:ring focus:ring-green-200 focus:border-green-500 px-3 py-2 rounded-md'>
                         <option value='student'>Student</option>
-                        <option value='assistant'>Assistent</option>
                         <option value='guest'>Guest</option>
-                    </Select>
-                </Form.Item>
-                <Form.Item label='Passport Series' name='passport_series'>
-                    <Input type='text' className='border-2 border-black' />
-                </Form.Item>
-                <Form.Item label='Expiration Date' name='expiration_date'>
-                    <Input
-                        type='date'
-                        className='w-full border-2 border-black'
-                    />
+                    </select>
                 </Form.Item>
                 <Form.Item>
                     <button
                         type='submit'
-                        className='w-14 h-10 rounded-sm bg-green-700 text-white mt-10'>
+                        className='w-full bg-green-600 text-white font-semibold py-2 rounded-md hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-green-500'>
                         Submit
                     </button>
                 </Form.Item>
             </Form>
-        </>
+            <Link to={"/"} className='underline'>
+                Return to Login
+            </Link>
+        </div>
     );
 };
 
-export default App;
+export default Signup;

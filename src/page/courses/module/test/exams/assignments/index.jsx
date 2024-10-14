@@ -112,7 +112,7 @@ const AssignmentTypes = () => {
             </h1>
             <button
                 onClick={onOpen}
-                className='bg-green-700 w-10 h-10 ml-[95%] rounded-full mb-10 text-white text-xl'>
+                className='bg-green-700 w-10 h-10 text-xl ml-[95%] rounded-full mb-10 text-white text-xl'>
                 +
             </button>
             <AssignmentsDrawer
@@ -136,7 +136,8 @@ const AssignmentTypes = () => {
                                 <td>{index + 1}</td>
                                 <td>
                                     <Link
-                                        to={`/modules/${moduleID}/types/${assignmentID}/assignments/${item.id}`} state={{ moduleID, typeId: item.id }}>
+                                        to={`/modules/${moduleID}/types/${assignmentID}/assignments/${item.id}`}
+                                        state={{ moduleID, typeId: item.id }}>
                                         {item.name}
                                     </Link>
                                 </td>

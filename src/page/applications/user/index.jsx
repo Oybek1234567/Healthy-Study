@@ -90,112 +90,121 @@ const User = () => {
     );
 
     return (
-        <div>
+        <div className='p-5'>
             <a
                 href='#'
                 onClick={handleDownloadExcel}
-                style={{ marginBottom: "10px" }}>
+                className='mb-4 inline-block px-4 py-2 bg-blue-600 text-white font-semibold rounded-lg hover:bg-blue-700 transition hover:text-white'>
                 Download Excel
             </a>
-            <div className='flex mt-2 text-xl gap-3'>
-                <label htmlFor='accepted'>Accepted</label>
-                <input
-                    type='checkbox'
-                    id='accepted'
-                    onChange={() => handleCheckboxChange("accepted")}
-                    className='cursor-pointer'
-                />
-                <label htmlFor='pending'>Pending</label>
-                <input
-                    type='checkbox'
-                    id='pending'
-                    onChange={() => handleCheckboxChange("pending")}
-                    className='cursor-pointer'
-                />
-                <label htmlFor='denied'>Denied</label>
-                <input
-                    type='checkbox'
-                    id='denied'
-                    onChange={() => handleCheckboxChange("denied")}
-                    className='cursor-pointer'
-                />
+
+            <div className='flex items-center gap-4 text-lg my-5'>
+                <label className='cursor-pointer'>
+                    <input
+                        type='checkbox'
+                        onChange={() => handleCheckboxChange("accepted")}
+                        className='mr-2'
+                    />
+                    Accepted
+                </label>
+                <label className='cursor-pointer'>
+                    <input
+                        type='checkbox'
+                        onChange={() => handleCheckboxChange("pending")}
+                        className='mr-2'
+                    />
+                    Pending
+                </label>
+                <label className='cursor-pointer'>
+                    <input
+                        type='checkbox'
+                        onChange={() => handleCheckboxChange("denied")}
+                        className='mr-2'
+                    />
+                    Denied
+                </label>
             </div>
+
             <button
                 type='button'
-                className='ml-[95%] w-10 h-10 bg-[green] rounded-full text-white'
+                className='bg-green-600 w-12 h-12 mt-32 text-white rounded-full absolute top-4 right-10 flex items-center justify-center shadow-lg hover:bg-green-700 transition'
                 onClick={onOpen}>
                 +
             </button>
+
             <UserDrawer open={open} onClosed={onClose} />
-            <table className='mt-5'>
+
+            <table className='w-full mt-8 table-auto border-collapse border border-gray-300'>
                 <thead>
-                    <tr>
-                        <th>ID</th>
+                    <tr className='bg-gray-100 text-left'>
+                        <th className='px-4 py-2 border border-gray-300'>ID</th>
                         <th
                             onClick={() => handleSort("name")}
-                            className='cursor-pointer'>
+                            className='px-4 py-2 border border-gray-300 cursor-pointer'>
                             Name
                             {sortConfig?.key === "name" &&
                             sortConfig?.direction === "ascending" ? (
-                                <UpOutlined />
+                                <UpOutlined className='ml-2 inline-block' />
                             ) : (
-                                <DownOutlined />
+                                <DownOutlined className='ml-2 inline-block' />
                             )}
                         </th>
                         <th
                             onClick={() => handleSort("surname")}
-                            className='cursor-pointer'>
+                            className='px-4 py-2 border border-gray-300 cursor-pointer'>
                             Surname
                             {sortConfig?.key === "surname" &&
                             sortConfig?.direction === "ascending" ? (
-                                <UpOutlined />
+                                <UpOutlined className='ml-2 inline-block' />
                             ) : (
-                                <DownOutlined />
+                                <DownOutlined className='ml-2 inline-block' />
                             )}
                         </th>
                         <th
                             onClick={() => handleSort("date_of_birth")}
-                            className='cursor-pointer'>
+                            className='px-4 py-2 border border-gray-300 cursor-pointer'>
                             Date Of Birth
                             {sortConfig?.key === "date_of_birth" &&
                             sortConfig?.direction === "ascending" ? (
-                                <UpOutlined />
+                                <UpOutlined className='ml-2 inline-block' />
                             ) : (
-                                <DownOutlined />
+                                <DownOutlined className='ml-2 inline-block' />
                             )}
                         </th>
-                        <th>Phone</th>
+                        <th className='px-4 py-2 border border-gray-300'>
+                            Phone
+                        </th>
                         <th
                             onClick={() => handleSort("role")}
-                            className='cursor-pointer'>
+                            className='px-4 py-2 border border-gray-300 cursor-pointer'>
                             Role
                             {sortConfig?.key === "role" &&
                             sortConfig?.direction === "ascending" ? (
-                                <UpOutlined />
+                                <UpOutlined className='ml-2 inline-block' />
                             ) : (
-                                <DownOutlined />
+                                <DownOutlined className='ml-2 inline-block' />
                             )}
                         </th>
                         <th
                             onClick={() => handleSort("passport_series")}
-                            className='cursor-pointer'>
+                            className='px-4 py-2 border border-gray-300 cursor-pointer'>
                             Passport Series
                             {sortConfig?.key === "passport_series" &&
                             sortConfig?.direction === "ascending" ? (
-                                <UpOutlined />
+                                <UpOutlined className='ml-2 inline-block' />
                             ) : (
-                                <DownOutlined />
+                                <DownOutlined className='ml-2 inline-block' />
                             )}
                         </th>
                         <th
                             onClick={() => handleSort("expiration_date")}
-                            className='cursor-pointer'>
+                            className='px-4 py-2 border border-gray-300 cursor-pointer'>
                             Expiration Date
                             {sortConfig?.key === "expiration_date" &&
                             sortConfig?.direction === "ascending" ? (
-                                <UpOutlined />
+                                <UpOutlined className='ml-2 inline-block' />
                             ) : (
-                                <DownOutlined />
+                                <DownOutlined className='ml-2 inline-block' />
                             )}
                         </th>
                     </tr>
@@ -203,19 +212,31 @@ const User = () => {
                 <tbody>
                     {filteredUserData &&
                         filteredUserData.map((user) => (
-                            <tr key={user.id}>
-                                <td>{user.id}</td>
-                                <td>{user.name}</td>
-                                <td>{user.surname}</td>
-                                <td>
+                            <tr key={user.id} className='hover:bg-gray-50'>
+                                <td className='px-4 py-2 border border-gray-300'>
+                                    {user.id}
+                                </td>
+                                <td className='px-4 py-2 border border-gray-300'>
+                                    {user.name}
+                                </td>
+                                <td className='px-4 py-2 border border-gray-300'>
+                                    {user.surname}
+                                </td>
+                                <td className='px-4 py-2 border border-gray-300'>
                                     {user.date_of_birth
                                         ? user.date_of_birth.slice(0, 10)
                                         : ""}
                                 </td>
-                                <td>{user.phone}</td>
-                                <td>{user.role}</td>
-                                <td>{user.passport_series}</td>
-                                <td>
+                                <td className='px-4 py-2 border border-gray-300'>
+                                    {user.phone}
+                                </td>
+                                <td className='px-4 py-2 border border-gray-300'>
+                                    {user.role}
+                                </td>
+                                <td className='px-4 py-2 border border-gray-300'>
+                                    {user.passport_series}
+                                </td>
+                                <td className='px-4 py-2 border border-gray-300'>
                                     {user.expiration_date
                                         ? user.expiration_date.slice(0, 10)
                                         : ""}

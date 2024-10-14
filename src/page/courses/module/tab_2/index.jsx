@@ -40,7 +40,6 @@ const QuestionLvl = () => {
                 `http://localhost:3000/questionlevels/edit/${currentItem.id}`,
                 { name: value }
             );
-            // Update local state with new value
             setData((prevData) =>
                 prevData.map((item) =>
                     item.id === currentItem.id ? { ...item, name: value } : item
@@ -52,6 +51,7 @@ const QuestionLvl = () => {
             console.error(error);
         }
     };
+
     const handleDelete = async (item) => {
         try {
             await axios.post(
@@ -65,7 +65,6 @@ const QuestionLvl = () => {
         }
     };
 
-
     const menuItems = (item) => [
         {
             key: "1",
@@ -73,64 +72,77 @@ const QuestionLvl = () => {
         },
         {
             key: "2",
-            label: <p onClick={() =>handleDelete(item)}>Delete</p>,
+            label: <p onClick={() => handleDelete(item)}>Delete</p>,
         },
     ];
 
     return (
-        <div>
-            <button
-                className='bg-green-800 w-10 h-10 text-white rounded-full ml-[95%] -translate-y-20'
-                onClick={onOpen}>
-                +
-            </button>
+        <div className='relative min-h-screen bg-gray-50 p-8'>
+            <div className='flex justify-end mb-8'>
+                <button
+                    className='bg-green-600 hover:bg-green-700 transition-colors duration-200 ease-in-out text-white w-10 h-10 rounded-full shadow-md'
+                    onClick={onOpen}>
+                    +
+                </button>
+            </div>
             <LevelDrawer open={open} onClose={onClose} />
-            <table>
-                <thead>
-                    <tr className='text-center'>
-                        <th>№</th>
-                        <th>Name</th>
-                        <th>Action</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {data.map((item, idx) => (
-                        <tr key={item.id}>
-                            <td>{idx + 1}</td>
-                            <td>{item.name}</td>
-                            <td>
-                                <Dropdown
-                                    menu={{ items: menuItems(item) }}
-                                    trigger={["click"]}>
-                                    <a onClick={(e) => e.preventDefault()}>
-                                        <Space>
-                                            <p className='rotate-90 text-4xl cursor-pointer'>
-                                                ...
-                                            </p>
-                                        </Space>
-                                    </a>
-                                </Dropdown>
-                            </td>
+            <div className='bg-white shadow-lg rounded-lg p-6 overflow-x-auto'>
+                <table className='w-full table-auto'>
+                    <thead>
+                        <tr className='text-center bg-gray-100 text-gray-700'>
+                            <th className='p-4'>№</th>
+                            <th className='p-4'>Name</th>
+                            <th className='p-4'>Action</th>
                         </tr>
-                    ))}
-                </tbody>
-            </table>
+                    </thead>
+                    <tbody>
+                        {data.map((item, idx) => (
+                            <tr key={item.id} className='text-center'>
+                                <td className='p-4 border-b'>{idx + 1}</td>
+                                <td className='p-4 border-b'>{item.name}</td>
+                                <td className='p-4 border-b'>
+                                    <Dropdown
+                                        menu={{ items: menuItems(item) }}
+                                        trigger={["click"]}>
+                                        <a
+                                            onClick={(e) => e.preventDefault()}
+                                            className='cursor-pointer'>
+                                            <Space>
+                                                <p className='rotate-90 text-2xl font-bold text-gray-600'>
+                                                    ...
+                                                </p>
+                                            </Space>
+                                        </a>
+                                    </Dropdown>
+                                </td>
+                            </tr>
+                        ))}
+                    </tbody>
+                </table>
+            </div>
+
             <Modal
                 open={showModal}
                 onCancel={() => setShowModal(false)}
-                footer={null}>
-                <span className='mr-1'>Change name</span>
-                <input
-                    type='text'
-                    value={value}
-                    onChange={(e) => setValue(e.target.value)}
-                    className='border-2 border-black'
-                />
-                <button
-                    onClick={handleSave}
-                    className='bg-green-800 p-2 mt-3 text-white ml-3 rounded-lg'>
-                    Save
-                </button>
+                footer={null}
+                centered
+                className='p-4'>
+                <div className='flex flex-col'>
+                    <label className='text-lg font-semibold mb-2'>
+                        Change name
+                    </label>
+                    <input
+                        type='text'
+                        value={value}
+                        onChange={(e) => setValue(e.target.value)}
+                        className='border-2 border-gray-300 rounded-md p-2 focus:outline-none focus:border-blue-500'
+                    />
+                    <button
+                        onClick={handleSave}
+                        className='bg-green-600 hover:bg-green-700 transition-colors duration-200 ease-in-out text-white p-2 mt-4 rounded-md self-end'>
+                        Save
+                    </button>
+                </div>
             </Modal>
         </div>
     );

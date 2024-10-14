@@ -46,7 +46,6 @@ const Modules = () => {
             alert("Kurs muvaffaqiyatli yangilandi");
             setShowEditModal(false);
             window.location.reload();
-            console.log(newName, newStudent, newLength);
             await axios.post(
                 `http://localhost:3000/modules/edit/${editModule.id}`,
                 { name: newName, max_students: newStudent, length: newLength },
@@ -127,25 +126,48 @@ const Modules = () => {
         setModules(updatedCourses);
         onClose();
     };
-    console.log(courseName);
 
     return (
-        <div>
-            <div className='absolute flex flex-wrap gap-4 mt-8 p-4'>
+        <div className='container mx-auto p-6'>
+            <div className='flex justify-between items-center mb-6'>
+                <h1 className='text-3xl font-semibold'>
+                    {courseName || "Modules"}
+                </h1>
+                <select
+                    name='course'
+                    onChange={(e) => handleStatusChange(e.target.value)}
+                    className='p-2 border border-gray-300 rounded-md'>
+                    <option value='all'>All</option>
+                    <option value='active'>Active</option>
+                    <option value='deleted'>Deleted</option>
+                </select>
+            </div>
+
+            <div className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6'>
                 {filteredCourses &&
                     filteredCourses.map((module) => (
-                        <div key={module.id}>
+                        <div
+                            key={module.id}
+                            className='p-4  bg-white shadow-md rounded-lg'>
                             <Link
                                 to={`/courses/${id}/modules/${module.id}`}
                                 state={{
                                     courseName,
                                     moduleName: module.name,
                                 }}
-                                className='flex flex-wrap gap-2 mt-8 p-4 text-xl w-[300px] border-4 border-black hover:text-black'>
-                                <p>Modul ID: {module.id}</p>
-                                <p>Modul nomi: {module.name}</p>
-                                <p>Max № studentlar: {module.max_students}</p>
-                                <p>Darslar davomiyligi: {module.length}</p>
+                                className='block'>
+                                <p className='text-2xl font-semibold'>
+                                    Modul ID: {module.id}
+                                </p>
+                                <p className='text-gray-600 text-lg'>
+                                    Modul nomi: {module.name}
+                                </p>
+                                <p className='text-gray-600 text-lg'>
+                                    Max № studentlar: {module.max_students}
+                                </p>
+                                <p className='text-gray-600 text-lg'>
+                                    Darslar davomiyligi: {module.length}
+                                </p>
                             </Link>
                             <Dropdown as={ButtonGroup}>
                                 <Dropdown.Toggle
@@ -167,41 +189,48 @@ const Modules = () => {
                         </div>
                     ))}
             </div>
+
             <button
-                className='absolute w-10 h-10 ml-[70%] bg-green-700 rounded-full text-white'
+                className='fixed top-36 right-11 w-12 h-12 bg-green-500 text-white rounded-full flex items-center justify-center shadow-lg hover:bg-green-600'
                 type='button'
                 onClick={() => onOpen()}>
                 +
             </button>
+
             <ModulesDrawer
                 open={open}
                 onClosed={onClose}
                 onCreate={handleCreate}
             />
-            <select
-                name='course'
-                onChange={(e) => handleStatusChange(e.target.value)}
-                className='absolute ml-[50%] mt-2 border-2 border-black'>
-                <option value='all'>All</option>
-                <option value='active'>Active</option>
-                <option value='deleted'>Deleted</option>
-            </select>
-            <Modal show={showEditModal} onHide={() => setShowEditModal(false)}>
+
+            <Modal
+                show={showEditModal}
+                onHide={() => setShowEditModal(false)}
+                centered>
                 <Modal.Header closeButton>
                     <Modal.Title>Edit Course</Modal.Title>
                 </Modal.Header>
-                <Modal.Body className='flex flex-col gap-2'>
+                <Modal.Body className='flex flex-col gap-4'>
                     <input
                         type='text'
-                        className='border-2 border-black w-full'
+                        className='p-2 border border-gray-300 rounded-md'
                         value={newName}
                         onChange={(e) => setNewName(e.target.value)}
+                        placeholder='Module Name'
                     />
                     <input
                         type='number'
-                        className='border-2 border-black w-full'
+                        className='p-2 border border-gray-300 rounded-md'
                         value={newStudent}
                         onChange={(e) => setNewStudent(e.target.value)}
+                        placeholder='Max Students'
+                    />
+                    <input
+                        type='text'
+                        className='p-2 border border-gray-300 rounded-md'
+                        value={newLength}
+                        onChange={(e) => setNewLength(e.target.value)}
+                        placeholder='Module Length'
                     />
                 </Modal.Body>
                 <Modal.Footer>
@@ -210,10 +239,7 @@ const Modules = () => {
                         onClick={() => setShowEditModal(false)}>
                         Close
                     </Button>
-                    <Button
-                        variant='primary'
-                        type='button'
-                        onClick={handleSave}>
+                    <Button variant='primary' onClick={handleSave}>
                         Save Changes
                     </Button>
                 </Modal.Footer>

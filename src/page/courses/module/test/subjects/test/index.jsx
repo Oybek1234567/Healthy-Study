@@ -97,7 +97,7 @@ const SubjectTests = () => {
     return (
         <div>
             <Button
-                className='bg-green-700 w-10 h-10 rounded-full text-white ml-[95%]'
+                className='bg-green-700 text-xl w-10 h-10 rounded-full text-white ml-[95%]'
                 onClick={onOpen}>
                 +
             </Button>

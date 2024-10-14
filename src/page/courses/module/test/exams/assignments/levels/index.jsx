@@ -118,12 +118,12 @@ const AssignmentLevels = () => {
     return (
         <div>
             <button
-                className='bg-green-800 w-10 h-10 mt-3 text-white rounded-full ml-[95%]'
+                className='bg-green-800 text-xl w-10 h-10 mt-3 text-white rounded-full ml-[95%]'
                 onClick={onOpen}>
                 +
             </button>
             <AssignmentLvlDrawer open={open} onClose={onClose} />
-            <table className="mt-4">
+            <table className='mt-4'>
                 <thead>
                     <tr className='border-2 border-black text-center'>
                         <th>№</th>

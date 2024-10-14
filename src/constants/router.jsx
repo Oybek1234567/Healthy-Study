@@ -12,9 +12,7 @@ import Reports from "../page/reports/reports";
 import Revenue from "../page/reports/revenue";
 import Rooms from "../page/rooms";
 import Timetable from "../page/timetable";
-import Login from "../page/register";
 import Tests from "../page/courses/module/test";
-import Success from "../page/register/success";
 import Accepted from "../page/applications/user/accepted";
 import UsersPending from "../page/applications/user/pending";
 import Denied from "../page/applications/user/denied";
@@ -35,6 +33,10 @@ import Assignments from "../page/groups/excisting/assignments";
 import ModulesTab from "../page/courses/module";
 import AssignmentLevels from "../page/courses/module/test/exams/assignments/levels";
 import Exams from "../page/exams";
+import Signup from "../components/AuthRouters/signup/signin";
+import Logout from "../page/logout";
+import AuthRouters from "../components/AuthRouters/root";
+import ExamsTest from "../page/exams/test";
 export const MenuList = [
     {
         id: 1,
@@ -117,19 +119,9 @@ export const MenuList = [
         element: <ModulesTab />,
     },
     {
-        id: 17,
-        path: "/login",
-        element: <Login />,
-    },
-    {
         id: 18,
         path: "/courses/:id/modules/:id",
         element: <Tests />,
-    },
-    {
-        id: 19,
-        path: "/success",
-        element: <Success />,
     },
     {
         id: 20,
@@ -220,5 +212,25 @@ export const MenuList = [
         id: 37,
         path: "/exams",
         element: <Exams />,
+    },
+    {
+        id: 38,
+        path: "/auth",
+        element: <AuthRouters />
+    },
+    {
+        id: 39,
+        path: "/signup",
+        element: <Signup />,
+    },
+    {
+        id: 40,
+        path: "/logout",
+        element: <Logout />,
+    },
+    {
+        id: 41,
+        path: "exams/:id",
+        element: <ExamsTest />
     }
 ];
