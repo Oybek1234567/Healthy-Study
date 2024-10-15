@@ -2,15 +2,15 @@ import axios from "axios";
 import { useEffect, useState } from "react";
 
 const HeaderPage = () => {
-    const [data, setData] = useState(null); // Boshlang'ich qiymatni null qilish, massiv emas
+    const [data, setData] = useState(null);
     const token = localStorage.getItem("token");
-
+    let API = "http://localhost:3000";
     useEffect(() => {
         const fetchData = async () => {
             if (token) {
                 try {
                     const req = await axios.get(
-                        "http://localhost:3000/users/me",
+                        `${API}/users/me`,
                         {
                             headers: {
                                 Authorization: `Bearer ${token}`,
@@ -18,6 +18,8 @@ const HeaderPage = () => {
                         }
                     );
                     setData(req.data.user);
+                    console.log(req.data.user);
+                    
                 } catch (e) {
                     console.error("Error", e);
                 }
@@ -26,7 +28,7 @@ const HeaderPage = () => {
             }
         };
         fetchData();
-    }, [token]);
+    }, [API, token]);
 
     return (
         <div>

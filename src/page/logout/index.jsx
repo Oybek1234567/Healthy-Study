@@ -8,9 +8,7 @@ const Logout = () => {
         window.location.href = "/";
     }, [])
 
-    return <div>
-        {/* <Link onClick={handleLogout} className="underline cursor-pointer">Logout</Link> */}
-    </div>;
+    return <></>;
 };
 
 export default Logout;

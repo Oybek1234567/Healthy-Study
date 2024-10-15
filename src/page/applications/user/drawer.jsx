@@ -7,6 +7,7 @@ import { useNavigate } from "react-router-dom";
 const UserDrawer = ({ open, onClosed }) => {
     const [form] = Form.useForm();
     const navigate = useNavigate();
+    const API = "http://localhost:3000";
 
     // Upload Img
     // const props = {  
@@ -46,7 +47,7 @@ const UserDrawer = ({ open, onClosed }) => {
             console.log("Request data: ", request);
 
             const res = await axios.post(
-                "http://localhost:3000/applications/create",
+                `${API}/applications/create`,
                 request
             );
 

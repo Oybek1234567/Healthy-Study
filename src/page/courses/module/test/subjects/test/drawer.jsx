@@ -7,11 +7,12 @@ const TestsDrawer = ({ open, onClosed, onCreate }) => {
     const { id: unitId } = useParams();
     const [form] = Form.useForm();
     const [data, setData] = useState([]);
+    const API = "http://localhost:3000";
     useEffect(() => {
         const fetchData = async () => {
             try {
                 const req = await axios.get(
-                    `http://localhost:3000/questionlevels/all/${unitId}`
+                    `${API}/questionlevels/all/${unitId}`
                 );
                 setData(req.data.question_levels);
             } catch (error) {
@@ -28,12 +29,11 @@ const TestsDrawer = ({ open, onClosed, onCreate }) => {
             ...values,
             unit_id: +unitId,
         };
-        
-        
+
         try {
-            await axios.post("http://localhost:3000/questions/create", data);
+            await axios.post(`${API}/questions/create`, data);
             console.log("Posted data:", data);
-            
+
             if (typeof onCreate === "function") {
                 onCreate(
                     data.first,
@@ -51,7 +51,7 @@ const TestsDrawer = ({ open, onClosed, onCreate }) => {
             notification.success({ message: "Created successfully" });
             form.resetFields();
             console.log(data);
-            
+
             // window.location.reload();
         } catch (err) {
             console.error("Error:", err);

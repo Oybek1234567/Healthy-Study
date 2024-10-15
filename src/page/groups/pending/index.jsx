@@ -18,13 +18,15 @@ const Pending = () => {
     const [newDay, setNewDay] = useState("");
     const [groups, setGroups] = useState([]);
     const [loading, setLoading] = useState(false);
+    const API = "http://localhost:3000";
+
 
     // Fetch initial data
     useEffect(() => {
         const fetchData = async () => {
             try {
                 const req = await axios.get(
-                    "http://localhost:3000/groupenrolements/all"
+                    `${API}/groupenrolements/all`
                 );
                 setData(req.data.group_enrolements || []);
             } catch (error) {
@@ -41,7 +43,7 @@ const Pending = () => {
                 setLoading(true);
                 try {
                     const req = await axios.get(
-                        `http://localhost:3000/groupenrolementsbystudent/all/${selectedItem.id}`
+                        `${API}/groupenrolementsbystudent/all/${selectedItem.id}`
                     );
                     setNewData(req.data.group_enrolement_by_student || []);
                 } catch (error) {
@@ -62,7 +64,7 @@ const Pending = () => {
             if (id) {
                 try {
                     const res = await axios.get(
-                        `http://localhost:3000/groupenrolementdays/all/${id}`
+                        `${API}/groupenrolementdays/all/${id}`
                     );
                     setDays(res.data.Group_enrolement_days || []);
                 } catch (error) {
@@ -79,7 +81,7 @@ const Pending = () => {
     useEffect(() => {
         const getGroups = async () => {
             try {
-                const res = await axios.get("http://localhost:3000/days/all");
+                const res = await axios.get(`${API}/days/all`);
                 setAllDays(res.data.days);
             } catch (err) {
                 console.error("Error fetching groups", err);
@@ -123,7 +125,7 @@ const Pending = () => {
 
         try {
             const res = await axios.post(
-                "http://localhost:3000/groups/create",
+                `${API}/groups/create`,
                 payload
             );
             console.log("Server response:", res.data);
@@ -142,7 +144,7 @@ const handleNewSave = async () => {
     };
     try {
         const req = await axios.post(
-            "http://localhost:3000/groupenrolementsbystudent/create",
+            `${API}/groupenrolementsbystudent/create`,
             newDataPayload
         );
         console.log("New student added:", req.data.group_enrolement_by_student);
@@ -168,7 +170,7 @@ const handleNewSave = async () => {
 
         try {
             const res = await axios.post(
-                "http://localhost:3000/groupenrolementdays/create",
+                `${API}/groupenrolementdays/create`,
                 newDayPayload
             );
             console.log("New day added:", res.data);
@@ -200,7 +202,7 @@ const handleNewSave = async () => {
     const handleSave = async () => {
         try {
             await axios.post(
-                `http://localhost:3000/groupenrolements/edit/${selectedItem.id}`,
+                `${API}/groupenrolements/edit/${selectedItem.id}`,
                 selectedItem
             );
             const updatedData = data.map((item) =>
@@ -226,7 +228,7 @@ const handleNewSave = async () => {
     const handleDelete = async (item) => {
         try {
             await axios.post(
-                `http://localhost:3000/groupenrolements/delete/${item.id}`
+                `${API}/groupenrolements/delete/${item.id}`
             );
             const updatedData = data.filter(
                 (dataItem) => dataItem.id !== item.id
@@ -242,7 +244,7 @@ const handleNewSave = async () => {
     const handleDeleteStudent = async (studentId) => {
         try {
             await axios.post(
-                `http://localhost:3000/groupenrolementsbystudent/delete/${studentId}`
+                `${API}/groupenrolementsbystudent/delete/${studentId}`
             );
             setNewData((prev) =>
                 prev.filter((student) => student.id !== studentId)
@@ -256,7 +258,7 @@ const handleNewSave = async () => {
     const handleDeleteDays = async (id) => {
         try {
             await axios.post(
-                `http://localhost:3000/groupenrolementdays/delete/${id}`
+                `${API}/groupenrolementdays/delete/${id}`
             );
             setDays((prev) => prev.filter((day) => day.id !== id));
             alert("Day successfully deleted");

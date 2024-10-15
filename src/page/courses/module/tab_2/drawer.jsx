@@ -6,10 +6,11 @@ import { useParams } from "react-router-dom"
 const LevelDrawer = ({ open, onClose }) => {
     const [input, setInput] = useState([])
     const id = useParams()
+    const API = "http://localhost:3000";
     const handlePost = async () => {
         try {
             const req = await axios.post(
-                `http://localhost:3000/questionlevels/create/${id.id}`,
+                `${API}/questionlevels/create/${id.id}`,
                 { name: input }
             )
             console.log(req.data)

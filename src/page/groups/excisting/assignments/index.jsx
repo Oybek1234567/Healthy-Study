@@ -9,14 +9,15 @@ const Assignments = () => {
     //   const [lesson, setLesson] = useState([]);
     //   const [student, setStudent] = useState([]);
       const location = useLocation();
-      const { groupId, lesson_report_type_id } = location.state;
+      const { groupId } = location.state;
       const { open, onOpen, onClose } = useDrawer();
-            
+      const API = "http://localhost:3000";
+
       useEffect(() => {
           const fetchData = async () => {
               try {
                   const response = await axios.get(
-                      'http://localhost:3000/users/all',
+                      `${API}/users/all`,
                   );
                   setData(response.data);
                   console.log(response.data);

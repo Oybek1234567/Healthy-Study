@@ -21,12 +21,13 @@ const ExistingDrawer = ({ open, onClosed, onCreate }) => {
 
     const [options, setOptions] = useState([]);
     const [selectedOption, setSelectedOption] = useState([]);
+        const API = "http://localhost:3000";
 
     useEffect(() => {
         const getTeachers = async () => {
             try {
                 const res = await axios.get(
-                    "http://localhost:3000/users/teachers"
+                    `${API}/users/teachers`
                 );
                 setTeachers(res.data.users);
             } catch (err) {
@@ -40,7 +41,7 @@ const ExistingDrawer = ({ open, onClosed, onCreate }) => {
         const getAssistants = async () => {
             try {
                 const res = await axios.get(
-                    "http://localhost:3000/users/assistants"
+                    `${API}/users/assistants`
                 );
                 setAssistants(res.data.users);
             } catch (err) {
@@ -53,7 +54,7 @@ const ExistingDrawer = ({ open, onClosed, onCreate }) => {
     useEffect(() => {
         const getRooms = async () => {
             try {
-                const res = await axios.get("http://localhost:3000/rooms/all");
+                const res = await axios.get(`${API}/rooms/all`);
                 setRooms(res.data.rooms);
             } catch (err) {
                 console.error("Error fetching rooms", err);
@@ -66,7 +67,7 @@ const ExistingDrawer = ({ open, onClosed, onCreate }) => {
         const getCourses = async () => {
             try {
                 const req = await axios.get(
-                    "http://localhost:3000/courses/all"
+                    `${API}/courses/all`
                 );
                 setCourses(req.data.courses);
             } catch (err) {
@@ -81,7 +82,7 @@ const ExistingDrawer = ({ open, onClosed, onCreate }) => {
             if (courseId) {
                 try {
                     const res = await axios.get(
-                        `http://localhost:3000/modules/all/${courseId}`
+                        `${API}/modules/all/${courseId}`
                     );
                     setModules(res.data.modules);
                 } catch (err) {
@@ -95,7 +96,7 @@ const ExistingDrawer = ({ open, onClosed, onCreate }) => {
     useEffect(() => {
         const handleGetDays = async () => {
             try {
-                const res = await axios.get("http://localhost:3000/days/all");
+                const res = await axios.get(`${API}/days/all`);
                 setDays(res.data.days);
                 setOptions(
                     res.data.days.map((day) => ({
@@ -126,7 +127,7 @@ const ExistingDrawer = ({ open, onClosed, onCreate }) => {
             alert("Created successfully");
             window.location.reload()
               await axios.post(
-                "http://localhost:3000/groupenrolements/create",
+                `${API}/groupenrolements/create`,
                 data
             );
             if (onCreate) {

@@ -4,6 +4,7 @@ import { Link } from "react-router-dom";
 
 const Exams = () => {
     const [data, setData] = useState([]);
+    const API = "http://localhost:3000";
 
     useEffect(() => {
         const fetchData = async () => {
@@ -12,15 +13,15 @@ const Exams = () => {
 
                 if (token) {
                     const req = await axios.get(
-                        "http://localhost:3000/exams/allbystudent",
+                        `${API}/exams/allbystudent`,
                         {
                             headers: {
                                 Authorization: `Bearer ${token}`,
                             },
                         }
-                    );                    
+                    );
                     if (Array.isArray(req.data.exams)) {
-                        setData(req.data.exams); 
+                        setData(req.data.exams);
                     } else {
                         console.error(
                             "Data is not in expected format:",
@@ -50,18 +51,28 @@ const Exams = () => {
                         data.map((item) => (
                             <tr key={item.id}>
                                 <td>
-                                    <Link
-                                        to={`/exams/${item.id}`}
-                                        state={{
-                                            name: item.group_name,
-                                            assignment_by_groupstudent_id:
-                                                item.id,
-                                        }}>
-                                        {item.group_name}
-                                    </Link>
+                                    {item.status === "completed" ? (
+                                        <span>{item.group_name}</span>
+                                    ) : (
+                                        <Link
+                                            to={`/exams/${item.id}`}
+                                            state={{
+                                                name: item.group_name,
+                                                assignment_by_groupstudent_id:
+                                                    item.id,
+                                            }}>
+                                            {item.group_name}
+                                        </Link>
+                                    )}
                                 </td>
                                 <td>{item.assignment_name}</td>
-                                <td>{item.status}</td>
+                                <td>
+                                    {item.status === "completed" ? (
+                                        <span>{item.result * 100 + "%"}</span>
+                                    ) : (
+                                        item.status
+                                    )}
+                                </td>
                             </tr>
                         ))
                     ) : (

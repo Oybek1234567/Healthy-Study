@@ -1,7 +1,7 @@
 import { DeleteFilled } from "@ant-design/icons";
 import { Dropdown, Space, Menu, Modal } from "antd";
 import axios from "axios";
-import { useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { Link } from "react-router-dom";
 
 const Existing = () => {
@@ -14,12 +14,13 @@ const Existing = () => {
     const [student, setStudent] = useState("");
     const [filter, setFilter] = useState("active");
     const [studentIndex, setStudentIndex] = useState(null);
+        const API = "http://localhost:3000";
 
 
     useEffect(() => {
         const fetchData = async () => {
             try {
-                const req = await axios.get("http://localhost:3000/groups/all");
+                const req = await axios.get(`${API}/groups/all`);
                 setData(req.data.groups);
                 console.log(req.data.groups);
                 
@@ -33,12 +34,12 @@ const Existing = () => {
 
     useEffect(() => {
         handleFinish();
-    }, [filter]);
+    }, [handleFinish]); 
 
     const handleGetStudents = async (id) => {
         try {
             const req = await axios.get(
-                `http://localhost:3000/groupstudents/all/${id}`
+                `${API}/groupstudents/all/${id}`
             );
             setStudents(req.data.group_student);
             console.log(req.data.group_student);
@@ -51,7 +52,7 @@ const Existing = () => {
     const handleGetLessons = async (id) => {
         try {
             const req = await axios.get(
-                `http://localhost:3000/grouplessons/all/${id}`
+                `${API}/grouplessons/all/${id}`
             );
             setLessons(req.data.group_lessons);
             
@@ -70,7 +71,7 @@ const Existing = () => {
 
         try {
             const req = await axios.post(
-                `http://localhost:3000/groupstudents/create/${groupId}`,
+                `${API}/groupstudents/create/${groupId}`,
                 data
             );
             setStudents(req.data.group_students);
@@ -86,7 +87,7 @@ const Existing = () => {
 
     const handleDelete = async (id) => {
         try {
-            await axios.post(`http://localhost:3000/groups/delete/${id}`);
+            await axios.post(`${API}/groups/delete/${id}`);
             setData((prevData) => prevData.filter((item) => item.id !== id));
             alert("Group deleted successfully");
         } catch (error) {
@@ -94,9 +95,9 @@ const Existing = () => {
         }
     };
 
-const handleFinish = async () => {
+const handleFinish = useCallback( async () => {
     try {
-        const response = await axios.get("http://localhost:3000/groups/all");
+        const response = await axios.get(`${API}/groups/all`);
         const allData = response.data.groups;
 
         const filteredData = filter
@@ -107,12 +108,12 @@ const handleFinish = async () => {
     } catch (error) {
         console.log(error);
     }
-};
+}, [filter])
 
     const handleDeleteStudent = async (id) => {
         try {
             await axios.post(
-                `http://localhost:3000/groupstudents/delete/${id}`
+                `${API}/groupstudents/delete/${id}`
             );
             setStudents((prevData) =>
                 prevData.filter((item) => item.id !== id)

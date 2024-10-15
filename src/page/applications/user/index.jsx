@@ -10,6 +10,7 @@ const User = () => {
     const { open, onOpen, onClose } = useDrawer();
     const [userData, setUserData] = useState([]);
     const [sortConfig, setSortConfig] = useState(null);
+    const API = "http://localhost:3000";
 
     const handleSort = (key) => {
         let direction = "ascending";
@@ -33,7 +34,7 @@ const User = () => {
         const fetchData = async () => {
             try {
                 const response = await axios.get(
-                    "http://localhost:3000/applications/all"
+                    `${API}/applications/all`
                 );
                 setUserData(response.data.users || []);
             } catch (error) {

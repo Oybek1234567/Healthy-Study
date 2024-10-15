@@ -8,13 +8,15 @@ import UserDrawer from "./drawer";
 // import XLSX from "xlsx";
 const AllStatics = () => {
     const [data, setData] = useState([]);
-    const {open, onOpen, onClose} = useDrawer();
-    console.log(data);
+    const { open, onOpen, onClose } = useDrawer();
+            const API = "http://localhost:3000";
+
+
     useEffect(() => {
         const fetchData = async () => {
             try {
                 const response = await axios.get(
-                    "http://localhost:3000/users/all"
+                    `${API}/users/all`
                 );
                 console.log("Fetched user data:", response.data.users);
                 setData(response.data.users || []);

@@ -12,12 +12,13 @@ const UsersPending = () => {
     const [disabledButtons, setDisabledButtons] = useState({});
     const [isModalVisible, setIsModalVisible] = useState(false);
     const [editUser, setEditUser] = useState(null);
+    const API = "http://localhost:3000";
 
     useEffect(() => {
         const fetchData = async () => {
             try {
                 const req = await axios.get(
-                    "http://localhost:3000/applications/pending"
+                    `${API}/applications/pending`
                 );
                 setData(req.data.users);
             } catch (error) {
@@ -53,7 +54,7 @@ const UsersPending = () => {
     const handleSubmit = async (user) => {
         try {
             const res = await axios.post(
-                "http://localhost:3000/users/create",
+                `${API}/users/create`,
                 user
             );
             alert("Success");
@@ -71,7 +72,7 @@ const UsersPending = () => {
 
         try {
             await axios.post(
-                `http://localhost:3000/applications/deny/${ids}`,
+                `${API}/applications/deny/${ids}`,
                 user
             );
         } catch (error) {
@@ -95,7 +96,7 @@ const UsersPending = () => {
     const handleSaveClick = async () => {
         try {
             const response = await axios.post(
-                `http://localhost:3000/applications/edit/${editUser.id}`,
+                `${API}/applications/edit/${editUser.id}`,
                 editUser
             );
             if (response.status === 200) {

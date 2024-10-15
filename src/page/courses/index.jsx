@@ -17,12 +17,13 @@ const NewCourses = () => {
     const [editCourse, setEditCourse] = useState(null);
     const [newName, setNewName] = useState("");
     const [selectedStatus, setSelectedStatus] = useState("all");
+    const API = "http://localhost:3000";
 
     useEffect(() => {
         const handleGet = async () => {
             try {
                 const response = await axios.get(
-                    "http://localhost:3000/courses/all"
+                    `${API}/courses/all`
                 );
                 setCourses(response.data.courses);
                 setFilteredCourses(response.data.courses);
@@ -37,7 +38,7 @@ const NewCourses = () => {
     const handleSave = async () => {
         try {
             await axios.post(
-                `http://localhost:3000/courses/edit/${editCourse.id}`,
+                `${API}/courses/edit/${editCourse.id}`,
                 { name: newName }
             );
             setCourses((prev) =>
@@ -66,7 +67,7 @@ const NewCourses = () => {
     const handleDelete = async (course) => {
         const id = course.id;
         try {
-            await axios.post(`http://localhost:3000/courses/delete/${id}`);
+            await axios.post(`${API}/courses/delete/${id}`);
             const updatedCourses = courses.filter((c) => c.id !== id);
             setCourses(updatedCourses);
             setFilteredCourses(updatedCourses);

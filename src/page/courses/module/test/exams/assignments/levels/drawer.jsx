@@ -12,12 +12,13 @@ const AssignmentLvlDrawer = ({ open, onClose }) => {
     const [selectedSubject, setSelectedSubject] = useState("");
     const [selectedLevel, setSelectedLevel] = useState("");
     const [quantity, setQuantity] = useState("");
+    const API = "http://localhost:3000";
 
     useEffect(() => {
         const fetchData = async () => {
             try {
                 const req = await axios.get(
-                    `http://localhost:3000/questionlevels/all/${moduleID}`
+                    `${API}/questionlevels/all/${moduleID}`
                 );
                 setData(req.data.question_levels);
             } catch (error) {
@@ -31,7 +32,7 @@ const AssignmentLvlDrawer = ({ open, onClose }) => {
         const fetchData = async () => {
             try {
                 const req = await axios.get(
-                    `http://localhost:3000/subjects/all/${moduleID}`
+                    `${API}/subjects/all/${moduleID}`
                 );
                 setUnits(req.data.units);
             } catch (error) {
@@ -44,7 +45,7 @@ const AssignmentLvlDrawer = ({ open, onClose }) => {
     const handlePost = async () => {
         try {
             const req = await axios.post(
-                `http://localhost:3000/assignmentlevels/create/${typeId}`,
+                `${API}/assignmentlevels/create/${typeId}`,
                 {
                     unit_id: selectedSubject,
                     level_id: selectedLevel,

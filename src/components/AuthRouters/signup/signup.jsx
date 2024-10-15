@@ -4,7 +4,7 @@ import { Link, useNavigate } from "react-router-dom";
 
 const Signup = () => {
     const navigate = useNavigate();
-
+    const API = "http://localhost:3000"
     const onFinish = async (values) => {
         try {
             const requestData = {
@@ -21,7 +21,7 @@ const Signup = () => {
             console.log("Request data: ", requestData);
 
             const res = await axios.post(
-                "http://localhost:3000/applications/create",
+                `${API}/applications/create`,
                 JSON.stringify(requestData),
                 {
                     headers: {

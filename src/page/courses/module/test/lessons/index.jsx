@@ -12,13 +12,14 @@ const Lessons = () => {
     const [editLesson, setEditLesson] = useState(null);
     const [showEditModal, setShowEditModal] = useState(false);
     const { open, onOpen, onClose } = useDrawer();
+    const API = "http://localhost:3000";
 
     // Darslarni olish
     useEffect(() => {
         const fetchLessons = async () => {
             try {
                 const { data } = await axios.get(
-                    `http://localhost:3000/lessons/all/${moduleID}`
+                    `${API}/lessons/all/${moduleID}`
                 );
                 setLessons(data.lessons);
             } catch (error) {
@@ -35,7 +36,7 @@ const Lessons = () => {
 
         try {
             await axios.post(
-                `http://localhost:3000/lessons/edit/${editLesson.id}`,
+                `${API}/lessons/edit/${editLesson.id}`,
                 { name: newName }
             );
             setLessons((prev) =>
@@ -64,7 +65,7 @@ const Lessons = () => {
     const handleDelete = async (lesson) => {
         try {
             await axios.post(
-                `http://localhost:3000/lessons/delete/${lesson.id}`
+                `${API}/lessons/delete/${lesson.id}`
             );
             setLessons((prev) => prev.filter((l) => l.id !== lesson.id));
             alert("Dars muvaffaqiyatli o'chirildi");

@@ -6,11 +6,13 @@ import axios from "axios";
 const Rooms = () => {
     const { open, onOpen, onClose } = useDrawer();
     const [data, setData] = useState([]);
+            const API = "http://localhost:3000";
+
 
     useEffect(() => {
         const fetchData = async () => {
             try {
-                const req = await axios.get("http://localhost:3000/rooms/all");
+                const req = await axios.get(`${API}/rooms/all`);
                 setData(req.data.rooms);
             } catch (error) {
                 console.error(error);
