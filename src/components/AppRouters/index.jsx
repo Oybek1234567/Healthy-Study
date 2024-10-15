@@ -5,6 +5,7 @@ import { Icons } from "../../assets/Icons";
 import { menu } from "../../constants/data";
 import { Route, Routes, Link } from "react-router-dom";
 import { MenuList } from "../../constants/router";
+import HeaderPage from "../../page/header";
 
 const { Header, Sider, Content } = Layout;
 
@@ -18,7 +19,6 @@ const AppRouters = () => {
     const toggleHidePart = () => {
         setHidePart(!hidePart);
     };
-
     return (
         <div>
             <Layout
@@ -138,6 +138,9 @@ const AppRouters = () => {
                     }}>
                     <Header
                         style={{
+                            width: "90%",
+                            display: "flex",
+                            marginLeft: "110px",
                             padding: 0,
                             background: colorBgContainer,
                             zIndex: 1,
@@ -162,6 +165,7 @@ const AppRouters = () => {
                             }}
                             className='show--hide_btn'
                         />
+                        <HeaderPage />
                     </Header>
                     <Content
                         style={{

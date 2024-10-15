@@ -18,18 +18,16 @@ const Exams = () => {
     const location = useLocation();
     const courseName = location.state?.courseName;
     const moduleName = location.state?.moduleName;
-
-    console.log(courseName, moduleName);
+    const API = "http://localhost:3000";
 
     useEffect(() => {
         const fetchData = async () => {
             try {
                 const req = await axios.get(
-                    `http://localhost:3000/assignmenttypes/all/${id}`
+                    `${API}/assignmenttypes/all/${id}`
                 );
                 setExams(req.data.assignmenttypes);
                 setFilteredExams(req.data.assignmenttypes);
-                console.log(req.data.assignmenttypes);
             } catch (error) {
                 console.error(error);
             }
@@ -41,7 +39,7 @@ const Exams = () => {
     const handleSave = async () => {
         try {
             await axios.post(
-                `http://localhost:3000/assignmenttypes/edit/${editExam.id}`,
+                `${API}/assignmenttypes/edit/${editExam.id}`,
                 { name: newName, weight: newWeight, tests_total: newTests },
                 {
                     headers: {
@@ -82,7 +80,7 @@ const Exams = () => {
     const handleDelete = async (exam) => {
         try {
             await axios.post(
-                `http://localhost:3000/assignmenttypes/delete/${exam.id}`
+                `${API}/assignmenttypes/delete/${exam.id}`
             );
             const updatedExams = exams.filter((c) => c.id !== exam.id);
             setExams(updatedExams);
@@ -97,13 +95,11 @@ const Exams = () => {
     const handleStatusChange = (event) => {
         const status = event.target.value;
         setSelectedStatus(status);
-        console.log("Selected status:", status);
 
         if (status === "all") {
             setFilteredExams(exams);
         } else {
             const filtered = exams.filter((exam) => exam.status === status);
-            console.log("Filtered exams:", filtered);
             setFilteredExams(filtered);
         }
     };
@@ -125,17 +121,29 @@ const Exams = () => {
 
     return (
         <div>
-            <button
-                className='absolute w-14 h-14 -translate-y-[200px] ml-[94%] bg-green-700 rounded-full text-white'
-                type='button'
-                onClick={() => onOpen()}>
-                +
-            </button>
+            <div className='flex justify-between mb-4'>
+                <select
+                    name='lessons'
+                    onChange={handleStatusChange}
+                    className='w-1/3 text-xl border-2 border-gray-300 rounded-md p-2'>
+                    <option value='all'>All</option>
+                    <option value='active'>Active</option>
+                    <option value='deleted'>Deleted</option>
+                </select>
+                <button
+                    className='w-14 h-14 text-xl bg-green-700 rounded-full text-white'
+                    type='button'
+                    onClick={() => onOpen()}>
+                    +
+                </button>
+            </div>
             <ExamsDrawer open={open} onClosed={onClose} />
-            <div className='absolute flex gap-4 flex-wrap'>
+            <div className='flex gap-4 flex-wrap'>
                 {filteredExams &&
                     filteredExams.map((item) => (
-                        <div key={item.id}>
+                        <div
+                            key={item.id}
+                            className='flex flex-col w-72 h-40 p-4 border-2 border-gray-300 rounded-lg shadow-md hover:shadow-lg transition-shadow duration-200'>
                             <Link
                                 to={`/modules/${id}/types/${item.id}`}
                                 state={{
@@ -143,7 +151,7 @@ const Exams = () => {
                                     moduleName: moduleName,
                                     name: item.name,
                                 }}
-                                className='flex flex-col text-2xl cursor-pointer mt-10 justify-center items-center w-[300px] h-40 border-4 border-black hover:text-black'>
+                                className='flex flex-col text-lg font-semibold text-gray-800 cursor-pointer'>
                                 <p>Exam name: {item.name}</p>
                                 <p>Exam weight: {item.weight}</p>
                                 <p>Tests total: {item.tests_total}</p>
@@ -162,15 +170,6 @@ const Exams = () => {
                         </div>
                     ))}
             </div>
-            <select
-                name='lessons'
-                onChange={handleStatusChange}
-                className='-translate-y-[200px] ml-[75%] w-1/12 text-xl'>
-                <option value='all'>All</option>
-                <option value='active'>Active</option>
-                <option value='deleted'>Deleted</option>
-            </select>
-
             <Modal
                 open={showEditModal}
                 onCancel={() => setShowEditModal(false)}
@@ -188,19 +187,19 @@ const Exams = () => {
                 <div className='flex flex-col gap-2'>
                     <input
                         type='text'
-                        className='border-2 border-black w-full'
+                        className='border-2 border-black w-full p-2 rounded-md'
                         value={newName}
                         onChange={(e) => setNewName(e.target.value)}
                     />
                     <input
                         type='number'
-                        className='border-2 border-black w-full'
+                        className='border-2 border-black w-full p-2 rounded-md'
                         value={newWeight}
                         onChange={(e) => setNewWeight(e.target.value)}
                     />
                     <input
                         type='number'
-                        className='border-2 border-black w-full'
+                        className='border-2 border-black w-full p-2 rounded-md'
                         value={newTests}
                         onChange={(e) => setNewTests(e.target.value)}
                     />

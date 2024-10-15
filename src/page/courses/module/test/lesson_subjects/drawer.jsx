@@ -12,12 +12,12 @@ const LessonSubjectsDrawer = ({ open, onClosed, onCreate }) => {
     const [lesson, setLesson] = useState([]);
     const [subject, setSubject] = useState([]);
     const [form] = Form.useForm();
-
+    const API = "http://localhost:3000";
     useEffect(() => {
         const handleGetLesson = async () => {
             try {
                 const req = await axios.get(
-                    `http://localhost:3000/lessons/all/${moduleID}`
+                    `${API}/lessons/all/${moduleID}`
                 );
                 setLesson(req.data.lessons);
             } catch (error) {
@@ -34,7 +34,7 @@ const LessonSubjectsDrawer = ({ open, onClosed, onCreate }) => {
         const handleGetSubject = async () => {
             try {
                 const req = await axios.get(
-                    `http://localhost:3000/subjects/all/${moduleID}`
+                    `${API}/subjects/all/${moduleID}`
                 );
                 setSubject(req.data.units);
             } catch (error) {
@@ -54,7 +54,7 @@ const LessonSubjectsDrawer = ({ open, onClosed, onCreate }) => {
 
         try {
             const res = await axios.post(
-                "http://localhost:3000/lessonunits/create",
+                `${API}/lessonunits/create`,
                 data
             );
 

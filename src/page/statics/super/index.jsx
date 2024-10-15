@@ -3,10 +3,12 @@ import { useEffect, useState } from "react";
 
 const Super = () => {
   const [data, setData] = useState([]);
+          const API = "http://localhost:3000";
+
   useEffect(() => {
       const fetchData = async () => {
           try {
-              const req = await axios.get("http://localhost:3000/users/supers");
+              const req = await axios.get(`${API}/users/supers`);
             setData(req.data.users);
             console.log(req.data);
             

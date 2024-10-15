@@ -8,7 +8,7 @@ const ReportsDrawer = ({ open, onClosed, onCreate }) => {
     const [inputValue, setInputValue] = useState("");
     const [secondInput, setSecondInput] = useState("");
     const [loading, setLoading] = useState(false);
-
+    const API = "http://localhost:3000";
     const handlePost = async () => {
         const data = {
             name: inputValue,
@@ -21,7 +21,7 @@ const ReportsDrawer = ({ open, onClosed, onCreate }) => {
         try {
             window.location.reload()
             const res = await axios.post(
-                "http://localhost:3000/lessonreporttypes/create",
+                `${API}/lessonreporttypes/create`,
                 data
             );
             console.log(moduleID);

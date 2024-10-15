@@ -13,17 +13,16 @@ const Subjects = () => {
     const [newName, setNewName] = useState("");
     const [selectedStatus, setSelectedStatus] = useState("all");
     const { id } = useParams();
-    console.log(id);
-    
+    const API = "http://localhost:3000";
 
     useEffect(() => {
         const fetchData = async () => {
             try {
-                const req = await axios.get(
-                    `http://localhost:3000/subjects/all/${id}`
+                const { data } = await axios.get(
+                    `${API}/subjects/all/${id}`
                 );
-                setSubjects(req.data.units);
-                setFilteredSubjects(req.data.units);
+                setSubjects(data.units);
+                setFilteredSubjects(data.units);
             } catch (error) {
                 console.error(error);
             }
@@ -35,13 +34,9 @@ const Subjects = () => {
     const handleSave = async () => {
         try {
             await axios.post(
-                `http://localhost:3000/subjects/edit/${editSubject.id}`,
+                `${API}/subjects/edit/${editSubject.id}`,
                 { name: newName },
-                {
-                    headers: {
-                        "Content-Type": "application/json",
-                    },
-                }
+                { headers: { "Content-Type": "application/json" } }
             );
 
             const updatedSubjects = subjects.map((subject) =>
@@ -69,9 +64,8 @@ const Subjects = () => {
     const handleDelete = async (subject) => {
         try {
             await axios.post(
-                `http://localhost:3000/subjects/delete/${subject.id}`
+                `${API}/subjects/delete/${subject.id}`
             );
-
             const updatedSubjects = subjects.filter((s) => s.id !== subject.id);
             setSubjects(updatedSubjects);
             setFilteredSubjects(updatedSubjects);
@@ -84,21 +78,15 @@ const Subjects = () => {
 
     const handleStatusChange = (status) => {
         setSelectedStatus(status);
-        if (status === "all") {
-            setFilteredSubjects(subjects);
-        } else {
-            setFilteredSubjects(
-                subjects.filter((subject) => subject.status === status)
-            );
-        }
+        setFilteredSubjects(
+            status === "all"
+                ? subjects
+                : subjects.filter((subject) => subject.status === status)
+        );
     };
 
     const menuItems = (subject) => [
-        {
-            key: "edit",
-            label: "Edit",
-            onClick: () => handleEdit(subject),
-        },
+        { key: "edit", label: "Edit", onClick: () => handleEdit(subject) },
         {
             key: "delete",
             label: "Delete",
@@ -109,32 +97,48 @@ const Subjects = () => {
     const { open, onOpen, onClose } = useDrawer();
 
     return (
-        <div>
+        <div className='relative p-6'>
             <button
-                className='absolute w-14 h-14 -translate-y-[200px] ml-[94%] bg-green-700 rounded-full text-white'
+                className='absolute w-14 h-14 text-xl -top-2 right-6 bg-green-700 rounded-full text-white'
                 type='button'
                 onClick={onOpen}>
                 +
             </button>
             <SubjectsDrawer open={open} onClosed={onClose} />
-            <table className='absolute'>
+
+            <div className='flex justify-between mb-4'>
+                <select
+                    name='subjects'
+                    onChange={(e) => handleStatusChange(e.target.value)}
+                    className='w-1/3 text-xl border-2 border-gray-200 rounded-md p-2'>
+                    <option value='all'>All</option>
+                    <option value='active'>Active</option>
+                    <option value='deleted'>Deleted</option>
+                </select>
+            </div>
+
+            <table className='min-w-full border border-gray-300'>
                 <thead>
-                    <tr className='text-center'>
-                        <th>№</th>
-                        <th>Name</th>
-                        <th>Actions</th>
+                    <tr className='bg-gray-100 text-center'>
+                        <th className='border p-2'>№</th>
+                        <th className='border p-2'>Name</th>
+                        <th className='border p-2'>Actions</th>
                     </tr>
                 </thead>
                 <tbody>
-                    {filteredSubjects && filteredSubjects.map((item, index) => (
-                        <tr key={item.id}>
-                            <td>{index + 1}</td>
-                            <td>
-                                <Link to={`/modules/${id}/subjects/${item.id}`} state={{ moduleId: id}}>
+                    {filteredSubjects.map((item, index) => (
+                        <tr key={item.id} className='hover:bg-gray-100'>
+                            <td className='border text-center p-2'>
+                                {index + 1}
+                            </td>
+                            <td className='border p-2'>
+                                <Link
+                                    to={`/modules/${id}/subjects/${item.id}`}
+                                    state={{ moduleId: id }}>
                                     {item.name}
                                 </Link>
                             </td>
-                            <td>
+                            <td className='border text-center p-2'>
                                 <Dropdown
                                     menu={{ items: menuItems(item) }}
                                     trigger={["click"]}>
@@ -151,14 +155,7 @@ const Subjects = () => {
                     ))}
                 </tbody>
             </table>
-            <select
-                name='subjects'
-                onChange={(e) => handleStatusChange(e.target.value)}
-                className='-translate-y-[200px] ml-[75%] w-1/12 text-xl'>
-                <option value='all'>All</option>
-                <option value='active'>Active</option>
-                <option value='deleted'>Deleted</option>
-            </select>
+
             <Modal
                 open={showEditModal}
                 onCancel={() => setShowEditModal(false)}

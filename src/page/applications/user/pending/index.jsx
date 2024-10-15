@@ -12,12 +12,13 @@ const UsersPending = () => {
     const [disabledButtons, setDisabledButtons] = useState({});
     const [isModalVisible, setIsModalVisible] = useState(false);
     const [editUser, setEditUser] = useState(null);
+    const API = "http://localhost:3000";
 
     useEffect(() => {
         const fetchData = async () => {
             try {
                 const req = await axios.get(
-                    "http://localhost:3000/applications/pending"
+                    `${API}/applications/pending`
                 );
                 setData(req.data.users);
             } catch (error) {
@@ -35,7 +36,7 @@ const UsersPending = () => {
                 ...prev,
                 [userId]: true,
             }));
-            window.location.reload()
+            window.location.reload();
         } catch (error) {
             console.error("Error deleting user:", error.message);
         }
@@ -53,7 +54,7 @@ const UsersPending = () => {
     const handleSubmit = async (user) => {
         try {
             const res = await axios.post(
-                "http://localhost:3000/users/create",
+                `${API}/users/create`,
                 user
             );
             alert("Success");
@@ -71,7 +72,7 @@ const UsersPending = () => {
 
         try {
             await axios.post(
-                `http://localhost:3000/applications/deny/${ids}`,
+                `${API}/applications/deny/${ids}`,
                 user
             );
         } catch (error) {
@@ -91,44 +92,43 @@ const UsersPending = () => {
             [name]: value,
         }));
     };
-const handleSaveClick = async () => {
-    try {
-        const response = await axios.post(
-            `http://localhost:3000/applications/edit/${editUser.id}`,
-            editUser
-        );
-        if (response.status === 200) {
-            alert("Foydalanuvchi ma'lumotlari muvaffaqiyatli tahrirlandi");
-            setData((prevData) =>
-                prevData.map((user) =>
-                    user.id === editUser.id ? response.data.user : user
-                )
-            );
-            window.location.reload()
-            setIsModalVisible(false);
-        }
-    } catch (error) {
-        console.error(
-            "Foydalanuvchini tahrirlashda xatolik yuz berdi:",
-            error.response ? error.response.data : error.message
-        );
-        alert(
-            error.response?.data?.msg ||
-                "Foydalanuvchini tahrirlashda xatolik yuz berdi"
-        );
-    }
-};
 
+    const handleSaveClick = async () => {
+        try {
+            const response = await axios.post(
+                `${API}/applications/edit/${editUser.id}`,
+                editUser
+            );
+            if (response.status === 200) {
+                alert("Foydalanuvchi ma'lumotlari muvaffaqiyatli tahrirlandi");
+                setData((prevData) =>
+                    prevData.map((user) =>
+                        user.id === editUser.id ? response.data.user : user
+                    )
+                );
+                setIsModalVisible(false);
+            }
+        } catch (error) {
+            console.error(
+                "Foydalanuvchini tahrirlashda xatolik yuz berdi:",
+                error.response ? error.response.data : error.message
+            );
+            alert(
+                error.response?.data?.msg ||
+                    "Foydalanuvchini tahrirlashda xatolik yuz berdi"
+            );
+        }
+    };
 
     return (
-        <div>
-            <table>
-                <thead>
+        <div className='p-4'>
+            <table className='min-w-full bg-white border border-gray-300 rounded-lg shadow-md'>
+                <thead className='bg-gray-200'>
                     <tr>
-                        <th>ID</th>
+                        <th className='p-2 border-b'>ID</th>
                         <th
                             onClick={() => handleSort("name")}
-                            className='cursor-pointer'>
+                            className='p-2 border-b cursor-pointer'>
                             Name
                             {sortConfig?.key === "name" &&
                             sortConfig?.direction === "ascending" ? (
@@ -139,7 +139,7 @@ const handleSaveClick = async () => {
                         </th>
                         <th
                             onClick={() => handleSort("surname")}
-                            className='cursor-pointer'>
+                            className='p-2 border-b cursor-pointer'>
                             Surname
                             {sortConfig?.key === "surname" &&
                             sortConfig?.direction === "ascending" ? (
@@ -150,7 +150,7 @@ const handleSaveClick = async () => {
                         </th>
                         <th
                             onClick={() => handleSort("date_of_birth")}
-                            className='cursor-pointer'>
+                            className='p-2 border-b cursor-pointer'>
                             Date Of Birth
                             {sortConfig?.key === "date_of_birth" &&
                             sortConfig?.direction === "ascending" ? (
@@ -159,10 +159,10 @@ const handleSaveClick = async () => {
                                 <DownOutlined />
                             )}
                         </th>
-                        <th>Phone</th>
+                        <th className='p-2 border-b'>Phone</th>
                         <th
                             onClick={() => handleSort("role")}
-                            className='cursor-pointer'>
+                            className='p-2 border-b cursor-pointer'>
                             Role
                             {sortConfig?.key === "role" &&
                             sortConfig?.direction === "ascending" ? (
@@ -173,7 +173,7 @@ const handleSaveClick = async () => {
                         </th>
                         <th
                             onClick={() => handleSort("passport_series")}
-                            className='cursor-pointer'>
+                            className='p-2 border-b cursor-pointer'>
                             Passport Series
                             {sortConfig?.key === "passport_series" &&
                             sortConfig?.direction === "ascending" ? (
@@ -184,7 +184,7 @@ const handleSaveClick = async () => {
                         </th>
                         <th
                             onClick={() => handleSort("expiration_date")}
-                            className='cursor-pointer'>
+                            className='p-2 border-b cursor-pointer'>
                             Expiration Date
                             {sortConfig?.key === "expiration_date" &&
                             sortConfig?.direction === "ascending" ? (
@@ -193,48 +193,53 @@ const handleSaveClick = async () => {
                                 <DownOutlined />
                             )}
                         </th>
-                        <th>Action</th>
+                        <th className='p-2 border-b'>Action</th>
                     </tr>
                 </thead>
                 <tbody>
-                    {data && data.map((user) => (
-                        <tr key={user.id}>
-                            <td>{user.id}</td>
-                            <td>{user.name}</td>
-                            <td>{user.surname}</td>
-                            <td>{user.phone}</td>
-                            <td>
-                                {user.date_of_birth
-                                    ? user.date_of_birth.slice(0, 10)
-                                    : ""}
-                            </td>
-                            <td>{user.role}</td>
-                            <td>{user.passport_series}</td>
-                            <td>
-                                {user.expiration_date
-                                    ? user.expiration_date.slice(0, 10)
-                                    : ""}
-                            </td>
-                            <td className='flex'>
-                                <button onClick={() => handleEditClick(user)}>
-                                    ✏️
-                                </button>
-                                <button
-                                    className='border-none'
-                                    onClick={() => handleDeleteClick(user)}
-                                    disabled={disabledButtons[user.id]}>
-                                    ❌
-                                </button>
-                                <Button
-                                    type='default'
-                                    onClick={() => handleSubmitClick(user)}
-                                    className='border-none'
-                                    disabled={disabledButtons[user.id]}>
-                                    ✅
-                                </Button>
-                            </td>
-                        </tr>
-                    ))}
+                    {data &&
+                        data.map((user) => (
+                            <tr key={user.id} className='hover:bg-gray-100'>
+                                <td className='p-2 border-b'>{user.id}</td>
+                                <td className='p-2 border-b'>{user.name}</td>
+                                <td className='p-2 border-b'>{user.surname}</td>
+                                <td className='p-2 border-b'>{user.phone}</td>
+                                <td className='p-2 border-b'>
+                                    {user.date_of_birth
+                                        ? user.date_of_birth.slice(0, 10)
+                                        : ""}
+                                </td>
+                                <td className='p-2 border-b'>{user.role}</td>
+                                <td className='p-2 border-b'>
+                                    {user.passport_series}
+                                </td>
+                                <td className='p-2 border-b'>
+                                    {user.expiration_date
+                                        ? user.expiration_date.slice(0, 10)
+                                        : ""}
+                                </td>
+                                <td className='p-2 border-b flex space-x-2'>
+                                    <button
+                                        onClick={() => handleEditClick(user)}
+                                        className='text-blue-600 hover:text-blue-800'>
+                                        ✏️
+                                    </button>
+                                    <button
+                                        className='border-none text-red-600 hover:text-red-800'
+                                        onClick={() => handleDeleteClick(user)}
+                                        disabled={disabledButtons[user.id]}>
+                                        ❌
+                                    </button>
+                                    <Button
+                                        type='default'
+                                        onClick={() => handleSubmitClick(user)}
+                                        className='border-none text-green-600 hover:text-green-800'
+                                        disabled={disabledButtons[user.id]}>
+                                        ✅
+                                    </Button>
+                                </td>
+                            </tr>
+                        ))}
                 </tbody>
             </table>
 
@@ -252,57 +257,58 @@ const handleSaveClick = async () => {
                             Save
                         </Button>,
                     ]}>
-                    <div className='flex flex-col gap-2'>
+                    <div className='flex flex-col gap-4'>
                         <Input
                             name='name'
                             placeholder='Name'
                             value={editUser.name}
                             onChange={handleInputChange}
+                            className='border border-gray-300 rounded p-2'
                         />
                         <Input
                             name='surname'
                             placeholder='Surname'
                             value={editUser.surname}
                             onChange={handleInputChange}
+                            className='border border-gray-300 rounded p-2'
                         />
                         <Input
-                            type="date"
+                            type='date'
                             name='date_of_birth'
-                            placeholder='Date of Birth'
                             value={editUser.date_of_birth}
                             onChange={handleInputChange}
+                            className='border border-gray-300 rounded p-2'
                         />
                         <Input
                             name='phone'
                             placeholder='Phone'
                             value={editUser.phone}
                             onChange={handleInputChange}
+                            className='border border-gray-300 rounded p-2'
                         />
                         <Select
-                            className='w-full'
+                            className='w-full border border-gray-300 rounded'
                             value={editUser.role}
-                            onChange={handleInputChange}>
-                            <Option value='super'>Staff</Option>
-                            <Option value='super'>Module Leader</Option>
-                            <Option value='teacher'>Teacher</Option>
-                            <Option value='super'>Assistent</Option>
-                            <Option value='student'>Student</Option>
-                            <Option value='super'>Guest</Option>
+                            onChange={(value) =>
+                                setEditUser({ ...editUser, role: value })
+                            }>
+                            <Option value='admin'>Admin</Option>
+                            <Option value='user'>User</Option>
                         </Select>
                         <Input
                             name='passport_series'
                             placeholder='Passport Series'
                             value={editUser.passport_series}
                             onChange={handleInputChange}
+                            className='border border-gray-300 rounded p-2'
                         />
                         <Input
-                            name='expiration_date'
                             type='date'
-                            placeholder='Expiration Date'
+                            name='expiration_date'
                             value={editUser.expiration_date}
                             onChange={handleInputChange}
+                            className='border border-gray-300 rounded p-2'
                         />
-
                     </div>
                 </Modal>
             )}

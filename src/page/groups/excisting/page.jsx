@@ -16,16 +16,16 @@ const Page = () => {
     const [activeTabKey, setActiveTabKey] = useState(
         localStorage.getItem("activeTabKey") || "1"
     );
+    const API = "http://localhost:3000";
 
     useEffect(() => {
         const fetchData = async () => {
             try {
                 const assignmentTypes = await axios.get(
-                    `http://localhost:3000/assignmenttypes/all/${moduleId}`
+                    `${API}/assignmenttypes/all/${moduleId}`
                 );
                 setAssignments(assignmentTypes.data.assignmenttypes);
                 console.log(assignmentTypes.data.assignmenttypes);
-                
             } catch (error) {
                 console.error("Error fetching data:", error);
             }
@@ -38,7 +38,7 @@ const Page = () => {
         const handleGetAssignments = async () => {
             try {
                 const lessonReports = await axios.get(
-                    `http://localhost:3000/lessonreporttypes/all/${moduleId}`
+                    `${API}/lessonreporttypes/all/${moduleId}`
                 );
                 setLesson(lessonReports.data.lesson_report_types);
                 console.log(lessonReports.data.lesson_report_types);
@@ -53,7 +53,7 @@ const Page = () => {
         const handleGetAttendance = async () => {
             try {
                 const response = await axios.get(
-                    `http://localhost:3000/groupattendance/all/${groupId}`
+                    `${API}/groupattendance/all/${groupId}`
                 );
                 setAttendance(response.data.data);
             } catch (error) {
@@ -92,8 +92,11 @@ const Page = () => {
                         <div className='flex gap-6'>
                             {assignments.map((item) => (
                                 <Link
-                                    to={`/excisting/${groupId}/assignmenttypes/${item.id}`} 
-                                    state={{ groupId, assignment_type_id: item.id }}
+                                    to={`/excisting/${groupId}/assignmenttypes/${item.id}`}
+                                    state={{
+                                        groupId,
+                                        assignment_type_id: item.id,
+                                    }}
                                     key={item.key}
                                     className='flex cursor-pointer mt-10 justify-center items-center w-[300px] h-40 border-4 border-black hover:text-black text-2xl'>
                                     {item.name}

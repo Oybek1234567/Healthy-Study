@@ -9,12 +9,14 @@ const AssignmentsModal = ({ open, onClose }) => {
     const [assignments, setAssignments] = useState([]);
     const [lesson, setLesson] = useState("");
     const [date, setDate] = useState("");
+            const API = "http://localhost:3000";
+
 
     useEffect(() => {
         const handleGetAssignments = async () => {
             try {
                 const req = await axios.get(
-                    `http://localhost:3000/assignments/all/${assignment_type_id}`
+                    `${API}/assignments/all/${assignment_type_id}`
                 );
                 setAssignments(req.data.assignments);
             } catch (e) {
@@ -36,7 +38,7 @@ const AssignmentsModal = ({ open, onClose }) => {
             console.log(postData);
 
              await axios.post(
-                `http://localhost:3000/exams/create/${groupId}`,
+                `${API}/exams/create/${groupId}`,
                 postData
             );
         } catch (e) {

@@ -4,7 +4,7 @@ import axios from "axios";
 
 const CoursesDrawer = ({ open, onClose, onCreate }) => {
     const [inputValue, setInputValue] = useState("");
-
+    const API = "http://localhost:3000";
     const handleInputChange = (e) => {
         setInputValue(e.target.value);
     };
@@ -13,7 +13,7 @@ const CoursesDrawer = ({ open, onClose, onCreate }) => {
         const data = { name: inputValue };
         try {
             const res = await axios.post(
-                "http://localhost:3000/courses/create",
+                `${API}/courses/create`,
                 data
             );
             onCreate(res.data); 

@@ -12,13 +12,13 @@ const LessonSubjects = () => {
     const [showEditModal, setShowEditModal] = useState(false);
     const { open, onOpen, onClose } = useDrawer();
     const { id: moduleID } = useParams();
-
+    const API = "http://localhost:3000";
     useEffect(() => {
         const fetchData = async () => {
             try {
                 const response = await axios.get(
-                    `http://localhost:3000/lessonunits/all/${moduleID}`
-                );  
+                    `${API}/lessonunits/all/${moduleID}`
+                );
                 setLessons(response.data.lesson_units);
             } catch (error) {
                 console.error(error);
@@ -39,118 +39,130 @@ const LessonSubjects = () => {
     const handleDeleteSubject = async (lessonName, subjectName, index) => {
         try {
             const unit_id = editLessonData[index].id;
-            console.log(unit_id);
-            
             await axios.post(
-                `http://localhost:3000/lessonunits/delete/${unit_id}`,
+                `${API}/lessonunits/delete/${unit_id}`
             );
+            setLessons((prevLessons) =>
+                prevLessons.filter(
+                    (lesson) =>
+                        lesson.lesson_name !== lessonName ||
+                        lesson.unit_name !== subjectName
+                )
+            );
+
+            setEditLessonData((prevData) => {
+                const newData = [...prevData];
+                newData.splice(index, 1);
+                return newData;
+            });
         } catch (error) {
             console.error(error);
             alert("Failed to delete subject");
         }
-        setLessons((prevLessons) =>
-            prevLessons.filter(
-                (lesson) =>
-                    lesson.lesson_name !== lessonName ||
-                    lesson.unit_name !== subjectName
-            )
-        );
-
-        setEditLessonData((prevData) => {
-            const newData = [...prevData];
-            newData.splice(index, 1);
-            return newData;
-        });
     };
 
     return (
-        <div>
-            <table className='absolute'>
-                <thead>
-                    <tr className='text-center'>
-                        <th>№</th>
-                        <th>Lesson</th>
-                        <th>Subjects</th>
-                        <th>Action</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {lessons && lessons
-                        .reduce((acc, curr) => {
-                            const index = acc.findIndex(
-                                (item) => item.lesson_name === curr.lesson_name
-                            );
-                            if (index === -1) {
-                                acc.push({
-                                    ...curr,
-                                    subjects: new Set([curr.unit_name]),
-                                });
-                            } else {
-                                acc[index].subjects.add(curr.unit_name);
-                            }
-                            return acc;
-                        }, [])
-                        .map((item, index) => (
-                            <tr
-                                key={`${
-                                    item.lesson_name
-                                }-${index}-${Math.random()}`}>
-                                <td>{index + 1}</td>
-                                <td>{item.lesson_name}</td>
-                                <td>{[...item.subjects].join(", ")}</td>
-                                <td>
-                                    <Button
-                                        type='link'
-                                        onClick={() =>
-                                            handleEdit(item.lesson_name)
-                                        }>
-                                        Edit
-                                    </Button>
-                                </td>
-                            </tr>
-                        ))}
-                </tbody>
-            </table>
-
+        <div className='relative p-4'>
             <button
-                className='absolute w-14 h-14 -translate-y-[200px] ml-[94%] bg-green-700 rounded-full text-white'
+                className='absolute w-14 h-14 -translate-y-8 right-4 text-xl bg-green-700 rounded-full text-white flex items-center justify-center'
                 type='button'
                 onClick={onOpen}>
                 +
             </button>
             <LessonSubjectsDrawer open={open} onClosed={onClose} />
 
-            <select
-                name='lessons'
-                className='-translate-y-[200px] ml-[75%] w-1/12 text-xl'>
+            <select name='lessons' className='mb-4 w-1/4 ml-auto border border-black p-2 rounded-lg'>
                 <option value='all'>All</option>
                 <option value='active'>Active</option>
                 <option value='deleted'>Deleted</option>
             </select>
 
+            <table className='min-w-full bg-white border border-gray-300 rounded-lg'>
+                <thead className='bg-gray-100'>
+                    <tr className='text-center'>
+                        <th className='py-3 px-4 text-gray-600 font-semibold'>
+                            №
+                        </th>
+                        <th className='py-3 px-4 text-gray-600 font-semibold'>
+                            Lesson
+                        </th>
+                        <th className='py-3 px-4 text-gray-600 font-semibold'>
+                            Subjects
+                        </th>
+                        <th className='py-3 px-4 text-gray-600 font-semibold'>
+                            Action
+                        </th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {lessons &&
+                        lessons
+                            .reduce((acc, curr) => {
+                                const index = acc.findIndex(
+                                    (item) =>
+                                        item.lesson_name === curr.lesson_name
+                                );
+                                if (index === -1) {
+                                    acc.push({
+                                        ...curr,
+                                        subjects: new Set([curr.unit_name]),
+                                    });
+                                } else {
+                                    acc[index].subjects.add(curr.unit_name);
+                                }
+                                return acc;
+                            }, [])
+                            .map((item, index) => (
+                                <tr
+                                    key={`${
+                                        item.lesson_name
+                                    }-${index}-${Math.random()}`}
+                                    className='text-center border-b hover:bg-gray-100'>
+                                    <td className='p-2'>{index + 1}</td>
+                                    <td className='p-2'>{item.lesson_name}</td>
+                                    <td className='p-2'>
+                                        {[...item.subjects].join(", ")}
+                                    </td>
+                                    <td className='p-2'>
+                                        <Button
+                                            type='link'
+                                            onClick={() =>
+                                                handleEdit(item.lesson_name)
+                                            }
+                                            className='text-blue-600 hover:underline'>
+                                            Edit
+                                        </Button>
+                                    </td>
+                                </tr>
+                            ))}
+                </tbody>
+            </table>
+
             <Modal
                 open={showEditModal}
                 onCancel={() => setShowEditModal(false)}
-                footer={null}>
-                <h2>Edit Lesson</h2>
+                footer={null}
+                className='rounded-lg'>
+                <h2 className='text-xl font-semibold mb-4'>Edit Lesson</h2>
 
                 <Select
                     placeholder='Select Lesson'
                     style={{ width: "100%", marginBottom: "20px" }}
                     onChange={(value) => handleEdit(value)}>
-                    {lessons && lessons
-                        .map((item) => item.lesson_name)
-                        .filter(
-                            (value, index, self) =>
-                                self.indexOf(value) === index
-                        )
-                        .map((lesson_name) => (
-                            <Select.Option
-                                key={lesson_name}
-                                value={lesson_name}>
-                                {lesson_name}
-                            </Select.Option>
-                        ))}
+                    {lessons &&
+                        lessons
+                            .map((item) => item.lesson_name)
+                            .filter(
+                                (value, index, self) =>
+                                    self.indexOf(value) === index
+                            )
+                            .map((lesson_name) => (
+                                <Select.Option
+                                    key={lesson_name}
+                                    value={lesson_name}>
+                                    {lesson_name}
+                                </Select.Option>
+                            ))}
                 </Select>
 
                 <Table
@@ -165,7 +177,7 @@ const LessonSubjects = () => {
                             dataIndex: "unit_name",
                             key: "unit_name",
                             render: (text, record, index) => (
-                                <div>
+                                <div className='flex items-center justify-between'>
                                     {text}
                                     <Button
                                         type='link'
@@ -177,6 +189,7 @@ const LessonSubjects = () => {
                                                 index
                                             )
                                         }
+                                        className='text-red-600'
                                     />
                                 </div>
                             ),

@@ -6,13 +6,14 @@ import { useSort } from "../../../../hooks/useSort";
 const Accepted = () => {
     const [data, setData] = useState([]);
     const [userData, setUserData] = useState([]);
+    const API = "http://localhost:3000";
 
     const { handleSort, sortConfig } = useSort(userData, setUserData);
     useEffect(() => {
         const handleGet = async () => {
             try {
                 const req = await axios.get(
-                    "http://localhost:3000/applications/accepted"
+                    `${API}/applications/accepted`
                 );
                 setData(req.data.users);
                 console.log(req.data);

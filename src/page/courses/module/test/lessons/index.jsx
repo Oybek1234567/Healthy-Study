@@ -7,115 +7,125 @@ import { Dropdown, Space, Button, Modal, Menu } from "antd";
 
 const Lessons = () => {
     const { id: moduleID } = useParams();
-    const [data, setData] = useState([]);
+    const [lessons, setLessons] = useState([]);
     const [newName, setNewName] = useState("");
     const [editLesson, setEditLesson] = useState(null);
     const [showEditModal, setShowEditModal] = useState(false);
     const { open, onOpen, onClose } = useDrawer();
+    const API = "http://localhost:3000";
 
+    // Darslarni olish
     useEffect(() => {
-        const fetchData = async () => {
+        const fetchLessons = async () => {
             try {
-                const req = await axios.get(
-                    `http://localhost:3000/lessons/all/${moduleID}`
+                const { data } = await axios.get(
+                    `${API}/lessons/all/${moduleID}`
                 );
-                setData(req.data.lessons);
+                setLessons(data.lessons);
             } catch (error) {
-                console.error(error);
+                console.error("Darslarni olishda xato:", error);
             }
         };
 
-        fetchData();
+        fetchLessons();
     }, [moduleID]);
 
+    // Darsni saqlash
     const handleSave = async () => {
+        if (!editLesson) return;
+
         try {
-            alert("Yaratildi");
-            window.location.reload();
             await axios.post(
-                `http://localhost:3000/lessons/edit/${editLesson.id}`,
+                `${API}/lessons/edit/${editLesson.id}`,
                 { name: newName }
             );
-            const updatedLessons = data.map((lesson) =>
-                lesson.id === editLesson.id
-                    ? { ...lesson, name: newName }
-                    : lesson
+            setLessons((prev) =>
+                prev.map((lesson) =>
+                    lesson.id === editLesson.id
+                        ? { ...lesson, name: newName }
+                        : lesson
+                )
             );
-            setData(updatedLessons);
-            setEditLesson(null);
             setShowEditModal(false);
-            alert("Lesson successfully updated");
+            alert("Dars muvaffaqiyatli yangilandi");
         } catch (error) {
-            console.error(error);
-            alert("Failed to update lesson");
+            console.error("Darsni yangilashda xato:", error);
+            alert("Darsni yangilashda xato");
         }
     };
 
+    // Darsni tahrirlash
     const handleEdit = (lesson) => {
         setEditLesson(lesson);
         setNewName(lesson.name);
         setShowEditModal(true);
     };
 
+    // Darsni o'chirish
     const handleDelete = async (lesson) => {
         try {
-            alert("Deleted");
-            window.location.reload();
             await axios.post(
-                `http://localhost:3000/lessons/delete/${lesson.id}`
+                `${API}/lessons/delete/${lesson.id}`
             );
-            const updatedLessons = data.filter((l) => l.id !== lesson.id);
-            setData(updatedLessons);
-            alert("Lesson successfully deleted");
+            setLessons((prev) => prev.filter((l) => l.id !== lesson.id));
+            alert("Dars muvaffaqiyatli o'chirildi");
         } catch (error) {
-            console.error(error);
-            alert("Failed to delete lesson");
+            console.error("Darsni o'chirishda xato:", error);
+            alert("Darsni o'chirishda xato");
         }
     };
 
+    // Dropdown menyusini yaratish
     const renderMenu = (lesson) => (
         <Menu>
             <Menu.Item key='edit' onClick={() => handleEdit(lesson)}>
-                Edit
+                Tahrirlash
             </Menu.Item>
             <Menu.Item key='delete' onClick={() => handleDelete(lesson)}>
-                Delete
+                O`chirish
             </Menu.Item>
         </Menu>
     );
 
     return (
-        <div>
+        <div className='relative p-4'>
             <button
-                className='absolute w-14 h-14 -translate-y-[200px] ml-[94%] bg-green-700 rounded-full text-white'
+                className='absolute w-14 h-14 -translate-y-10 ml-[90%] text-xl bg-green-600 rounded-full text-white shadow-lg hover:bg-green-700 transition duration-300 ease-in-out'
                 type='button'
-                onClick={() => onOpen()}>
+                onClick={onOpen}>
                 +
             </button>
             <LessonsDrawer open={open} onClosed={onClose} />
-            <table className='absolute'>
-                <thead>
+            <table className='min-w-full bg-white border border-gray-200 shadow-md rounded-lg overflow-hidden mt-10'>
+                <thead className='bg-gray-100'>
                     <tr className='text-center'>
-                        <th>№</th>
-                        <th>Name</th>
+                        <th className='py-3 px-4 text-gray-600 font-semibold'>
+                            №
+                        </th>
+                        <th className='py-3 px-4 text-gray-600 font-semibold'>
+                            Nomi
+                        </th>
+                        <th className='py-3 px-4 text-gray-600 font-semibold'>
+                            Harakatlar
+                        </th>
                     </tr>
                 </thead>
                 <tbody>
-                    {data && data.map((item, index) => (
-                        <tr key={item.id}>
-                            <td>{index + 1}</td>
-                            <td>{item.name}</td>
-                            <td>
+                    {lessons.map((item, index) => (
+                        <tr
+                            key={item.id}
+                            className='text-center border-b hover:bg-gray-50 transition duration-200 ease-in-out'>
+                            <td className='py-2 px-4'>{index + 1}</td>
+                            <td className='py-2 px-4'>{item.name}</td>
+                            <td className='py-2 px-4'>
                                 <Dropdown
                                     overlay={renderMenu(item)}
                                     trigger={["click"]}>
-                                    <div>
-                                        <Space>
-                                            <p className='rotate-90 text-4xl cursor-pointer'>
-                                                ...
-                                            </p>
-                                        </Space>
-                                    </div>
+                                    <Space>
+                                        <p className='rotate-90 text-2xl cursor-pointer'>
+                                            ...
+                                        </p>
+                                    </Space>
                                 </Dropdown>
                             </td>
                         </tr>
@@ -129,21 +139,19 @@ const Lessons = () => {
                     <Button
                         key='cancel'
                         onClick={() => setShowEditModal(false)}>
-                        Close
+                        Yopish
                     </Button>,
                     <Button key='save' type='primary' onClick={handleSave}>
-                        Save Changes
+                        O'zgarishlarni saqlash
                     </Button>,
                 ]}>
-                <h2>Edit Lesson</h2>
-                <div className='flex flex-col gap-2'>
-                    <input
-                        type='text'
-                        className='border-2 border-black w-full'
-                        value={newName}
-                        onChange={(e) => setNewName(e.target.value)}
-                    />
-                </div>
+                <h2 className='text-lg font-semibold'>Darsni tahrirlash</h2>
+                <input
+                    type='text'
+                    className='border-2 border-gray-300 w-full mt-2 mb-3 h-10 pl-2 rounded'
+                    value={newName}
+                    onChange={(e) => setNewName(e.target.value)}
+                />
             </Modal>
         </div>
     );

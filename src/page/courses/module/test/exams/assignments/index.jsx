@@ -15,14 +15,13 @@ const AssignmentTypes = () => {
     const moduleName = location.state?.moduleName;
     const courseName = location.state?.courseName;
     const examName = location.state?.name;
-
+    const API = "http://localhost:3000";
     useEffect(() => {
-        console.log(assignmentID, moduleID);
 
         const fetchData = async () => {
             try {
                 const req = await axios.get(
-                    `http://localhost:3000/assignments/all/${assignmentID}`
+                    `${API}/assignments/all/${assignmentID}`
                 );
                 setData(req.data.assignments);
             } catch (error) {
@@ -31,12 +30,12 @@ const AssignmentTypes = () => {
         };
 
         fetchData();
-    }, [assignmentID]);
+    }, [moduleID, assignmentID]);
 
     const handleSave = async () => {
         try {
             await axios.post(
-                `http://localhost:3000/assignments/edit/${editItem.id}`,
+                `${API}/assignments/edit/${editItem.id}`,
                 { name: newName },
                 {
                     headers: {
@@ -67,7 +66,7 @@ const AssignmentTypes = () => {
     const handleDelete = async (item) => {
         try {
             await axios.post(
-                `http://localhost:3000/assignments/delete/${item.id}`
+                `${API}/assignments/delete/${item.id}`
             );
             const updatedData = data.filter((i) => i.id !== item.id);
             setData(updatedData);
@@ -112,7 +111,7 @@ const AssignmentTypes = () => {
             </h1>
             <button
                 onClick={onOpen}
-                className='bg-green-700 w-10 h-10 ml-[95%] rounded-full mb-10 text-white text-xl'>
+                className='bg-green-700 w-10 h-10 text-xl ml-[95%] rounded-full mb-10 text-white'>
                 +
             </button>
             <AssignmentsDrawer
@@ -136,7 +135,8 @@ const AssignmentTypes = () => {
                                 <td>{index + 1}</td>
                                 <td>
                                     <Link
-                                        to={`/modules/${moduleID}/types/${assignmentID}/assignments/${item.id}`} state={{ moduleID, typeId: item.id }}>
+                                        to={`/modules/${moduleID}/types/${assignmentID}/assignments/${item.id}`}
+                                        state={{ moduleID, typeId: item.id }}>
                                         {item.name}
                                     </Link>
                                 </td>

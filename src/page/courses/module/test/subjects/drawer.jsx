@@ -5,7 +5,7 @@ import { useParams } from "react-router-dom";
 const SubjectsDrawer = ({ open, onClosed, onCreate }) => {
     const { id: moduleID } = useParams();
     const [inputValue, setInputValue] = useState("");
-
+    const API = "http://localhost:3000";
     const handlePost = async () => {
         const data = {
             name: inputValue,
@@ -13,7 +13,7 @@ const SubjectsDrawer = ({ open, onClosed, onCreate }) => {
         };
         try {
             const res = await axios.post(
-                "http://localhost:3000/subjects/create",
+                `${API}/subjects/create`,
                 data
             );
             console.log(moduleID);

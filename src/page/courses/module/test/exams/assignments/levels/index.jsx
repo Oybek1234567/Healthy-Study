@@ -16,12 +16,13 @@ const AssignmentLevels = () => {
     const [modal, setModal] = useState(false);
     const [editItem, setEditItem] = useState(null);
     const [form] = Form.useForm();
+    const API = "http://localhost:3000";
 
     useEffect(() => {
         const fetchData = async () => {
             try {
                 const response = await axios.get(
-                    `http://localhost:3000/assignmentlevels/all/${typeId}`
+                    `${API}/assignmentlevels/all/${typeId}`
                 );
                 setData(response.data.assignment_levels);
             } catch (error) {
@@ -36,7 +37,7 @@ const AssignmentLevels = () => {
         const fetchData = async () => {
             try {
                 const req = await axios.get(
-                    `http://localhost:3000/questionlevels/all/${moduleID}`
+                    `${API}/questionlevels/all/${moduleID}`
                 );
                 setLevels(req.data.question_levels);
             } catch (error) {
@@ -50,7 +51,7 @@ const AssignmentLevels = () => {
         const fetchData = async () => {
             try {
                 const req = await axios.get(
-                    `http://localhost:3000/subjects/all/${moduleID}`
+                    `${API}/subjects/all/${moduleID}`
                 );
                 setUnits(req.data.units);
             } catch (error) {
@@ -73,7 +74,7 @@ const AssignmentLevels = () => {
     const handleDelete = async (id) => {
         try {
             await axios.post(
-                `http://localhost:3000/assignmentlevels/delete/${id}`
+                `${API}/assignmentlevels/delete/${id}`
             );
           setData((prevData) => prevData.filter((item) => item.id !== id));
         } catch (error) {
@@ -84,7 +85,7 @@ const AssignmentLevels = () => {
     const handleSubmit = async (values) => {
         try {
             await axios.post(
-                `http://localhost:3000/assignmentlevels/edit/${editItem.id}`,
+                `${API}/assignmentlevels/edit/${editItem.id}`,
                 values
             );
             setData((prevData) =>
@@ -118,12 +119,12 @@ const AssignmentLevels = () => {
     return (
         <div>
             <button
-                className='bg-green-800 w-10 h-10 mt-3 text-white rounded-full ml-[95%]'
+                className='bg-green-800 text-xl w-10 h-10 mt-3 text-white rounded-full ml-[95%]'
                 onClick={onOpen}>
                 +
             </button>
             <AssignmentLvlDrawer open={open} onClose={onClose} />
-            <table className="mt-4">
+            <table className='mt-4'>
                 <thead>
                     <tr className='border-2 border-black text-center'>
                         <th>№</th>

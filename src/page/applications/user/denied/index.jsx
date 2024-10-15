@@ -7,11 +7,12 @@ const Denied = () => {
     const [data, setData] = useState([]);
     const [userData, setUserData] = useState([]);
     const { handleSort, sortConfig } = useSort(userData, setUserData);
+    const API = "http://localhost:3000";
     useEffect(() => {
         const handleGet = async () => {
             try {
                 const req = await axios.get(
-                    "http://localhost:3000/applications/denied"
+                    `${API}/applications/denied`
                 );
                 setData(req.data.users);
                 console.log(req.data);

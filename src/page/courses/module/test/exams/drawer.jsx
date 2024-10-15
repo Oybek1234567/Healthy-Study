@@ -6,7 +6,7 @@ const ExamsDrawer = ({ open, onClosed, onCreate }) => {
     const { id: moduleID } = useParams();
     const [inputValue, setInputValue] = useState("");
     const [secondInput, setSecondInput] = useState("");
-
+    const API = "http://localhost:3000";
     const handlePost = async () => {
         const data = {
             name: inputValue,
@@ -15,7 +15,7 @@ const ExamsDrawer = ({ open, onClosed, onCreate }) => {
         };
         try {
             await axios.post(       
-                "http://localhost:3000/assignmenttypes/create",
+                `${API}/assignmenttypes/create`,
                 data
             );
             console.log(moduleID);
