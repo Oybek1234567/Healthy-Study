@@ -11,12 +11,14 @@ const ExistingGroupDrawer = ({ open, onClose, onCreate }) => {
     const [checkedStatus, setCheckedStatus] = useState({});
     const location = useLocation();
     const { groupId } = location.state;
+        const API = "http://localhost:3000";
+
 
     useEffect(() => {
         const handleGet = async () => {
             try {
                 const req = await axios.get(
-                    `http://localhost:3000/groupstudents/all/${groupId}`
+                    `${API}/groupstudents/all/${groupId}`
                 );
                 setData(req.data.group_student);
                 console.log(req.data.group_student);
@@ -31,7 +33,7 @@ const ExistingGroupDrawer = ({ open, onClose, onCreate }) => {
         const handleGetSelect = async () => {
             try {
                 const req = await axios.get(
-                    `http://localhost:3000/grouplessons/all/${groupId}`
+                    `${API}/grouplessons/all/${groupId}`
                 );
                 setSelect(req.data.group_lessons);
                 console.log(req.data.group_lessons);
@@ -63,7 +65,7 @@ const ExistingGroupDrawer = ({ open, onClose, onCreate }) => {
         try {
             window.location.reload()
             const res = await axios.post(
-                `http://localhost:3000/groupattendance/create/${groupId}`,
+                `${API}/groupattendance/create/${groupId}`,
                 postData
             );
             onCreate(selectedValue);

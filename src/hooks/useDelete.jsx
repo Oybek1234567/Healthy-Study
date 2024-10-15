@@ -3,12 +3,12 @@ import { useState } from "react";
 
 const useDelete = () => {
     const [userData, setUserData] = useState([]);
-
+    const API = "http://localhost:3000/";
     const handleDelete = async (user) => {
         const phoneNum = user.phone;
         try {
             const res = await axios.post(
-                `http://localhost:3000/applications/deny/${phoneNum}`
+                `${API}applications/deny/${phoneNum}`
             );
             if (res.data && res.data.user) {
                 alert("User deleted successfully");

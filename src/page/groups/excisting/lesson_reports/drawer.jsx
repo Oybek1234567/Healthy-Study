@@ -10,12 +10,14 @@ const LessonModal = ({ open, onClose }) => {
     const [selectedInput, setSelectedInput] = useState({});
     const location = useLocation();
     const { groupId, lesson_report_type_id } = location.state;
+    const API = "http://localhost:3000";
+
 
     useEffect(() => {
         const handleGet = async () => {
             try {
                 const req = await axios.get(
-                    `http://localhost:3000/grouplessons/all/${groupId}`
+                    `${API}/grouplessons/all/${groupId}`
                 );
                 setData(req.data.group_lessons);
             } catch (error) {
@@ -29,7 +31,7 @@ const LessonModal = ({ open, onClose }) => {
         const handleGetStudent = async () => {
             try {
                 const req = await axios.get(
-                    `http://localhost:3000/groupstudents/all/${groupId}`
+                    `${API}/groupstudents/all/${groupId}`
                 );
                 setStudents(req.data.group_student);
             } catch (e) {
@@ -53,7 +55,7 @@ const LessonModal = ({ open, onClose }) => {
 
         try {
             const res = await axios.post(
-                `http://localhost:3000/lessonreportsbyuser/create/${groupId}`,
+                `${API}/lessonreportsbyuser/create/${groupId}`,
                 postData
             );
             console.log(res.data);

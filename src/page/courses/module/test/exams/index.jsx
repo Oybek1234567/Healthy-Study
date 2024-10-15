@@ -18,12 +18,13 @@ const Exams = () => {
     const location = useLocation();
     const courseName = location.state?.courseName;
     const moduleName = location.state?.moduleName;
+    const API = "http://localhost:3000";
 
     useEffect(() => {
         const fetchData = async () => {
             try {
                 const req = await axios.get(
-                    `http://localhost:3000/assignmenttypes/all/${id}`
+                    `${API}/assignmenttypes/all/${id}`
                 );
                 setExams(req.data.assignmenttypes);
                 setFilteredExams(req.data.assignmenttypes);
@@ -38,7 +39,7 @@ const Exams = () => {
     const handleSave = async () => {
         try {
             await axios.post(
-                `http://localhost:3000/assignmenttypes/edit/${editExam.id}`,
+                `${API}/assignmenttypes/edit/${editExam.id}`,
                 { name: newName, weight: newWeight, tests_total: newTests },
                 {
                     headers: {
@@ -79,7 +80,7 @@ const Exams = () => {
     const handleDelete = async (exam) => {
         try {
             await axios.post(
-                `http://localhost:3000/assignmenttypes/delete/${exam.id}`
+                `${API}/assignmenttypes/delete/${exam.id}`
             );
             const updatedExams = exams.filter((c) => c.id !== exam.id);
             setExams(updatedExams);

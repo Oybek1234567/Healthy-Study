@@ -13,12 +13,13 @@ const Subjects = () => {
     const [newName, setNewName] = useState("");
     const [selectedStatus, setSelectedStatus] = useState("all");
     const { id } = useParams();
+    const API = "http://localhost:3000";
 
     useEffect(() => {
         const fetchData = async () => {
             try {
                 const { data } = await axios.get(
-                    `http://localhost:3000/subjects/all/${id}`
+                    `${API}/subjects/all/${id}`
                 );
                 setSubjects(data.units);
                 setFilteredSubjects(data.units);
@@ -33,7 +34,7 @@ const Subjects = () => {
     const handleSave = async () => {
         try {
             await axios.post(
-                `http://localhost:3000/subjects/edit/${editSubject.id}`,
+                `${API}/subjects/edit/${editSubject.id}`,
                 { name: newName },
                 { headers: { "Content-Type": "application/json" } }
             );
@@ -63,7 +64,7 @@ const Subjects = () => {
     const handleDelete = async (subject) => {
         try {
             await axios.post(
-                `http://localhost:3000/subjects/delete/${subject.id}`
+                `${API}/subjects/delete/${subject.id}`
             );
             const updatedSubjects = subjects.filter((s) => s.id !== subject.id);
             setSubjects(updatedSubjects);

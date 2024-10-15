@@ -5,7 +5,7 @@ const useEdit = () => {
     const [editedUserData, setEditedUserData] = useState({});
     const [editRowKey, setEditRowKey] = useState(null);
     const [userData, setUserData] = useState([]);
-
+    const API = "http://localhost:3000/";
     const handleSave = async () => {
          console.log("userData:", userData);
          console.log("editedUserData.id:", editedUserData.id);
@@ -40,7 +40,7 @@ const useEdit = () => {
 
         try {
             const response = await axios.post(
-                `http://localhost:3000/applications/edit/${editedUserData.id}`,
+                `${API}applications/edit/${editedUserData.id}`,
                 updatedFields
             );
 

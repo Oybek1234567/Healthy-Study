@@ -6,6 +6,7 @@ import { useParams } from "react-router-dom";
 const LessonsDrawer = ({ open, onClosed, onCreate }) => {
     const [input, setInput] = useState("");
     const { id: moduleID } = useParams();
+    const API = "http://localhost:3000";
     const handlePost = async () => {
         const data = {
             module_id: moduleID,
@@ -15,7 +16,7 @@ const LessonsDrawer = ({ open, onClosed, onCreate }) => {
             alert("Yaratildi");
             window.location.reload();
             const res = await axios.post(
-                "http://localhost:3000/lessons/create",
+                `${API}/lessons/create`,
                 data
             );
             onCreate(data.name);

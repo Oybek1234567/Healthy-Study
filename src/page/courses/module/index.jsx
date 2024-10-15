@@ -2,7 +2,6 @@ import { Link, useLocation } from "react-router-dom";
 import { useState } from "react";
 import Modules from "./tab_1/module";
 import QuestionLvl from "./tab_2";
-import "./style.css";
 
 const ModulesTab = () => {
     const location = useLocation();

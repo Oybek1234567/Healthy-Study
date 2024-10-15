@@ -16,12 +16,13 @@ const SubjectTests = () => {
     const { id } = useParams();
     const location = useLocation();
     const { moduleId } = location.state;
+    const API = "http://localhost:3000";
 
     useEffect(() => {
         const fetchData = async () => {
             try {
                 const req = await axios.get(
-                    `http://localhost:3000/questionlevels/all/${moduleId}`
+                    `${API}/questionlevels/all/${moduleId}`
                 );
                 setData(req.data.question_levels);
                 console.log(req.data);
@@ -41,7 +42,7 @@ const SubjectTests = () => {
 
             try {
                 const req = await axios.post(
-                    `http://localhost:3000/questions/all/${+id}`,
+                    `${API}/questions/all/${+id}`,
                     {
                         level_id: selectedLevel.id,
                     }
@@ -63,7 +64,7 @@ const SubjectTests = () => {
     const handleSaveClick = async () => {
         try {
             await axios.post(
-                `http://localhost:3000/questions/edit/${editingQuestionId}`,
+                `${API}/questions/edit/${editingQuestionId}`,
                 {
                     question: editedQuestionText,
                 }
@@ -84,7 +85,7 @@ const SubjectTests = () => {
 
     const handleDeleteClick = async (questionId) => {
         try {
-            await axios.post(`http://localhost:3000/questions/delete/${questionId}`);
+            await axios.post(`${API}//questions/delete/${questionId}`);
             setItem((prevQuestions) =>
                 prevQuestions.filter((q) => q.id !== questionId)
             );

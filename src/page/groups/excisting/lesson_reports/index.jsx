@@ -11,12 +11,13 @@ const LessonReports = () => {
     const location = useLocation();
     const { groupId, lesson_report_type_id } = location.state;
     const { open, onOpen, onClose } = useDrawer();
+            const API = "http://localhost:3000";
 
     useEffect(() => {
         const fetchData = async () => {
             try {
                 const response = await axios.post(
-                    `http://localhost:3000/lessonreportsbyuser/all/${groupId}`,
+                    `${API}/lessonreportsbyuser/all/${groupId}`,
                     { lesson_report_type_id }
                 );
                 setData(response.data.data);
@@ -31,7 +32,7 @@ const LessonReports = () => {
         const handleGetLessons = async () => {
             try {
                 const req = await axios.get(
-                    `http://localhost:3000/grouplessons/all/${groupId}`
+                    `${API}/grouplessons/all/${groupId}`
                 );
                 setLesson(req.data.group_lessons);
             } catch (e) {
@@ -45,7 +46,7 @@ const LessonReports = () => {
         const handleGetStudent = async () => {
             try {
                 const req = await axios.post(
-                    `http://localhost:3000/lessonreportsbyuser/all/${groupId}`,
+                    `${API}/lessonreportsbyuser/all/${groupId}`,
                     { lesson_report_type_id: lesson_report_type_id }
                 );
                 setStudent(req.data.data);

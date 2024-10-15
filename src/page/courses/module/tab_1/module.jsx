@@ -24,11 +24,12 @@ const Modules = () => {
     const location = useLocation();
     const courseName = location.state?.name;
 
+    const API = "http://localhost:3000";
     useEffect(() => {
         const fetchData = async () => {
             try {
                 const req = await axios.get(
-                    `http://localhost:3000/modules/all/${id}`
+                    `${API}/modules/all/${id}`
                 );
                 setData(req.data.modules);
                 setModules(req.data.modules);
@@ -47,7 +48,7 @@ const Modules = () => {
             setShowEditModal(false);
             window.location.reload();
             await axios.post(
-                `http://localhost:3000/modules/edit/${editModule.id}`,
+                `${API}/modules/edit/${editModule.id}`,
                 { name: newName, max_students: newStudent, length: newLength },
                 {
                     headers: {
@@ -99,7 +100,7 @@ const Modules = () => {
             alert("Kurs o'chirildi");
             window.location.reload();
             await axios.post(
-                `http://localhost:3000/modules/delete/${module.id}`
+                `${API}/modules/delete/${module.id}`
             );
             const updatedCourses = module.filter((c) => c.id !== module.id);
             setModules(updatedCourses);

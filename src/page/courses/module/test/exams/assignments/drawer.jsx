@@ -6,6 +6,7 @@ import { useParams } from "react-router-dom";
 const AssignmentsDrawer = ({ open, onClosed, onCreate }) => {
     const [input, setInput] = useState("");
     const { moduleID, assignmentID } = useParams();
+    const API = "http://localhost:3000";
 
     const handlePost = async () => {
         const data = {
@@ -16,7 +17,7 @@ const AssignmentsDrawer = ({ open, onClosed, onCreate }) => {
 
         try {
             const res = await axios.post(
-                "http://localhost:3000/assignments/create",
+                `${API}/assignments/create`,
                 data
             );
             onCreate(data.name, data.module_id, data.assignment_type_id); 

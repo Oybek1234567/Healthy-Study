@@ -3,11 +3,13 @@ import { useEffect, useState } from "react";
 
 const ModuleLeader = () => {
     const [data, setData] = useState([]);
+            const API = "http://localhost:3000";
+
     useEffect(() => {
         const fetchData = async () => {
             try {
                 const req = await axios.get(
-                    "http://localhost:3000/users/module_leaders"
+                    `${API}/users/module_leaders`
                 );
                 setData(req.data.users);
                 console.log(req.data);

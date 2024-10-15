@@ -4,6 +4,8 @@ import { useState } from "react";
 
 const RoomsDrawer = ({ open, onClose, onCreate }) => {
     const [loading, setLoading] = useState(false);
+    const API = "http://localhost:3000";
+
 
     const handlePost = async (data) => {
         setLoading(true);
@@ -11,7 +13,7 @@ const RoomsDrawer = ({ open, onClose, onCreate }) => {
             window.location.reload()
             alert("Xona yaratildi")
             const response = await axios.post(
-                "http://localhost:3000/rooms/create",
+                `${API}/rooms/create`,
                 data
             );
             console.log(response.data);

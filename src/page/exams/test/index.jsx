@@ -9,6 +9,8 @@ const ExamsTest = () => {
 
     const [data, setData] = useState([]);
     const [Answers, setAnswers] = useState([]);
+    const API = "http://localhost:3000";
+
     useEffect(() => {
         const token = localStorage.getItem("token");
         const headers = {
@@ -18,7 +20,7 @@ const ExamsTest = () => {
         const fetchData = async () => {
             try {
                 const req = await axios.post(
-                    "http://localhost:3000/exams/allquestions",
+                    `${API}/exams/allquestions`,
                     { assignment_by_groupstudent_id },
                     { headers }
                 );
@@ -69,13 +71,12 @@ const ExamsTest = () => {
                 Authorization: `Bearer ${token}`,
             };
 
-            const req = await axios.post(
-                "http://localhost:3000/exams/answers",
+             await axios.post(
+                `${API}/exams/answers`,
                 responseData,
                 { headers }
             );
-            console.log(req.data);
-            console.log(responseData);
+            window.history.back()
         } catch (e) {
             console.error(e);
         }

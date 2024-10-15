@@ -12,12 +12,13 @@ const QuestionLvl = () => {
     const [showModal, setShowModal] = useState(false);
     const [value, setValue] = useState("");
     const [currentItem, setCurrentItem] = useState(null);
+    const API = "http://localhost:3000";
 
     useEffect(() => {
         const fetchData = async () => {
             try {
                 const req = await axios.get(
-                    `http://localhost:3000/questionlevels/all/${id}`
+                    `${API}/questionlevels/all/${id}`
                 );
                 setData(req.data.question_levels);
             } catch (error) {
@@ -37,7 +38,7 @@ const QuestionLvl = () => {
     const handleSave = async () => {
         try {
             await axios.post(
-                `http://localhost:3000/questionlevels/edit/${currentItem.id}`,
+                `${API}/questionlevels/edit/${currentItem.id}`,
                 { name: value }
             );
             setData((prevData) =>
@@ -55,7 +56,7 @@ const QuestionLvl = () => {
     const handleDelete = async (item) => {
         try {
             await axios.post(
-                `http://localhost:3000/questionlevels/delete/${item.id}`
+                `${API}/questionlevels/delete/${item.id}`
             );
             const updatedData = data.filter((d) => d.id !== item.id);
             setData(updatedData);

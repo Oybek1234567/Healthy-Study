@@ -15,13 +15,14 @@ const Report = () => {
     const [selectedStatus, setSelectedStatus] = useState("all");
     const { id } = useParams();
     const { open, onOpen, onClose } = useDrawer();
+    const API = "http://localhost:3000";
 
     // Ma'lumotlarni olish uchun funktsiya
     useEffect(() => {
         const fetchData = async () => {
             try {
                 const response = await axios.get(
-                    `http://localhost:3000/lessonreporttypes/all/${id}`
+                    `${API}/lessonreporttypes/all/${id}`
                 );
                 setReports(response.data.lesson_report_types);
                 setFilteredReports(response.data.lesson_report_types);
@@ -36,7 +37,7 @@ const Report = () => {
     const handleSave = async () => {
         try {
             await axios.post(
-                `http://localhost:3000/lessonreporttypes/edit/${editReport.id}`,
+                `${API}/lessonreporttypes/edit/${editReport.id}`,
                 { name: newName, weight: newWeight },
                 { headers: { "Content-Type": "application/json" } }
             );
@@ -69,7 +70,7 @@ const Report = () => {
     const handleDelete = async (report) => {
         try {
             await axios.post(
-                `http://localhost:3000/lessonreporttypes/delete/${report.id}`
+                `${API}/lessonreporttypes/delete/${report.id}`
             );
             const updatedReports = reports.filter((c) => c.id !== report.id);
 

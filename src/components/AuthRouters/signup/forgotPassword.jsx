@@ -5,16 +5,16 @@ import { Link } from "react-router-dom";
 
 const ForgotPassword = () => {
     const [step, setStep] = useState(1);
-    const [phone, setPhone] = useState("");
-    const [code, setCode] = useState("");
     const [loading, setLoading] = useState(false);
     const [form] = Form.useForm();
 
-    const handleStep1 = async () => {
+    const API = "http://localhost:3000";
+
+    const handleStep1 = async (values) => {
         setLoading(true);
         try {
-            const response = await axios.post("http://localhost:3000/users/forgotpassword", {
-                phone: phone,
+            const response = await axios.post(`${API}/users/forgotpassword`, {
+                phone: values.phone,
                 step: 1,
             });
             if (response.data.success) {
@@ -22,8 +22,6 @@ const ForgotPassword = () => {
                 setStep(2);
             } else {
                 message.error(response.data.msg || "Xatolik yuz berdi");
-                console.log(response.data);
-                
             }
         } catch (error) {
             message.error("Xatolik yuz berdi");
@@ -35,15 +33,12 @@ const ForgotPassword = () => {
     const handleStep2 = async (values) => {
         setLoading(true);
         try {
-            const response = await axios.post(
-                "http://localhost:3000/users/forgotpassword",
-                {
-                    phone: phone,
-                    code: code,
-                    newPassword: values.newPassword,
-                    step: 2,
-                }
-            );
+            const response = await axios.post(API, {
+                phone: values.phone,
+                code: values.code,
+                newPassword: values.newPassword,
+                step: 2,
+            });
             if (response.data.success) {
                 message.success("Parol muvaffaqiyatli o'zgartirildi");
             } else {
@@ -85,10 +80,6 @@ const ForgotPassword = () => {
                                         },
                                     ]}>
                                     <Input
-                                        value={phone}
-                                        onChange={(e) =>
-                                            setPhone(e.target.value)
-                                        }
                                         placeholder='Telefon raqamingiz'
                                         className='bg-gray-50 border border-gray-300 text-gray-900 rounded-lg'
                                     />
@@ -118,10 +109,6 @@ const ForgotPassword = () => {
                                         },
                                     ]}>
                                     <Input
-                                        value={code}
-                                        onChange={(e) =>
-                                            setCode(e.target.value)
-                                        }
                                         placeholder='Yuborilgan kod'
                                         className='bg-gray-50 border border-gray-300 text-gray-900 rounded-lg'
                                     />

@@ -12,12 +12,12 @@ const LessonSubjects = () => {
     const [showEditModal, setShowEditModal] = useState(false);
     const { open, onOpen, onClose } = useDrawer();
     const { id: moduleID } = useParams();
-
+    const API = "http://localhost:3000";
     useEffect(() => {
         const fetchData = async () => {
             try {
                 const response = await axios.get(
-                    `http://localhost:3000/lessonunits/all/${moduleID}`
+                    `${API}/lessonunits/all/${moduleID}`
                 );
                 setLessons(response.data.lesson_units);
             } catch (error) {
@@ -40,7 +40,7 @@ const LessonSubjects = () => {
         try {
             const unit_id = editLessonData[index].id;
             await axios.post(
-                `http://localhost:3000/lessonunits/delete/${unit_id}`
+                `${API}/lessonunits/delete/${unit_id}`
             );
             setLessons((prevLessons) =>
                 prevLessons.filter(
