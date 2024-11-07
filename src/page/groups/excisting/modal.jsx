@@ -6,7 +6,7 @@ import { useLocation } from "react-router-dom";
 const ExistingGroupDrawer = ({ open, onClose, onCreate }) => {
     const [data, setData] = useState([]);
     const [select, setSelect] = useState([]);
-    const [selectedValue, setSelectedValue] = useState(""); // New state for selected value
+    const [selectedValue, setSelectedValue] = useState("");
     const [commentVisible, setCommentVisible] = useState({});
     const [checkedStatus, setCheckedStatus] = useState({});
     const location = useLocation();

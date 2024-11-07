@@ -50,8 +50,8 @@ const UsersPending = () => {
             [user.id]: true,
         }));
     };
-
     const handleSubmit = async (user) => {
+        
         try {
             const res = await axios.post(
                 `${API}/users/create`,
@@ -119,7 +119,6 @@ const UsersPending = () => {
             );
         }
     };
-
     return (
         <div className='p-4'>
             <table className='min-w-full bg-white border border-gray-300 rounded-lg shadow-md'>

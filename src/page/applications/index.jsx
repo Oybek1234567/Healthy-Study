@@ -119,13 +119,16 @@ const Applications = () => {
         }
     };
     const handleAccept = async (id, user) => {
-        const { name, surname, phone, date_of_birth } = user;
+        const { name, surname, phone, date_of_birth, password } = user;
+        console.log(password);
         try {
             await axios.post(`${API}/users/create/${id}`, {
                 name,
                 surname,
                 phone,
                 date_of_birth,
+                password
+                
             });
             window.location.reload();
         } catch (e) {

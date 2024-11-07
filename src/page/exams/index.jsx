@@ -17,6 +17,8 @@ const Exams = () => {
                             Authorization: `Bearer ${token}`,
                         },
                     });
+                    console.log(req.data);
+                    
                     if (Array.isArray(req.data.exams)) {
                         setData(req.data.exams);
                     } else {
@@ -34,23 +36,27 @@ const Exams = () => {
     }, []);
 
     return (
-        <div className='container mx-auto mt-10 p-4'>
-            <h1 className='text-3xl font-bold text-center mb-6'>Exams</h1>
-            <table className='min-w-full bg-white shadow-md rounded-lg overflow-hidden'>
-                <thead className='bg-gray-200'>
-                    <tr>
-                        <th className='py-3 px-4 text-gray-600'>Group Name</th>
-                        <th className='py-3 px-4 text-gray-600'>
+        <div className='relative p-8 bg-gray-50'>
+            <h1 className='text-3xl font-bold text-gray-800 mb-6'>Exams</h1>
+            <table className='min-w-full border border-gray-300'>
+                <thead>
+                    <tr className='bg-gray-100 text-xl text-center'>
+                        <th className='px-4 py-2 border border-gray-300'>
+                            Group Name
+                        </th>
+                        <th className='px-4 py-2 border border-gray-300'>
                             Assignment Name
                         </th>
-                        <th className='py-3 px-4 text-gray-600'>Status</th>
+                        <th className='px-4 py-2 border border-gray-300'>
+                            Status
+                        </th>
                     </tr>
                 </thead>
-                <tbody>
+                <tbody className='text-center text-xl'>
                     {data.length > 0 ? (
                         data.map((item) => (
-                            <tr key={item.id} className='hover:bg-gray-100'>
-                                <td className='py-3 px-4'>
+                            <tr key={item.id} className='hover:bg-gray-50'>
+                                <td className='px-4 py-2 border border-gray-300'>
                                     {item.status === "completed" ? (
                                         <span className='text-gray-800'>
                                             {item.group_name}
@@ -60,6 +66,7 @@ const Exams = () => {
                                             to={`/exams/${item.id}`}
                                             state={{
                                                 name: item.group_name,
+                                                assignment_name: item.assignment_name,
                                                 assignment_by_groupstudent_id:
                                                     item.id,
                                             }}
@@ -68,10 +75,10 @@ const Exams = () => {
                                         </Link>
                                     )}
                                 </td>
-                                <td className='py-3 px-4 text-gray-800'>
+                                <td className='px-4 py-2 border border-gray-300'>
                                     {item.assignment_name}
                                 </td>
-                                <td className='py-3 px-4 text-gray-800'>
+                                <td className='px-4 py-2 border border-gray-300'>
                                     {item.status === "completed" ? (
                                         <span>
                                             {(item.result * 100).toFixed(2) +

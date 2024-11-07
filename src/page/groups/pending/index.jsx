@@ -19,6 +19,7 @@ const Pending = () => {
     const [newDay, setNewDay] = useState("");
     const [groups, setGroups] = useState([]);
     const [loading, setLoading] = useState(false);
+    const API = "http://localhost:3000";
 
     // Fetch initial data
     useEffect(() => {
@@ -136,27 +137,32 @@ const Pending = () => {
         }
     };
 
-const handleNewSave = async () => {
-    const newDataPayload = {
-        user_id: +newStudent, 
-        group_enrolement_id: selectedItem.id,  
+    const handleNewSave = async () => {
+        const newDataPayload = {
+            user_id: +newStudent,
+            group_enrolement_id: selectedItem.id,
+        };
+        try {
+            const req = await axios.post(
+                "http://localhost:3000/groupenrolementsbystudent/create",
+                newDataPayload
+            );
+            console.log(
+                "New student added:",
+                req.data.group_enrolement_by_student
+            );
+            setNewData((prev) => [
+                ...prev,
+                req.data.group_enrolement_by_student,
+            ]);
+            setNewStudent("");
+            alert("Student added successfully");
+            // window.location.reload(); // Sahifani qayta yuklash
+        } catch (error) {
+            console.error("Error saving new student:", error);
+            alert("Failed to add student");
+        }
     };
-    try {
-        const req = await axios.post(
-            "http://localhost:3000/groupenrolementsbystudent/create",
-            newDataPayload
-        );
-        console.log("New student added:", req.data.group_enrolement_by_student);
-        setNewData((prev) => [...prev, req.data.group_enrolement_by_student]);
-        setNewStudent(""); 
-        alert("Student added successfully");
-        // window.location.reload(); // Sahifani qayta yuklash
-    } catch (error) {
-        console.error("Error saving new student:", error);
-        alert("Failed to add student");
-    }
-};
-
 
     const handleNewDay = async () => {
         const groupEnrolementId = data[0].id;
@@ -279,21 +285,33 @@ const handleNewSave = async () => {
             label: "Delete",
             onClick: () => handleDelete(item),
         },
+        {
+            key: "start",
+            label: "Start",
+            onClick: () => {
+                setSelectedItem(item), handlePost(data.indexOf(item));
+            },
+        },
     ];
     console.log(data.map((item) => item.id));
 
     return (
-        <div className='overflow-x-scroll w-full max-w-[100%]'>
-            <button
-                className='w-10 h-10 ml-[95%] bg-green-700 rounded-full text-white'
-                type='button'
-                onClick={onOpen}>
-                +
-            </button>
+        <div className='relative p-8 bg-gray-50 overflow-x-scroll'>
+            <div className='flex items-center'>
+                <h1 className='text-3xl font-bold text-gray-800 mb-6'>
+                    Guruhlar / Kutilayotgan
+                </h1>
+                <button
+                    className='w-10 h-10 ml-[65%] bg-green-700 rounded-full text-white'
+                    type='button'
+                    onClick={onOpen}>
+                    +
+                </button>
+            </div>
             <ExcistingDrawer open={open} onClosed={onClose} />
-            <table className='table-auto w-full mt-10 shadow-md rounded overflow-hidden'>
+            <table className='min-w-full border border-gray-300'>
                 <thead>
-                    <tr className='bg-gray-200 text-gray-700'>
+                    <tr className='bg-gray-100 text-center text-xl'>
                         <th className='p-4 text-left'>Students</th>
                         <th className='p-4 text-left'>Courses</th>
                         <th className='p-4 text-left'>Modules</th>
@@ -308,7 +326,7 @@ const handleNewSave = async () => {
                 </thead>
                 <tbody>
                     {data.map((item) => (
-                        <tr key={item.id} className='bg-white border-b'>
+                        <tr key={item.id} className='bg-white border-b text-xl'>
                             <td className='p-4'>
                                 <div className='flex items-center'>
                                     <button
@@ -331,10 +349,15 @@ const handleNewSave = async () => {
                                     : null}
                             </td>
                             <td className='p-4'>
+                                {days.map((day) => (
+                                    <div className='mr-3' key={day.id}>
+                                        {day.day_name}
+                                    </div>
+                                ))}
                                 <button
-                                    className='bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded'
+                                    className='translate-x-[110px] border border-black p-1 rounded-full bg-yellow-500'
                                     onClick={() => setDaysModal(true)}>
-                                    Click
+                                    ✏
                                 </button>
                             </td>
                             <td className='p-4'>{item.time}</td>
@@ -349,20 +372,6 @@ const handleNewSave = async () => {
                                         ...
                                     </a>
                                 </Dropdown>
-                                <button
-                                    onClick={() => {
-                                        if (!item) {
-                                            alert(
-                                                "Please select an item before proceeding."
-                                            );
-                                            return;
-                                        }
-                                        setSelectedItem(item);
-                                        handlePost(data.indexOf(item));
-                                    }}
-                                    className='bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded'>
-                                    Start
-                                </button>
                             </td>
                         </tr>
                     ))}
@@ -455,9 +464,6 @@ const handleNewSave = async () => {
                                     </tr>
                                 </thead>
 
-
-
-                                
                                 <tbody>
                                     {days.map((day, index) => (
                                         <tr

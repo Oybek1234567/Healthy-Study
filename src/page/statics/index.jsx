@@ -267,8 +267,11 @@ const AllStatics = () => {
                                 className='block w-full border-gray-300 rounded-lg shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm px-4 py-2'>
                                 <option value='super'>Super</option>
                                 <option value='admin'>Admin</option>
-                                <option value='assistant'>Assistant</option>
+                                <option value='head_teacher'>
+                                    Head Teacher
+                                </option>
                                 <option value='teacher'>Teacher</option>
+                                <option value='assistant'>Assistant</option>
                                 <option value='student'>Student</option>
                                 <option value='guest'>Guest</option>
                             </select>

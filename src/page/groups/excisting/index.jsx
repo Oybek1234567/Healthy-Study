@@ -1,7 +1,7 @@
 import { DeleteFilled } from "@ant-design/icons";
 import { Dropdown, Space, Menu, Modal } from "antd";
 import axios from "axios";
-import { useCallback, useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Link } from "react-router-dom";
 
 const Existing = () => {
@@ -14,14 +14,27 @@ const Existing = () => {
     const [student, setStudent] = useState("");
     const [filter, setFilter] = useState("active");
     const [studentIndex, setStudentIndex] = useState(null);
+    const [studentName, setStudentName] = useState("");
+
     const API = "http://localhost:3000";
 
     useEffect(() => {
         const fetchData = async () => {
             try {
-                const req = await axios.get(`${API}/groups/all`);
+                let token = localStorage.getItem("token");
+                console.log("1");
+                
+                const req = await axios.get(`${API}/groups/all`, 
+                    {
+                        headers: {
+                            Authorization: `Bearer ${token}`,
+                        },
+                    }
+                );
+                console.log("11");
                 setData(req.data.groups);
-                console.log(req.data.groups);
+                console.log(req.data);
+                
             } catch (error) {
                 console.error(error);
             }
@@ -30,30 +43,31 @@ const Existing = () => {
         fetchData();
     }, []);
 
-const handleFinish = async () => {
-    try {
-        const response = await axios.get(`${API}/groups/all`);
-        const allData = response.data.groups;
+    const handleFinish = async () => {
+        try {
+            const response = await axios.get(`${API}/groups/all`);
+            const allData = response.data.groups;
 
-        const filteredData =
-            filter === "finished"
-                ? allData.filter((item) => item.status === "finished")
-                : allData.filter((item) => item.status !== "finished");
+            const filteredData =
+                filter === "finished"
+                    ? allData.filter((item) => item.status === "finished")
+                    : allData.filter((item) => item.status !== "finished");
 
-        setData(filteredData);
-    } catch (error) {
-        console.log(error);
-        alert("Xatolik yuz berdi!");
-    }
-};
+            setData(filteredData);
+        } catch (error) {
+            console.log(error);
+            alert("Xatolik yuz berdi!");
+        }
+    };
 
-
-    const handleGetStudents = async (id) => {
+    const handleGetStudents = async (id, name) => {
+        // 'name' parametri qo'shildi
         try {
             const req = await axios.get(`${API}/groupstudents/all/${id}`);
             setStudents(req.data.group_student);
-            console.log(req.data.group_student);
             setOpenModal(true);
+            setStudentIndex(0);
+            setStudentName(name); // modal uchun name yangilandi
         } catch (error) {
             console.error(error);
         }
@@ -70,9 +84,16 @@ const handleFinish = async () => {
         }
     };
     const handleSetStudent = async (index) => {
-        const firstStudent = students[index];
-        console.log(students);
-        const groupId = firstStudent.group_id;
+        if (!students[index] || !student) {
+            console.error(
+                "Student mavjud emas yoki noto'g'ri index, yoki student ID kiritilmagan."
+            );
+            return;
+        }
+
+        const selectedStudent = students[index];
+        const groupId = selectedStudent.group_id;
+
         const data = {
             user_id: +student,
         };
@@ -83,10 +104,9 @@ const handleFinish = async () => {
                 data
             );
             setStudents(req.data.group_students);
-            console.log(firstStudent);
 
-            alert("Student added");
-            setStudent("");
+            alert("Student qo'shildi");
+            window.location.reload();
         } catch (error) {
             console.error(error);
         }
@@ -124,113 +144,85 @@ const handleFinish = async () => {
         </Menu>
     );
 
-
     const filteredData =
         filter === "active"
             ? data
             : data.filter((item) => item.status === filter);
-    console.log(filteredData);
-
     return (
-        <div ref={myRef}>
-            <select
-                name='filter'
-                value={filter}
-                onChange={(e) => setFilter(e.target.value)}
-                className='mb-10 border border-black'>
-                <option value='active'>Active</option>
-                <option value='finished'>Finished</option>
-            </select>
-            <table className='min-w-full bg-white borderborder-gray-200 shadow-md rounded-md'>
-                <thead className='bg-gray-100 border-b border-gray-200'>
-                    <tr>
-                        <th className='py-3 px-6 text-left text-gray-600 font-semibold'>
-                            Name
-                        </th>
-                        <th className='py-3 px-6 text-left text-gray-600 font-semibold'>
-                            Students
-                        </th>
-                        <th className='py-3 px-6 text-left text-gray-600 font-semibold'>
-                            Teacher
-                        </th>
-                        <th className='py-3 px-6 text-left text-gray-600 font-semibold'>
-                            Assistant
-                        </th>
+        <div ref={myRef} className='relative p-8 bg-gray-50 overflow-x-scroll'>
+            <div className='flex justify-between items-center'>
+                <h1 className='text-3xl font-bold text-gray-800 mb-6'>
+                    Groups / Mavjud
+                </h1>
+                <select
+                    name='status'
+                    value={filter}
+                    onChange={(e) => setFilter(e.target.value)}
+                    className='mb-10 border border-black'>
+                    <option value='active'>Active</option>
+                    <option value='finished'>Finished</option>
+                </select>
+            </div>
+            <table className='min-w-full border border-gray-300'>
+                <thead>
+                    <tr className='bg-gray-100 text-center text-xl'>
+                        <th className='p-4 text-left'>Name</th>
+                        <th className='p-4 text-left'>Students</th>
+                        <th className='p-4 text-left'>Teacher</th>
+                        <th className='p-4 text-left'>Assistant</th>
 
-                        <th className='py-3 px-6 text-left text-gray-600 font-semibold'>
-                            Room
-                        </th>
-                        <th className='py-3 px-6 text-left text-gray-600 font-semibold'>
-                            Starting Date
-                        </th>
-                        <th className='py-3 px-6 text-left text-gray-600 font-semibold'>
-                            Days
-                        </th>
-                        <th className='py-3 px-6 text-left text-gray-600 font-semibold'>
-                            Time
-                        </th>
-                        <th className='py-3 px-6 text-left text-gray-600 font-semibold'>
-                            Lessons
-                        </th>
-                        <th className='py-3 px-6 text-left text-gray-600 font-semibold'>
-                            Process
-                        </th>
-                        <th className='py-3 px-6 text-left text-gray-600 font-semibold'>
-                            Action
-                        </th>
+                        <th className='p-4 text-left'>Room</th>
+                        <th className='p-4 text-left'>Starting Date</th>
+                        <th className='p-4 text-left'>Days</th>
+                        <th className='p-4 text-left'>Time</th>
+                        <th className='p-4 text-left'>Lessons</th>
+                        <th className='p-4 text-left'>Process</th>
+                        <th className='p-4 text-left'>Action</th>
                     </tr>
                 </thead>
                 <tbody>
                     {filteredData.map((item) => (
-                        <tr
-                            key={item.id}
-                            className='border-b border-gray-200 hover:bg-gray-50'>
-                            <Link
-                                to={`/excisting/${item.id}`}
-                                state={{
-                                    name: item.name,
-                                    moduleId: item.module_id,
-                                    groupId: item.id,
-                                }}
-                                className='p-1 text-gray-800 '>
-                                {item.name}
-                            </Link>
-                            <td className='border border-gray-300 py-4 px-6'>
+                        <tr key={item.id} className='bg-white border-b text-xl'>
+                            <td className='p-4'>
+                                <Link
+                                    to={`/excisting/${item.id}`}
+                                    state={{
+                                        name: item.name,
+                                        moduleId: item.module_id,
+                                        groupId: item.id,
+                                    }}
+                                    className='p-1 text-gray-800'>
+                                    {item.name}
+                                </Link>
+                            </td>
+                            <td className='p-4'>
                                 <button
                                     className='bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded'
-                                    onClick={() => handleGetStudents(item.id)}>
+                                    onClick={() => {
+                                        handleGetStudents(item.id, item.name);
+                                    }}>
                                     Click
                                 </button>
                             </td>
-                            <td className='py-4 px-6 text-gray-800'>
-                                {item.teacher_name}
-                            </td>
-                            <td className='py-4 px-6 text-gray-800'>
-                                {item.assistant_name}
-                            </td>
+                            <td className='p-4'>{item.teacher_name + " " + item.teacher_surname}</td>
+                            <td className='p-4'>{item.assistant_name + " " + item.assistant_surname}</td>
 
-                            <td className='py-4 px-6 text-gray-800'>
-                                {item.room_name}
-                            </td>
-                            <td className='py-4 px-6 text-gray-800'>
+                            <td className='p-4'>{item.room_name}</td>
+                            <td className='p-4'>
                                 {item.starting_date
                                     ? item.starting_date.slice(0, 10)
                                     : ""}
                             </td>
-                            <td className='py-4 px-6 text-gray-800'>
-                                {item.days}
-                            </td>
-                            <td className='py-4 px-6 text-gray-800'>
-                                {item.time}
-                            </td>
-                            <td className='py-4 px-6 text-gray-800'>
+                            <td className='p-4'>{item.days}</td>
+                            <td className='p-4'>{item.time}</td>
+                            <td className='p-4'>
                                 <button
                                     className='bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded'
                                     onClick={() => handleGetLessons(item.id)}>
                                     Open
                                 </button>
                             </td>
-                            <td className='py-4 px-6 text-gray-800'>0</td>
+                            <td className='p-4'>0</td>
                             <td>
                                 <Dropdown
                                     overlay={menuItems(item)}
@@ -255,12 +247,8 @@ const handleFinish = async () => {
                 <table className='min-w-full bg-white border border-gray-200 shadow-md rounded-md'>
                     <thead className='bg-gray-100 border-b border-gray-200'>
                         <tr>
-                            <th className='py-3 px-6 text-left text-gray-600 font-semibold'>
-                                №
-                            </th>
-                            <th className='py-3 px-6 text-left text-gray-600 font-semibold'>
-                                Lesson Name
-                            </th>
+                            <th className='p-4 text-left'>№</th>
+                            <th className='p-4 text-left'>Lesson Name</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -280,6 +268,7 @@ const handleFinish = async () => {
                 </table>
             </Modal>
             <Modal open={openModal} onCancel={() => setOpenModal(false)}>
+                <h2 className='text-2xl font-bold mb-4'>{studentName}</h2>
                 <input
                     type='text'
                     value={student}
@@ -314,6 +303,7 @@ const handleFinish = async () => {
                                 }}>
                                 Name
                             </th>
+                            <th className='border border-black p-2'>ID</th>
                             <th
                                 style={{
                                     border: "1px solid #000",
@@ -332,11 +322,18 @@ const handleFinish = async () => {
                                         textAlign: "left",
                                         borderBottom: "1px solid #ddd",
                                     }}>
-                                    <td style={{ padding: "8px" }}>
+                                    <td
+                                        style={{ padding: "8px" }}
+                                        className='text-center'>
                                         {index + 1}.
                                     </td>
-                                    <td style={{ padding: "8px" }}>
+                                    <td
+                                        style={{ padding: "8px" }}
+                                        className='text-center'>
                                         {item.student_name}
+                                    </td>
+                                    <td className='p-2 text-center'>
+                                        {item.student_id}
                                     </td>
                                     <td
                                         onClick={() => {
@@ -347,7 +344,8 @@ const handleFinish = async () => {
                                             padding: "8px",
                                             cursor: "pointer",
                                             color: "red",
-                                        }}>
+                                        }}
+                                        className='text-center'>
                                         <DeleteFilled />
                                     </td>
                                 </tr>

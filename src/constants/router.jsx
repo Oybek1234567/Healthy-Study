@@ -26,6 +26,7 @@ import AuthRouters from "../components/AuthRouters/root";
 import ExamsTest from "../page/exams/test";
 import AllStatics from "../page/statics";
 import Profile from "../page/profile";
+import VerifyPage from "../components/AuthRouters/signup/verify";
 export const MenuList = [
     {
         id: 1,
@@ -167,4 +168,9 @@ export const MenuList = [
         path: "/exams/:id",
         element: <ExamsTest />,
     },
+    {
+        id: 29,
+        path: '/verify',
+        element: <VerifyPage />
+    }
 ];

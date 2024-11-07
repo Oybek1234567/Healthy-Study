@@ -29,7 +29,7 @@ const Page = () => {
             }
         };
         fetchData();
-    }, [groupId, moduleId]);
+    }, [moduleId]);
 
     useEffect(() => {
         const handleGetAssignments = async () => {
@@ -65,9 +65,9 @@ const Page = () => {
     };
 
     return (
-        <div className='w-full p-6 bg-gray-100 rounded-lg'>
+        <div className='relative p-8 bg-gray-50'>
             <h1
-                className='text-4xl mb-4 cursor-pointer text-gray-800 hover:underline'
+                className='text-3xl font-bold text-gray-800 mb-6'
                 onClick={() => window.history.back()}>
                 {name}
             </h1>
@@ -84,11 +84,15 @@ const Page = () => {
                                     to={`/excisting/${groupId}/assignmenttypes/${item.id}`}
                                     state={{
                                         groupId,
+                                        id: item.id,
+                                        assignment_name: item.name,
+                                        name: name,
                                         assignment_type_id: item.id,
+
                                     }}
                                     key={item.id}
-                                    className='flex cursor-pointer justify-center items-center w-[300px] h-40 border-2 border-gray-300 rounded-lg shadow-lg hover:border-black transition duration-200 ease-in-out bg-white'>
-                                    <p className='text-2xl text-center text-gray-800'>
+                                    className='relative flex flex-col justify-center items-center bg-white shadow-lg hover:shadow-xl transition-shadow duration-300 cursor-pointer mt-10 p-6 w-[300px] h-40 border-4 border-gray-300 rounded-lg hover:border-black hover:text-gray-700'>
+                                    <p className='text-3xl font-semibold'>
                                         {item.name}
                                     </p>
                                 </Link>
@@ -105,8 +109,8 @@ const Page = () => {
                                         lesson_report_type_id: item.id,
                                     }}
                                     key={item.id}
-                                    className='flex cursor-pointer justify-center items-center w-[300px] h-40 border-2 border-gray-300 rounded-lg shadow-lg hover:border-black transition duration-200 ease-in-out bg-white'>
-                                    <p className='text-3xl text-center text-gray-800'>
+                                    className='relative flex flex-col justify-center items-center bg-white shadow-lg hover:shadow-xl transition-shadow duration-300 cursor-pointer mt-10 p-6 w-[300px] h-40 border-4 border-gray-300 rounded-lg hover:border-black hover:text-gray-700'>
+                                    <p className='text-3xl font-semibold'>
                                         {item.name}
                                     </p>
                                 </Link>
@@ -115,27 +119,31 @@ const Page = () => {
                     </Tabs.TabPane>
                     <Tabs.TabPane tab='Attendance' key='3'>
                         <button
-                            className='w-10 h-10 mb-4 ml-auto bg-green-600 text-white rounded-full border-2 border-black transition duration-200 ease-in-out hover:bg-green-700'
+                            className='w-10 h-10 mb-4 ml-[95%] bg-green-600 text-white rounded-full border-2 border-black transition duration-200 ease-in-out hover:bg-green-700'
                             onClick={onOpen}>
                             +
                         </button>
                         <ExcistingGroupDrawer open={open} onClose={onClose} />
-                        <table className='min-w-full bg-white border border-gray-300'>
+                        <table className='min-w-full border border-gray-300'>
                             <thead>
                                 <tr className='bg-gray-200 text-gray-600'>
-                                    <th className='p-2 border-b'>Name</th>
-                                    <th className='p-2 border-b'>Attendance</th>
+                                    <th className='px-4 py-2 border border-gray-300'>
+                                        Name
+                                    </th>
+                                    <th className='px-4 py-2 border border-gray-300'>
+                                        Attendance
+                                    </th>
                                 </tr>
                             </thead>
                             <tbody>
                                 {attendance.map((item) => (
                                     <tr
                                         key={item.id}
-                                        className='hover:bg-gray-100 transition duration-200'>
-                                        <td className='p-2 border-b'>
+                                        className='hover:bg-gray-50'>
+                                        <td className='px-4 py-2 border border-gray-300'>
                                             {item.student_name}
                                         </td>
-                                        <td className='flex gap-2 p-2 border-b'>
+                                        <td className='px-4 py-2 border border-gray-300'>
                                             {item.attendance.map((att) => (
                                                 <p key={att.id}>
                                                     {att.isAttended ===

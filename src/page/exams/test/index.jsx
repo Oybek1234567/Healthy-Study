@@ -4,9 +4,8 @@ import { useLocation } from "react-router-dom";
 
 const ExamsTest = () => {
     const location = useLocation();
-    const { name } = location.state;
-    const { assignment_by_groupstudent_id } = location.state;
-
+    const { name, assignment_name, assignment_by_groupstudent_id } = location.state;
+    
     const [data, setData] = useState([]);
     const [Answers, setAnswers] = useState([]);
     const API = "http://localhost:3000";
@@ -89,18 +88,21 @@ const ExamsTest = () => {
     return (
         <div className='p-6 bg-gray-100 min-h-screen'>
             <h1
-                className='text-4xl font-bold text-blue-600 cursor-pointer hover:underline mb-6'
+                className='text-4xl font-bold text-gray-800 mb-6'
                 onClick={() => window.history.back()}>
-                {name}
+                {name} / {assignment_name}
             </h1>
 
-            {data.map((item) => (
+            {data.map((item, idx) => (
                 <div
                     key={item.question_id}
                     className='bg-white shadow-lg rounded-lg p-6 mb-6'>
+                    <div className="flex">
+                    <span className="text-lg font-semibold text-gray-800 mr-4">{idx + 1}.</span>
                     <p className='text-lg font-semibold text-gray-800 mb-4'>
                         {item.question}
                     </p>
+                    </div>
                     <div className='grid grid-cols-1 gap-2 md:grid-cols-2'>
                         {item.options.map((nestedItem) => (
                             <div
@@ -108,7 +110,7 @@ const ExamsTest = () => {
                                 className={`bg-blue-100 p-4 text-xl rounded-lg transition-colors cursor-pointer ${
                                     Answers[item.question_id] ===
                                     nestedItem.option
-                                        ? "bg-[#eea929] text-[#fff]"
+                                        ? "bg-blue-700 text-white"
                                         : ""
                                 }`}
                                 onClick={() =>

@@ -1,10 +1,12 @@
+// Signup.js
 import { Form, Input } from "antd";
 import axios from "axios";
 import { Link, useNavigate } from "react-router-dom";
 
 const Signup = () => {
     const navigate = useNavigate();
-    const API = "http://localhost:3000"
+    const API = "http://localhost:3000";
+
     const onFinish = async (values) => {
         try {
             const requestData = {
@@ -13,6 +15,7 @@ const Signup = () => {
                 name: values.name,
                 surname: values.surname,
                 date_of_birth: values.date_of_birth,
+                step: 1,
             };
 
             console.log("Request data: ", requestData);
@@ -26,11 +29,12 @@ const Signup = () => {
                     },
                 }
             );
-            alert("Foydalanuvchi ro'yxatdan o'tdi!")
-            window.location.reload();
-
+            console.log(res.data);
+            
             if (res.data) {
-                navigate("/success");
+                localStorage.setItem("signupID", JSON.stringify(res.data.id));
+                localStorage.setItem("signupPhone", (res.data.phone));
+                navigate("/verify");
             }
         } catch (error) {
             if (!error.response) {
@@ -42,9 +46,9 @@ const Signup = () => {
     };
 
     return (
-        <div className='mt-10 mb-10 max-w-lg mx-auto bg-white shadow-2xl border-2 border-gray-300 rounded-lg p-8'>
-            <h2 className='text-2xl font-semibold text-center mb-6'>Sign Up</h2>
-            <Form layout='vertical' onFinish={onFinish}>
+        <div className='flex flex-col items-center mt-20 mb-20 max-w-lg mx-auto bg-white shadow-lg border-2 border-gray-300 rounded-lg p-8'>
+            <h2 className='text-3xl font-semibold text-center mb-6'>Sign Up</h2>
+            <Form layout='vertical' onFinish={onFinish} className='w-full'>
                 <Form.Item
                     label='Phone'
                     name='phone'
@@ -114,7 +118,7 @@ const Signup = () => {
                         type='date'
                         className='border-gray-300 focus:ring focus:ring-green-200 focus:border-green-500 w-full px-3 py-2 rounded-md'
                     />
-                </Form.Item>            
+                </Form.Item>
                 <Form.Item>
                     <button
                         type='submit'
@@ -123,7 +127,9 @@ const Signup = () => {
                     </button>
                 </Form.Item>
             </Form>
-            <Link to={"/"} className='underline'>
+            <Link
+                to={"/"}
+                className='underline mt-4 text-blue-600 hover:text-blue-800'>
                 Return to Login
             </Link>
         </div>

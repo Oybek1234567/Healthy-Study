@@ -23,7 +23,8 @@ const QuestionLvl = () => {
         }
         return false
     })
-
+        console.log(id);
+        
     useEffect(() => {
         const fetchData = async () => {
             try {

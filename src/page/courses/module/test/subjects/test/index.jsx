@@ -41,7 +41,7 @@ const SubjectTests = () => {
         };
 
         fetchData();
-    }, [moduleId]);
+    }, [API, moduleId]);
 
     const handleTabChange = async (key) => {
         const index = Number(key);

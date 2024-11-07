@@ -18,7 +18,6 @@ const HeaderPage = () => {
                         }
                     );
                     setData(req.data.user);
-                    console.log(req.data.user);
                     
                 } catch (e) {
                     console.error("Error", e);
