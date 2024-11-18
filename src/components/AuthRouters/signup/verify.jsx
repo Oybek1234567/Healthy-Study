@@ -15,8 +15,8 @@ const VerifyPage = () => {
     const onFinish = async (values) => {
         try {
             const requestData = {
-                id: Number(signupID), // Convert to number
-                phone: Number(signupPhone), // Convert to number
+                id: Number(signupID), 
+                phone: Number(signupPhone), 
                 code: values.code,
                 step: 2,
             };
@@ -24,8 +24,8 @@ const VerifyPage = () => {
             console.log("Request data: ", requestData);
 
             const response = await axios.post(
-                `${API}/applications/create`,
-                requestData, // Send the request data directly
+                `${API}/users/application/create`,
+                requestData,
                 {
                     headers: {
                         "Content-Type": "application/json",

@@ -39,7 +39,9 @@ const Applications = () => {
     useEffect(() => {
         const fetchData = async () => {
             try {
-                const response = await axios.get(`${API}/applications/all`);
+                const response = await axios.get(
+                    `${API}/users/application/all`
+                );
                 setUserData(response.data.users || []);
             } catch (error) {
                 console.error("Error fetching data:", error);
@@ -97,7 +99,7 @@ const Applications = () => {
     const handleSave = async () => {
         try {
             await axios.post(
-                `${API}/applications/edit/${selectedUser.id}`,
+                `${API}/users/application/edit/${selectedUser.id}`,
                 selectedUser
             );
             const updatedUserData = userData.map((user) =>
@@ -112,24 +114,15 @@ const Applications = () => {
 
     const handleDeny = async (id) => {
         try {
-            await axios.post(`${API}/applications/deny/${id}`);
+            await axios.post(`${API}/users/application/deny/${id}`);
             window.location.reload();
         } catch (e) {
             console.error(e);
         }
     };
-    const handleAccept = async (id, user) => {
-        const { name, surname, phone, date_of_birth, password } = user;
-        console.log(password);
+    const handleAccept = async (id) => {
         try {
-            await axios.post(`${API}/users/create/${id}`, {
-                name,
-                surname,
-                phone,
-                date_of_birth,
-                password
-                
-            });
+            await axios.post(`${API}/users/create/${id}`);
             window.location.reload();
         } catch (e) {
             console.error(e);
@@ -140,7 +133,7 @@ const Applications = () => {
         <div className='relative p-8 bg-gray-50'>
             <h1 className='text-3xl font-bold text-gray-800 mb-6'>Arizalar</h1>
 
-            {(role === "super") && (
+            {role === "super" && (
                 <div className='ml-[84%] -translate-y-[61px]'>
                     <select
                         id='status'
@@ -356,24 +349,6 @@ const Applications = () => {
                                 })
                             }
                             className='mt-1 block w-full p-2 border border-gray-300 rounded-lg focus:outline-none focus:ring focus:ring-blue-400'
-                        />
-                    </div>
-                    <div>
-                        <label className='block text-sm font-medium text-gray-700'>
-                            Phone:
-                        </label>
-                        <input
-                            type='text'
-                            name='phone'
-                            value={selectedUser?.phone || ""}
-                            onChange={(e) =>
-                                setSelectedUser({
-                                    ...selectedUser,
-                                    phone: e.target.value,
-                                })
-                            }
-                            className='mt-1 block w-full p-2 border border-gray-300 rounded-lg focus:outline-none focus:ring focus:ring-blue-400'
-                            placeholder='Enter phone number'
                         />
                     </div>
                 </div>

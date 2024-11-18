@@ -21,7 +21,7 @@ const Signup = () => {
             console.log("Request data: ", requestData);
 
             const res = await axios.post(
-                `${API}/applications/create`,
+                `${API}/users/application/create`,
                 JSON.stringify(requestData),
                 {
                     headers: {
