@@ -141,11 +141,11 @@ const Rooms = () => {
                         <p className='text-gray-700 text-lg'>
                             Max Students: {item.max_students}
                         </p>
-                        <p className='left-4 translate-y-7 w-10 h-6 bg-green-600 text-center text-white rounded'>
+                        <p className='left-4 w-10 h-6 bg-green-600 text-center text-white rounded'>
                             {item.id}
                         </p>
                         <p
-                            className={`ml-[160px] right-4 w-16 py-1 text-center text-white rounded-md ${
+                            className={`ml-[160px] -translate-y-10 right-4 w-16 py-1 text-center text-white rounded-md ${
                                 item.status === "active"
                                     ? "bg-green-500"
                                     : "bg-red-500"

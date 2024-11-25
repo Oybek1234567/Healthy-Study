@@ -16,6 +16,7 @@ const ModulesTab = () => {
         <div className='relative p-8 bg-gray-50 min-h-screen'>
             <h1 className='text-3xl font-bold text-gray-800 mb-6'>
                 <Link
+                    style={{ textDecoration: "none", text: "black" }}
                     to='/courses'
                     className='text-gray-600 hover:text-gray-800 transition duration-200'>
                     Kurslar  {" "}

@@ -114,11 +114,11 @@ const Report = () => {
                         <p className='text-xl font-semibold'>
                             Weight: {report.weight}
                         </p>
-                        <p className='translate-y-8 w-10 h-6 bg-green-600 text-center text-white rounded'>
+                        <p className='w-10 h-6 bg-green-600 text-center text-white rounded'>
                             {report.id}
                         </p>
                         <p
-                            className={`ml-[170px] mt-1 w-16 py-1 text-center text-white rounded-md ${
+                            className={`ml-[170px] -translate-y-11 mt-1 w-16 py-1 text-center text-white rounded-md ${
                                 report.status === "active"
                                     ? "bg-green-500"
                                     : "bg-red-500"

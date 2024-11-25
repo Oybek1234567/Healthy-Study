@@ -31,12 +31,16 @@ const Tests = () => {
     return (
         <div className='relative p-8 bg-gray-50'>
             <h1 className='text-3xl font-bold text-gray-800 mb-6'>
-                <Link to='/courses'>Kurslar</Link>
+                <Link
+                    to='/courses'
+                    style={{ textDecoration: "none", color: "black" }}>
+                    Kurslar
+                </Link>
                 <span
                     className='cursor-pointer'
                     onClick={() => window.history.back()}>
                     {" "}
-                    / {courseName} 
+                    / {courseName}
                 </span>{" "}
                 / {moduleName}
             </h1>

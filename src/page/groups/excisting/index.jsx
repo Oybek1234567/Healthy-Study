@@ -191,6 +191,7 @@ const Existing = () => {
                                         moduleId: item.module_id,
                                         groupId: item.id,
                                     }}
+                                    style={{ textDecoration: "none" }}
                                     className='p-1 text-gray-800'>
                                     {item.name}
                                 </Link>

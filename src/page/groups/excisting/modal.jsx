@@ -3,7 +3,8 @@ import axios from "axios";
 import { useEffect, useState } from "react";
 import { useLocation } from "react-router-dom";
 
-const ExistingGroupDrawer = ({ open, onClose, onCreate }) => {
+const ExistingGroupDrawer = (props) => {
+    const { open, onClose, onCreate } = props;
     const [data, setData] = useState([]);
     const [select, setSelect] = useState([]);
     const [selectedValue, setSelectedValue] = useState("");
@@ -95,8 +96,9 @@ const ExistingGroupDrawer = ({ open, onClose, onCreate }) => {
             }));
         } else {
             setCommentVisible((prev) => {
-                const { [id]: removedComment, ...rest } = prev;
-                return rest;
+                const newComment = { ...prev };
+                delete newComment[id];
+                return newComment;
             });
         }
     };

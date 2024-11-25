@@ -113,6 +113,7 @@ const NewCourses = () => {
                         <Link
                             to={`/courses/${course.id}`}
                             state={{ name: course.name }}
+                            style={{ textDecoration: "none", color: "black" }}
                             className='relative flex flex-col justify-center items-center bg-white shadow-lg hover:shadow-xl transition-shadow duration-300 cursor-pointer mt-10 p-6 w-[300px] h-40 border-4 border-gray-300 rounded-lg hover:border-black hover:text-gray-700'>
                             <h2 className='text-lg font-semibold'>
                                 {course.name}

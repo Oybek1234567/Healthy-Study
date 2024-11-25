@@ -1,23 +1,28 @@
-import { useContext } from "react";
-import { AuthContext, AuthProvider } from "./context/authContext";
+import { Routes, Route } from "react-router-dom";
 import AppRouters from "./components/AppRouters";
-import AuthRouters from "./components/AuthRouters/root";
+import AuthRouters from "./components/AuthRouters/root"; // AuthRoutersni import qiling
+import LandingPage from "./components/landingPage";
 
 const App = () => {
-    const { isAuthenticated, role } = useContext(AuthContext);
+    const token = localStorage.getItem("token");
 
-    return isAuthenticated && role ? (
-        <AppRouters role={role} />
-        
-    ) : (
-        <AuthRouters />
+    return (
+        <Routes>
+            <Route
+                path='*'
+                element={
+                    token ? (
+                        <AppRouters /> 
+                    ) : (
+                        <>
+                            <AuthRouters/>  
+                            <LandingPage />
+                        </>
+                    )
+                }
+            />
+        </Routes>
     );
 };
 
-const WrappedApp = () => (
-    <AuthProvider>
-        <App />
-    </AuthProvider>
-);
-
-export default WrappedApp; 
+export default App;

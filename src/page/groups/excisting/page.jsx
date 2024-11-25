@@ -81,6 +81,10 @@ const Page = () => {
                         <div className='flex gap-6 flex-wrap'>
                             {assignments.map((item) => (
                                 <Link
+                                    style={{
+                                        textDecoration: "none",
+                                        color: "black",
+                                    }}
                                     to={`/excisting/${groupId}/assignmenttypes/${item.id}`}
                                     state={{
                                         groupId,
@@ -88,7 +92,6 @@ const Page = () => {
                                         assignment_name: item.name,
                                         name: name,
                                         assignment_type_id: item.id,
-
                                     }}
                                     key={item.id}
                                     className='relative flex flex-col justify-center items-center bg-white shadow-lg hover:shadow-xl transition-shadow duration-300 cursor-pointer mt-10 p-6 w-[300px] h-40 border-4 border-gray-300 rounded-lg hover:border-black hover:text-gray-700'>
@@ -103,6 +106,10 @@ const Page = () => {
                         <div className='flex gap-4 flex-wrap'>
                             {lesson.map((item) => (
                                 <Link
+                                    style={{
+                                        textDecoration: "none",
+                                        color: "black",
+                                    }}
                                     to={`/excisting/${groupId}/lesson_reports/${item.id}`}
                                     state={{
                                         groupId,

@@ -113,7 +113,7 @@ export const menu = [
         path: "/timetable",
         icon: <FileDoneOutlined />,
         roles: [
-            // "super",
+            "super",
             // "admin",
             // "head_teacher",
             // "teacher",
@@ -128,7 +128,7 @@ export const menu = [
         icon: <UnorderedListOutlined />,
         roles: [
             // "super",
-            // "admin",
+            "admin",
             // "head_teacher",
             // "teacher",
             // "assistant",
@@ -142,7 +142,7 @@ export const menu = [
                 icon: <SolutionOutlined />,
                 roles: [
                     // "super",
-                    // "admin",
+                    "admin",
                     // "head_teacher",
                     // "teacher",
                     // "assistant",
@@ -156,7 +156,7 @@ export const menu = [
                 icon: <DollarOutlined />,
                 roles: [
                     // "super",
-                    // "admin",
+                    "admin",
                     // "head_teacher",
                     // "teacher",
                     // "assistant",
@@ -169,7 +169,7 @@ export const menu = [
                 path: "/expense",
                 icon: <ShoppingOutlined />,
                 roles: [
-                    // "super",
+                    "super",
                     // "admin",
                     // "head_teacher",
                     // "teacher",
@@ -183,7 +183,7 @@ export const menu = [
                 path: "/map",
                 icon: <FundOutlined />,
                 roles: [
-                    // "super",
+                    "super",
                     // "admin",
                     // "head_teacher",
                     // "teacher",

@@ -132,23 +132,24 @@ const Modules = () => {
                 {filteredCourses.map((module) => (
                     <div key={module.id}>
                         <Link
+                            style={{ textDecoration: "none", color: "black" }}
                             to={`/courses/${id}/modules/${module.id}`}
                             state={{ courseName, moduleName: module.name }}
                             className='relative flex flex-col justify-center bg-white shadow-lg hover:shadow-xl transition-shadow duration-300 cursor-pointer mt-4 pt-2 p-7 w-[300px] h-44 border-4 border-gray-300 rounded-lg hover:border-black hover:text-gray-700'>
-                            <p className='text-gray-600 text-lg'>
+                            <p className='text-gray-600 text-lg mt-4'>
                                 Modul nomi: {module.name}
                             </p>
-                            <p className='text-gray-600 text-lg'>
+                            <p className='text-gray-600 text-lg -translate-y-3'>
                                 Max № studentlar: {module.max_students}
                             </p>
-                            <p className='text-gray-600 text-lg mb-4'>
+                            <p className='text-gray-600 text-lg -translate-y-7'>
                                 Darslar soni: {module.length}
                             </p>
-                            <p className='absolute left-7 bottom-4 w-10 h-6 bg-green-600 text-center text-white rounded'>
+                            <p className='absolute left-7 bottom-2 w-10 h-6 bg-green-600 text-center text-white rounded'>
                                 {module.id}
                             </p>
                             <p
-                                className={`absolute right-4 bottom-4 w-16 py-1 text-center text-white rounded-md ${
+                                className={`absolute right-4 bottom-1 w-16 py-1 text-center text-white rounded-md ${
                                     module.status === "active"
                                         ? "bg-green-500"
                                         : "bg-red-500"
@@ -162,10 +163,16 @@ const Modules = () => {
                             <Dropdown
                                 overlay={
                                     <Menu>
-                                        <Menu.Item key='1' onClick={() => handleEdit(module)}>Edit</Menu.Item>
+                                        <Menu.Item
+                                            key='1'
+                                            onClick={() => handleEdit(module)}>
+                                            Edit
+                                        </Menu.Item>
                                     </Menu>
                                 }>
-                                <a className="absolute rotate-90 text-3xl translate-x-[270px] -translate-y-[160px]">...</a>
+                                <a className='absolute rotate-90 text-3xl translate-x-[270px] -translate-y-[160px]'>
+                                    ...
+                                </a>
                             </Dropdown>
                         )}
                     </div>

@@ -20,13 +20,14 @@ import Assignments from "../page/groups/excisting/assignments";
 import ModulesTab from "../page/courses/module";
 import AssignmentLevels from "../page/courses/module/test/exams/assignments/levels";
 import Exams from "../page/exams";
-import Signup from "../components/AuthRouters/signup/signin";
 import Logout from "../page/logout";
 import AuthRouters from "../components/AuthRouters/root";
 import ExamsTest from "../page/exams/test";
 import AllStatics from "../page/statics";
 import Profile from "../page/profile";
-import VerifyPage from "../components/AuthRouters/signup/verify";
+import VerifyPage from "../components/AuthRouters/sign/verify";
+import Signup from "../components/AuthRouters/sign/signup";
+import Signin from "../components/AuthRouters/sign/login";
 export const MenuList = [
     {
         id: 1,
@@ -172,5 +173,11 @@ export const MenuList = [
         id: 29,
         path: '/verify',
         element: <VerifyPage />
-    }
+    },
+    {
+        id: 30,
+        path: '/login',
+        element: <Signin />
+    },
+ 
 ];

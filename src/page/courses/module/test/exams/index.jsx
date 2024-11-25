@@ -148,16 +148,22 @@ const Exams = () => {
                                 </Link>
                             ) : (
                                 <div className='flex flex-col text-lg font-semibold text-gray-800'>
-                                    <p className="text-center text-2xl font-bold -translate-y-3">{item.name}</p>
-                                    <p>Exam weight: {item.weight}</p>
-                                    <p>Tests total: {item.tests_total}</p>
+                                    <p className='text-center text-2xl font-bold -translate-y-3'>
+                                        {item.name}
+                                    </p>
+                                    <p className='-translate-y-6'>
+                                        Exam weight: {item.weight}
+                                    </p>
+                                    <p className='-translate-y-8'>
+                                        Tests total: {item.tests_total}
+                                    </p>
                                 </div>
                             )}
-                            <p className='translate-y-3 w-10 h-6 bg-green-600 text-center text-white rounded'>
+                            <p className='-translate-y-10 w-10 h-6 bg-green-600 text-center text-white rounded'>
                                 {item.id}
                             </p>
                             <p
-                                className={`ml-[180px] w-16 -translate-y-4 py-1 text-center text-white rounded-md ${
+                                className={`ml-[180px]  w-16 -translate-y-20 py-1 text-center text-white rounded-md ${
                                     item.status === "active"
                                         ? "bg-green-500"
                                         : "bg-red-500"
