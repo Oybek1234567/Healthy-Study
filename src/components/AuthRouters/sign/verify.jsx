@@ -1,21 +1,20 @@
-// VerifyPage.js
 import { Form, Input } from "antd";
 import axios from "axios";
 import { useState } from "react";
-import {Link} from "react-router-dom"; 
+import { Link } from "react-router-dom";
 const VerifyPage = () => {
     const API = "http://localhost:3000";
     const [errorMessage, setErrorMessage] = useState(null);
     const [successMessage, setSuccessMessage] = useState(null);
- 
+
     const signupID = localStorage.getItem("signupID");
     const signupPhone = localStorage.getItem("signupPhone");
 
     const onFinish = async (values) => {
         try {
             const requestData = {
-                id: Number(signupID), 
-                phone: Number(signupPhone), 
+                id: Number(signupID),
+                phone: Number(signupPhone),
                 code: values.code,
                 step: 2,
             };
@@ -42,8 +41,7 @@ const VerifyPage = () => {
                 setErrorMessage(response.data.msg);
             }
         } catch (error) {
-            console.error(error)
-             
+            console.error(error);
         }
     };
 
@@ -70,7 +68,7 @@ const VerifyPage = () => {
                 </button>
             </Form>
             <Link
-                to={"/login"}
+                to={"/"}
                 className='underline mt-4 text-blue-600 hover:text-blue-800'>
                 Return to Login
             </Link>

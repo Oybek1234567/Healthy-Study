@@ -1,7 +1,6 @@
 import Applications from "../page/applications";
 import Courses from "../page/courses";
 import Dashboard from "../page/dashboard/dashboard";
-import Groups from "../page/groups";
 import Pending from "../page/groups/pending";
 import Education from "../page/reports/education";
 import Expense from "../page/reports/expense";
@@ -13,10 +12,10 @@ import Timetable from "../page/timetable";
 import Tests from "../page/courses/module/test";
 import AssignmentTypes from "../page/courses/module/test/exams/assignments";
 import SubjectTests from "../page/courses/module/test/subjects/test";
-import Excisting from "../page/groups/excisting";
-import Page from "../page/groups/excisting/page";
-import LessonReports from "../page/groups/excisting/lesson_reports";
-import Assignments from "../page/groups/excisting/assignments";
+import Excisting from "../page/groups2/excisting";
+import Page from "../page/groups2/excisting/page";
+import LessonReports from "../page/groups2/excisting/lesson_reports";
+import Assignments from "../page/groups2/excisting/assignments";
 import ModulesTab from "../page/courses/module";
 import AssignmentLevels from "../page/courses/module/test/exams/assignments/levels";
 import Exams from "../page/exams";
@@ -28,6 +27,10 @@ import Profile from "../page/profile";
 import VerifyPage from "../components/AuthRouters/sign/verify";
 import Signup from "../components/AuthRouters/sign/signup";
 import Signin from "../components/AuthRouters/sign/login";
+import GroupsNew from "../page/groups2";
+import GroupsNewExcisting from "../page/groups2/excisting";
+import GroupsNewPending from "../page/groups2/pending";
+import GroupsOld from "../page/groups";
 export const MenuList = [
     {
         id: 1,
@@ -61,8 +64,8 @@ export const MenuList = [
     },
     {
         id: 7,
-        path: "/groups",
-        element: <Groups />,
+        path: "/groups_old",
+        element: <GroupsOld />,
     },
     {
         id: 8,
@@ -76,12 +79,12 @@ export const MenuList = [
     },
     {
         id: 10,
-        path: "/groups/excisting",
+        path: "/groups_old/excisting",
         element: <Excisting />,
     },
     {
         id: 11,
-        path: "/pending",
+        path: "/groups_old/pending",
         element: <Pending />,
     },
     {
@@ -179,5 +182,19 @@ export const MenuList = [
         path: '/login',
         element: <Signin />
     },
- 
+    {
+        id: 31,
+        path: "/groups",
+        element: <GroupsNew />
+    },
+    {
+        id: 32,
+        path: '/groups/excisting',
+        element: <GroupsNewExcisting />
+    },
+    {
+        id: 33,
+        path: '/groups/pending',
+        element: <GroupsNewPending />
+    }
 ];

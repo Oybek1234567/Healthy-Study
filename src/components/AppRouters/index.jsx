@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import axios from "axios";
 import { Link, Route, Routes } from "react-router-dom";
-import { MenuList } from "../../constants/router"; // Yuqoridagi filter orqali ro'yxatni olish
+import { MenuList } from "../../constants/router";
 import { Content, Header } from "antd/es/layout/layout";
 import { Button, Layout, Menu, theme } from "antd";
 import Sider from "antd/es/layout/Sider";
@@ -12,7 +12,7 @@ import { menu } from "../../constants/data";
 
 const AppRouters = () => {
     const [data, setData] = useState({});
-    const [role, setRole] = useState(""); // Role o'zgaruvchisini qo'shdik
+    const [role, setRole] = useState("");
     const [collapsed, setCollapsed] = useState(false);
     const token = localStorage.getItem("token");
     const API = "http://localhost:3000";
@@ -27,7 +27,7 @@ const AppRouters = () => {
                         },
                     });
                     setData(req.data.user);
-                    setRole(req.data.user.role); // Role ni olish
+                    setRole(req.data.user.role);
                     console.log(req.data.user);
                 } catch (e) {
                     console.error("Error", e);
@@ -39,26 +39,20 @@ const AppRouters = () => {
         fetchData();
     }, [API, token]);
 
-    // Menu elementlarini filtrlash
-    const filteredMenu = menu
-        .map((item) => {
-            if (item.children) {
-                const filteredChildren = item.children.filter((child) =>
-                    child.roles.includes(role)
-                );
-                if (filteredChildren.length > 0) {
-                    return {
-                        ...item,
-                        children: filteredChildren, // Attach filtered children
-                    };
-                }
-                return null; // If no valid children, remove the item
-            }
+    // const filteredMenu = menu.filter((item) => {
+    //     if (item.children) {
+    //         const filteredChildren = item.children.filter((child) =>
+    //             child.roles.includes(role)
+    //         );
+    //         if (filteredChildren.length > 0) {
+    //             item.children = filteredChildren;
+    //             return true;
+    //         }
+    //         return false;
+    //     }
 
-            // Return item if it has the current role
-            return item.roles.includes(role) ? item : null;
-        })
-        .filter((item) => item !== null); // Remove null items
+    //     return item.roles.includes(role);
+    // });
 
     const {
         token: { colorBgContainer, borderRadiusLG },
@@ -108,19 +102,33 @@ const AppRouters = () => {
                             marginBottom: "50px",
                             border: "none",
                         }}
-                        items={filteredMenu.map(
+                        items={menu.map(
                             ({ id, path, title, icon, children }) => ({
                                 key: id,
-                                label: <Link to={path} style={{
-                                    textDecoration: "none", color: "black"
-                                }}>{title}</Link>,
+                                label: (
+                                    <Link
+                                        to={path}
+                                        style={{
+                                            textDecoration: "none",
+                                            color: "black",
+                                        }}>
+                                        {title}
+                                    </Link>
+                                ),
                                 icon: icon,
                                 children: children
                                     ? children.map(
                                           ({ id, path, title, icon }) => ({
                                               key: id,
                                               label: (
-                                                  <Link to={path} style={{textDecoration: "none"}}>{title}</Link>
+                                                  <Link
+                                                      to={path}
+                                                      style={{
+                                                          textDecoration:
+                                                              "none",
+                                                      }}>
+                                                      {title}
+                                                  </Link>
                                               ),
                                               icon: icon,
                                           })
@@ -173,7 +181,6 @@ const AppRouters = () => {
                         }}>
                         <Routes>
                             {MenuList.filter((item) => {
-                                // Agar foydalanuvchi "student" ro'li bo'lsa, "/applications" sahifasini ko'rsatmaslik
                                 if (
                                     role === "student" &&
                                     item.path === "/applications"

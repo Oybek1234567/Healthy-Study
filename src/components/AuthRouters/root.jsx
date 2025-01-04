@@ -1,4 +1,4 @@
-import { Route, Routes } from "react-router-dom";
+import { Navigate, Route, Routes } from "react-router-dom";
 import Signup from "./sign/signup";
 import ForgotPassword from "./sign/forgotPassword";
 import VerifyPage from "./sign/verify";
@@ -16,6 +16,7 @@ const AuthRouters = () => {
                         element={<ForgotPassword />}
                     />
                     <Route path='/verify' element={<VerifyPage />} />
+                    <Route path="*" element={<Navigate to={'/login'}/>} />
                 </Routes>
             </div>
         </div>

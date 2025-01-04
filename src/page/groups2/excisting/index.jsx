@@ -4,7 +4,7 @@ import axios from "axios";
 import { useEffect, useRef, useState } from "react";
 import { Link } from "react-router-dom";
 
-const Existing = () => {
+const GroupsNewExcisting = () => {
     const [data, setData] = useState([]);
     const myRef = useRef(null);
     const [openModal, setOpenModal] = useState(false);
@@ -151,9 +151,6 @@ const Existing = () => {
     return (
         <div ref={myRef} className='relative p-8 bg-gray-50 overflow-x-scroll'>
             <div className='flex justify-between items-center'>
-                <h1 className='text-3xl font-bold text-gray-800 mb-6'>
-                    Groups / Mavjud
-                </h1>
                 <select
                     name='status'
                     value={filter}
@@ -358,4 +355,4 @@ const Existing = () => {
     );
 };
 
-export default Existing;
+export default GroupsNewExcisting;
