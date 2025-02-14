@@ -24,8 +24,7 @@ const ExamsTest = () => {
                     { headers }
                 );
                 console.log("Data: ", req.data.data);
-
-                // Shuffle options for each question once
+ 
                 const shuffledData = req.data.data.map((item) => ({
                     ...item,
                     options: shuffleArray(item.options),
@@ -48,38 +47,46 @@ const ExamsTest = () => {
         }));
     };
 
-    const handlePost = async () => {
-        const answers = Object.entries(Answers).map(
-            ([question_id, answer]) => ({
-                question_id: parseInt(question_id),
-                answer,
-            })
-        );
+  const handlePost = async () => {
+      try { 
+          const answers = Object.entries(Answers).map(
+              ([question_id, answer]) => ({
+                  question_id: parseInt(question_id),
+                  answer,
+              })
+          );
 
-        console.log("answers", answers);
+          const responseData = {
+              assignment_by_groupstudent_id: assignment_by_groupstudent_id,
+              answers,
+          };
 
-        const responseData = {
-            assignment_by_groupstudent_id: assignment_by_groupstudent_id,
-            answers,
-        };
-        console.log(responseData);
+          console.log("Yuborilayotgan ma'lumotlar:", responseData);
 
-        try {
-            const token = localStorage.getItem("token");
-            const headers = {
-                Authorization: `Bearer ${token}`,
-            };
+          const token = localStorage.getItem("token");
+          const headers = {
+              Authorization: `Bearer ${token}`,
+              "Content-Type": "application/json",
+          };
+          const response = await axios.post(
+              `${API}/exams/answers`,
+              responseData,
+              {
+                  headers,
+              }
+          );
 
-             await axios.post(
-                `${API}/exams/answers`,
-                responseData,
-                { headers }
-            );
-            window.history.back()
-        } catch (e) {
-            console.error(e);
-        }
-    };
+          console.log("Javob:", response.data);
+          alert("Test muvaffaqiyatli yakunlandi!");
+ 
+          window.history.back();
+      } catch (error) {
+          console.error("Xatolik yuz berdi:", error);
+          alert(
+              "Ma'lumotlarni yuborishda xatolik yuz berdi. Iltimos, qayta urinib ko'ring."
+          );
+      }
+  };
 
     const shuffleArray = (array) => {
         return array.sort(() => Math.random() - 0.5);

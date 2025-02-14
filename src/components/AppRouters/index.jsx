@@ -39,20 +39,25 @@ const AppRouters = () => {
         fetchData();
     }, [API, token]);
 
-    // const filteredMenu = menu.filter((item) => {
-    //     if (item.children) {
-    //         const filteredChildren = item.children.filter((child) =>
-    //             child.roles.includes(role)
-    //         );
-    //         if (filteredChildren.length > 0) {
-    //             item.children = filteredChildren;
-    //             return true;
-    //         }
-    //         return false;
-    //     }
+    const filteredMenu = menu
+        .map((item) => { 
+            if (item.children) {
+                const filteredChildren = item.children.filter((child) =>
+                    child.roles.includes(role)
+                );
+ 
+                if (filteredChildren.length > 0) {
+                    return {
+                        ...item,
+                        children: filteredChildren,  
+                    };
+                }
+                return null; 
+            }
 
-    //     return item.roles.includes(role);
-    // });
+             return item.roles.includes(role) ? item : null;
+        })
+        .filter(Boolean); 
 
     const {
         token: { colorBgContainer, borderRadiusLG },
@@ -80,7 +85,7 @@ const AppRouters = () => {
                             width: collapsed ? "70px" : "210px",
                             height: "150px",
                         }}>
-                        <Link to={"/"}>
+                        <Link to={"http://localhost:5173"}>
                             <Icons.logo
                                 style={{
                                     width: "200px",
@@ -102,7 +107,7 @@ const AppRouters = () => {
                             marginBottom: "50px",
                             border: "none",
                         }}
-                        items={menu.map(
+                        items={filteredMenu.map(
                             ({ id, path, title, icon, children }) => ({
                                 key: id,
                                 label: (

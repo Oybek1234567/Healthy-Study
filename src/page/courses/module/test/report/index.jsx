@@ -16,11 +16,11 @@ const Report = () => {
     const [selectedStatus, setSelectedStatus] = useState("active");
     const [newStatus, setNewStatus] = useState("");
     const { id } = useParams();
+    console.log(id)
     const { open, onOpen, onClose } = useDrawer();
     const API = "http://localhost:3000";
     const {role} = useContext(AuthContext);
-
-    // Ma'lumotlarni olish uchun funktsiya
+ 
     useEffect(() => {
         const fetchData = async () => {
             try {
@@ -60,8 +60,7 @@ const Report = () => {
             alert("Mavzuni yangilashda xatolik");
         }
     };
-
-    // Tahrirlash uchun funktsiya
+ 
     const handleEdit = (report) => {
         setEditReport(report);
         setNewName(report.name);

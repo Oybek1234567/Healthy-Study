@@ -11,7 +11,7 @@ const LessonModal = ({ open, onClose }) => {
     const location = useLocation();
     const { groupId, lesson_report_type_id } = location.state;
     const API = "http://localhost:3000";
-
+ 
 
     useEffect(() => {
         const handleGet = async () => {
@@ -25,7 +25,7 @@ const LessonModal = ({ open, onClose }) => {
             }
         };
         handleGet();
-    }, [groupId]); // Faqat `groupId` o'zgarganda ishlaydi
+    }, [groupId]);
 
     useEffect(() => {
         const handleGetStudent = async () => {
@@ -58,8 +58,7 @@ const LessonModal = ({ open, onClose }) => {
                 `${API}/lessonreportsbyuser/create/${groupId}`,
                 postData
             );
-            console.log(res.data);
-            // window.location.reload();
+            console.log(res.data); 
         } catch (err) {
             console.error(err);
         }
@@ -75,9 +74,8 @@ const LessonModal = ({ open, onClose }) => {
                 <select
                     name=''
                     className='mb-10 w-full border-2 border-black'
-                    value={selected}
                     onChange={(e) => setSelected(e.target.value)}>
-                    <option value='' disabled={selected !== ""}>
+                    <option value='lessons' selected>
                         Select Lesson
                     </option>
                     {data.map((item) => (

@@ -7,13 +7,17 @@ const ExistingGroupDrawer = (props) => {
     const { open, onClose, onCreate } = props;
     const [data, setData] = useState([]);
     const [select, setSelect] = useState([]);
+    const [rooms, setRooms] = useState([]);
     const [selectedValue, setSelectedValue] = useState("");
+    const [selectedDate, setSelectedDate] = useState("");
+    const [selectedRoomId, setSelectedRoomId] = useState("");
     const [commentVisible, setCommentVisible] = useState({});
     const [checkedStatus, setCheckedStatus] = useState({});
     const location = useLocation();
-    const { groupId } = location.state;
-        const API = "http://localhost:3000";
-
+    const { groupId, moduleId } = location.state;
+    const API = "http://localhost:3000";
+    console.log(groupId);
+    
 
     useEffect(() => {
         const handleGet = async () => {
@@ -29,34 +33,43 @@ const ExistingGroupDrawer = (props) => {
         };
         handleGet();
     }, [groupId]);
+    useEffect(() => {
+        const fetchData = async () => {
+            try {
+                const req = await axios.get(`${API}/rooms/all`);
+                setRooms(req.data.rooms);
+            } catch (e) {
+                console.error(e);
+            }
+        };
+        fetchData();
+    }, []);
 
     useEffect(() => {
         const handleGetSelect = async () => {
             try {
-                const req = await axios.get(
-                    `${API}/grouplessons/all/${groupId}`
-                );
-                setSelect(req.data.group_lessons);
-                console.log(req.data.group_lessons);
+                const req = await axios.get(`${API}/lessons/all/${moduleId}`);
+                setSelect(req.data.lessons);
             } catch (error) {
                 console.error(error);
             }
         };
         handleGetSelect();
-    }, [groupId]);
+    }, [moduleId]);
 
     const handlePost = async () => {
-        // Talabalarni tanlash
         const selectedStudents = data.map((item) => ({
             group_student_id: item.id,
             isAttended: checkedStatus[item.id]?.tick
                 ? "attended"
                 : "not attended",
-            comment: commentVisible[item.id] || "", 
+            comment: commentVisible[item.id] || "",
         }));
 
         const postData = {
-            group_lesson_id: selectedValue,
+            lesson_id: selectedValue,
+            lesson_date: selectedDate,
+            room_id: selectedRoomId,
             students: selectedStudents,
         };
 
@@ -64,7 +77,7 @@ const ExistingGroupDrawer = (props) => {
         console.log(postData);
 
         try {
-            window.location.reload()
+            window.location.reload();
             const res = await axios.post(
                 `${API}/groupattendance/create/${groupId}`,
                 postData
@@ -111,18 +124,47 @@ const ExistingGroupDrawer = (props) => {
         <div>
             <Modal open={open} onCancel={onClose} footer={null}>
                 <Form onFinish={handlePost}>
-                    <Select
-                        required={true}
-                        name='hello'
-                        className='w-full border-2 border-black'
-                        onChange={handleSelectChange}
-                        value={selectedValue}>
-                        {select.map((item) => (
-                            <Select.Option key={item.id} value={item.id}>
-                                {item.lesson_name}
-                            </Select.Option>
-                        ))}
-                    </Select>
+                    <label className='flex flex-col'>
+                        <span className='font-bold text-[20px] mb-1'>
+                            Lesson Date
+                        </span>
+                        <input
+                            value={selectedDate}
+                            onChange={(e) => setSelectedDate(e.target.value)}
+                            type='date'
+                            className='border-2 border-black mb-4 p-1 '
+                        />
+                    </label>
+                    <label className='flex flex-col'>
+                        <span className='font-bold text-[20px] mb-1'>
+                            Lesson Name
+                        </span>
+                        <Select
+                            required={true}
+                            name='hello'
+                            className='w-full border-2 border-black'
+                            onChange={handleSelectChange}
+                            value={selectedValue}>
+                            {select.map((item) => (
+                                <Select.Option key={item.id} value={item.id}>
+                                    {item.name}
+                                </Select.Option>
+                            ))}
+                        </Select>
+                    </label>
+                    <label className='flex flex-col mt-3'>
+                        <span className='font-bold text-[20px] mb-1'>
+                            Rooms
+                        </span>
+                        <select
+                            className='border-2 border-black p-2'
+                            value={selectedRoomId}
+                            onChange={(e) => setSelectedRoomId(e.target.value)}>
+                            {rooms.map((item) => (
+                                <option key={item.id} value={item.id}>{item.name}</option>
+                            ))}
+                        </select>
+                    </label>
                     <table className='w-full mt-6 border-collapse border border-black'>
                         <thead>
                             <tr className='text-center'>
@@ -204,7 +246,10 @@ const ExistingGroupDrawer = (props) => {
                             ))}
                         </tbody>
                     </table>
-                    <Button type='primary' htmlType='submit' className="mt-10 ml-[85%]">
+                    <Button
+                        type='primary'
+                        htmlType='submit'
+                        className='mt-10 ml-[85%]'>
                         Create
                     </Button>
                 </Form>

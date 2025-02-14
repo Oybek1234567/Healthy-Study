@@ -18,18 +18,19 @@ const Signup = () => {
             };
 
             const res = await axios.post(
-                `${API}/users/application/create`,
+                `${API}/users/create`,
                 JSON.stringify(requestData),
                 {
                     headers: {
                         "Content-Type": "application/json",
                     },
                 }
-            );
-
+            );   
+            console.log(res.data);
+            
             if (res.data) {
-                localStorage.setItem("signupID", JSON.stringify(res.data.id));
-                localStorage.setItem("signupPhone", res.data.phone);
+                localStorage.setItem("signupID", res.data.user_id);
+                localStorage.setItem("signupPhone", values.phone);
                 navigate("/verify");
             }
         } catch (error) {

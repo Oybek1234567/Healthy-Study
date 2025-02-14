@@ -1,38 +1,42 @@
 import { Drawer, Form, Input, Button, Select, notification } from "antd";
 import axios from "axios";
 import { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
+import { useLocation } from "react-router-dom";
 
 const TestsDrawer = ({ open, onClosed, onCreate }) => {
-    const { id: unitId } = useParams();
+    const location = useLocation();
+    const ID = location.state.moduleId;
     const [form] = Form.useForm();
     const [data, setData] = useState([]);
     const API = "http://localhost:3000";
+    let numberedId = Number(ID);
+    console.log(ID);
+
     useEffect(() => {
         const fetchData = async () => {
             try {
                 const req = await axios.get(
-                    `${API}/questionlevels/all/${unitId}`
+                    `${API}/questionlevels/all/${numberedId}`
                 );
                 setData(req.data.question_levels);
             } catch (error) {
                 console.error("Error fetching data:", error);
             }
         };
-        if (unitId) {
+        if (numberedId) {
             fetchData();
         }
-    }, [unitId]);
+    }, [numberedId]);
 
     const handlePost = async (values) => {
         const data = {
             ...values,
-            unit_id: +unitId,
+            unit_id: +numberedId,
         };
 
         try {
             await axios.post(`${API}/questions/create`, data);
-            console.log("Posted data:", data);
+            // console.log("Posted data:", data);
 
             if (typeof onCreate === "function") {
                 onCreate(
@@ -50,9 +54,9 @@ const TestsDrawer = ({ open, onClosed, onCreate }) => {
 
             notification.success({ message: "Created successfully" });
             form.resetFields();
-            console.log(data);
+            // console.log(data);
 
-            // window.location.reload();
+            window.location.reload();
         } catch (err) {
             console.error("Error:", err);
             notification.error({ message: "Failed to create" });

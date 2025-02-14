@@ -15,8 +15,8 @@ const Lessons = () => {
     const { open, onOpen, onClose } = useDrawer();
     const API = "http://localhost:3000";
     const {role} = useContext(AuthContext)
-
-    // Darslarni olish
+    console.log(role);
+    
     useEffect(() => {
         const fetchLessons = async () => {
             try {

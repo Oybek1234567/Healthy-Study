@@ -9,12 +9,14 @@ const VerifyPage = () => {
 
     const signupID = localStorage.getItem("signupID");
     const signupPhone = localStorage.getItem("signupPhone");
-
+    const numberedID = Number(signupID)
     const onFinish = async (values) => {
+        console.log(values.code);
+        
         try {
             const requestData = {
-                id: Number(signupID),
-                phone: Number(signupPhone),
+                user_id: numberedID,
+                phone: signupPhone,
                 code: values.code,
                 step: 2,
             };
@@ -22,7 +24,7 @@ const VerifyPage = () => {
             console.log("Request data: ", requestData);
 
             const response = await axios.post(
-                `${API}/users/application/create`,
+                `${API}/users/create`,
                 requestData,
                 {
                     headers: {
@@ -36,7 +38,9 @@ const VerifyPage = () => {
                 setSuccessMessage(
                     "Foydalanuvchi muvaffaqiyatli ro'yxatdan o'tdi!"
                 );
-                setErrorMessage(null); // Clear any previous error messages
+                window.location.reload()
+                window.location.href = "/login";
+                setErrorMessage(null);
             } else {
                 setErrorMessage(response.data.msg);
             }

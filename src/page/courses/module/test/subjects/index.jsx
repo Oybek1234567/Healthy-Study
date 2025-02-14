@@ -15,11 +15,12 @@ const Subjects = () => {
     const [newName, setNewName] = useState("");
     const [selectedStatus, setSelectedStatus] = useState("active");
     const [newStatus, setNewStatus] = useState("active");
-    const { id } = useParams();
+    const { id } = useParams()
     const location = useLocation();
     const courseName = location.state?.courseName;
     const moduleName = location.state?.moduleName;
-    console.log(location.state);
+    const ID = location.state?.id;
+    console.log(ID);
 
     const API = "http://localhost:3000";
 
@@ -35,10 +36,10 @@ const Subjects = () => {
     useEffect(() => {
         const fetchData = async () => {
             try {
-                const { data } = await axios.get(`${API}/subjects/all/${id}`);
+                const { data } = await axios.get(`${API}/subjects/all/${id}`);  
                 setSubjects(data.units);
                 setFilteredSubjects(data.units);
-            } catch (error) {
+             } catch (error) {
                 console.error(error);
             }
         };
@@ -153,6 +154,7 @@ const Subjects = () => {
                                             courseName: courseName,
                                             moduleName: moduleName,
                                             name: item.name,
+                                            ID: ID
                                         }}>
                                         {item.name}
                                     </Link>

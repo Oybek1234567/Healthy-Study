@@ -12,11 +12,14 @@ const Exams = () => {
                 const token = localStorage.getItem("token");
 
                 if (token) {
-                    const req = await axios.get(`${API}/exams/allbystudent`, {
-                        headers: {
-                            Authorization: `Bearer ${token}`,
-                        },
-                    });
+                    const req = await axios.get(
+                        `${API}/exams/allbystudentbymodule`,
+                        {
+                            headers: {
+                                Authorization: `Bearer ${token}`,
+                            },
+                        }
+                    );
                     console.log(req.data);
                     
                     if (Array.isArray(req.data.exams)) {

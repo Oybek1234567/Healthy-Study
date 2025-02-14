@@ -16,7 +16,7 @@ import { Link, useLocation } from "react-router-dom";
 
 const Tests = () => {
     const location = useLocation();
-    const { courseName, moduleName } = location.state;
+    const { courseName, moduleName, } = location.state;
     const [activeTabKey, setActiveTabKey] = useState(() => {
         return localStorage.getItem("activeTabKey") || "subjects";
     });

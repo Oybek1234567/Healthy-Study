@@ -86,6 +86,7 @@ const Pending = () => {
                 `${API}/moduleenrolementsbystudent/createbyadmin/${value}`,
                 data
             );
+            window.location.reload();
         } catch (e) {
             console.error(e);
         }
@@ -160,7 +161,6 @@ const Pending = () => {
 
     return (
         <div className='p-4'>
-            <h1 className='text-xl font-bold mb-4'>Pending Enrollments</h1>
             <table className='table-auto border-collapse border border-gray-300 w-full text-left'>
                 <thead>
                     <tr className='bg-gray-200'>

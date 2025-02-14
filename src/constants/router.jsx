@@ -31,6 +31,8 @@ import GroupsNew from "../page/groups2";
 import GroupsNewExcisting from "../page/groups2/excisting";
 import GroupsNewPending from "../page/groups2/pending";
 import GroupsOld from "../page/groups";
+import LessonReportTypesByGroup from "../page/groups2/excisting/lesson_reports/type";
+import AssignmentByGroup from "../page/groups2/excisting/assignments/assignmentByGroup";
 export const MenuList = [
     {
         id: 1,
@@ -129,7 +131,7 @@ export const MenuList = [
     },
     {
         id: 20,
-        path: "/excisting/:id",
+        path: "/groups/:id",
         element: <Page />,
     },
     {
@@ -196,5 +198,15 @@ export const MenuList = [
         id: 33,
         path: '/groups/pending',
         element: <GroupsNewPending />
+    },
+    {
+        id: 34,
+        path: "groups/:id/lesson_report_types/:id",
+        element: <LessonReportTypesByGroup />
+    },
+    {
+        id: 35,
+        path: "groups/:groupId/assignmenttypes/:id",
+        element: <AssignmentByGroup />
     }
 ];

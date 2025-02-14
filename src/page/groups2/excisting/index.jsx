@@ -9,8 +9,6 @@ const GroupsNewExcisting = () => {
     const myRef = useRef(null);
     const [openModal, setOpenModal] = useState(false);
     const [students, setStudents] = useState([]);
-    const [lessons, setLessons] = useState([]);
-    const [openLesson, setOpenLesson] = useState(false);
     const [student, setStudent] = useState("");
     const [filter, setFilter] = useState("active");
     const [studentIndex, setStudentIndex] = useState(null);
@@ -23,18 +21,15 @@ const GroupsNewExcisting = () => {
             try {
                 let token = localStorage.getItem("token");
                 console.log("1");
-                
-                const req = await axios.get(`${API}/groups/all`, 
-                    {
-                        headers: {
-                            Authorization: `Bearer ${token}`,
-                        },
-                    }
-                );
+
+                const req = await axios.get(`${API}/groups/all`, {
+                    headers: {
+                        Authorization: `Bearer ${token}`,
+                    },
+                });
                 console.log("11");
                 setData(req.data.groups);
-                console.log(req.data);
-                
+                console.log(req.data.groups);
             } catch (error) {
                 console.error(error);
             }
@@ -67,18 +62,7 @@ const GroupsNewExcisting = () => {
             setStudents(req.data.group_student);
             setOpenModal(true);
             setStudentIndex(0);
-            setStudentName(name); // modal uchun name yangilandi
-        } catch (error) {
-            console.error(error);
-        }
-    };
-
-    const handleGetLessons = async (id) => {
-        try {
-            const req = await axios.get(`${API}/grouplessons/all/${id}`);
-            setLessons(req.data.group_lessons);
-
-            setOpenLesson(true);
+            setStudentName(name);
         } catch (error) {
             console.error(error);
         }
@@ -149,13 +133,13 @@ const GroupsNewExcisting = () => {
             ? data
             : data.filter((item) => item.status === filter);
     return (
-        <div ref={myRef} className='relative p-8 bg-gray-50 overflow-x-scroll'>
-            <div className='flex justify-between items-center'>
+        <div ref={myRef} className='p-8 bg-gray-50 overflow-x-scroll'>
+            <div className='absolute flex justify-between items-center ml-[80%] -translate-y-[230px] z-10'>
                 <select
                     name='status'
                     value={filter}
                     onChange={(e) => setFilter(e.target.value)}
-                    className='mb-10 border border-black'>
+                    className='border border-gray-300 rounded-lg bg-white text-gray-700 focus:ring-2 focus:ring-blue-500 focus:outline-none shadow-sm hover:border-blue-400 transition duration-200 px-4 py-2'>
                     <option value='active'>Active</option>
                     <option value='finished'>Finished</option>
                 </select>
@@ -170,9 +154,8 @@ const GroupsNewExcisting = () => {
 
                         <th className='p-4 text-left'>Room</th>
                         <th className='p-4 text-left'>Starting Date</th>
-                        <th className='p-4 text-left'>Days</th>
-                        <th className='p-4 text-left'>Time</th>
-                        <th className='p-4 text-left'>Lessons</th>
+                        <th className='p-4 text-left'>Course</th>
+                        <th className='p-4 text-left'>Module</th>
                         <th className='p-4 text-left'>Process</th>
                         <th className='p-4 text-left'>Action</th>
                     </tr>
@@ -182,7 +165,7 @@ const GroupsNewExcisting = () => {
                         <tr key={item.id} className='bg-white border-b text-xl'>
                             <td className='p-4'>
                                 <Link
-                                    to={`/excisting/${item.id}`}
+                                    to={`/groups/${item.id}`}
                                     state={{
                                         name: item.name,
                                         moduleId: item.module_id,
@@ -202,8 +185,14 @@ const GroupsNewExcisting = () => {
                                     Click
                                 </button>
                             </td>
-                            <td className='p-4'>{item.teacher_name + " " + item.teacher_surname}</td>
-                            <td className='p-4'>{item.assistant_name + " " + item.assistant_surname}</td>
+                            <td className='p-4'>
+                                {item.teacher_name + " " + item.teacher_surname}
+                            </td>
+                            <td className='p-4'>
+                                {item.assistant_name +
+                                    " " +
+                                    item.assistant_surname}
+                            </td>
 
                             <td className='p-4'>{item.room_name}</td>
                             <td className='p-4'>
@@ -211,15 +200,8 @@ const GroupsNewExcisting = () => {
                                     ? item.starting_date.slice(0, 10)
                                     : ""}
                             </td>
-                            <td className='p-4'>{item.days}</td>
-                            <td className='p-4'>{item.time}</td>
-                            <td className='p-4'>
-                                <button
-                                    className='bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded'
-                                    onClick={() => handleGetLessons(item.id)}>
-                                    Open
-                                </button>
-                            </td>
+                            <td className='p-4'>{item.course_name}</td>
+                            <td className='p-4'>{item.module_name}</td>
                             <td className='p-4'>0</td>
                             <td>
                                 <Dropdown
@@ -240,31 +222,6 @@ const GroupsNewExcisting = () => {
                     ))}
                 </tbody>
             </table>
-
-            <Modal open={openLesson} onCancel={() => setOpenLesson(false)}>
-                <table className='min-w-full bg-white border border-gray-200 shadow-md rounded-md'>
-                    <thead className='bg-gray-100 border-b border-gray-200'>
-                        <tr>
-                            <th className='p-4 text-left'>№</th>
-                            <th className='p-4 text-left'>Lesson Name</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {lessons.map((item, index) => (
-                            <tr
-                                key={item.id}
-                                className='border-b border-gray-200 hover:bg-gray-50'>
-                                <td className='py-4 px-6 text-gray-800'>
-                                    {index + 1}
-                                </td>
-                                <td className='py-4 px-6 text-gray-800'>
-                                    {item.lesson_name}
-                                </td>
-                            </tr>
-                        ))}
-                    </tbody>
-                </table>
-            </Modal>
             <Modal open={openModal} onCancel={() => setOpenModal(false)}>
                 <h2 className='text-2xl font-bold mb-4'>{studentName}</h2>
                 <input

@@ -18,6 +18,7 @@ const Modules = () => {
     const [newStatus, setNewStatus] = useState("");
     const [selectedStatus, setSelectedStatus] = useState("active");
     const { id } = useParams();
+    
     const location = useLocation();
     const courseName = location.state?.name;
 
@@ -134,7 +135,7 @@ const Modules = () => {
                         <Link
                             style={{ textDecoration: "none", color: "black" }}
                             to={`/courses/${id}/modules/${module.id}`}
-                            state={{ courseName, moduleName: module.name }}
+                            state={{ courseName, moduleName: module.name, id }}
                             className='relative flex flex-col justify-center bg-white shadow-lg hover:shadow-xl transition-shadow duration-300 cursor-pointer mt-4 pt-2 p-7 w-[300px] h-44 border-4 border-gray-300 rounded-lg hover:border-black hover:text-gray-700'>
                             <p className='text-gray-600 text-lg mt-4'>
                                 Modul nomi: {module.name}

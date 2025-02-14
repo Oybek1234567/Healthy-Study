@@ -20,7 +20,9 @@ const Exams = () => {
     const courseName = location.state?.courseName;
     const moduleName = location.state?.moduleName;
     const API = "http://localhost:3000";
-    const {role} = useContext(AuthContext);
+    const { role } = useContext(AuthContext);
+    const courseId = location.state.id
+    
 
     useEffect(() => {
         const fetchData = async () => {
@@ -140,8 +142,9 @@ const Exams = () => {
                                         courseName: courseName,
                                         moduleName: moduleName,
                                         name: item.name,
+                                        courseId: courseId
                                     }}
-                                    className='flex flex-col text-lg font-semibold text-gray-800 cursor-pointer'>
+                                    className='flex flex-col text-lg font-semibold text-gray-800 cursor-pointer no-underline'>
                                     <p>Exam name: {item.name}</p>
                                     <p>Exam weight: {item.weight}</p>
                                     <p>Tests total: {item.tests_total}</p>

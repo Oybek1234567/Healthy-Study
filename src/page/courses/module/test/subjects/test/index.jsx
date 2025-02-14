@@ -1,4 +1,4 @@
-import { useContext, useEffect, useState } from "react";
+import { useCallback, useContext, useEffect, useState } from "react";
 import useDrawer from "../../../../../../hooks/useDrawer";
 import { useLocation, useParams } from "react-router-dom";
 import axios from "axios";
@@ -20,46 +20,59 @@ const SubjectTests = () => {
     const [showModal, setShowModal] = useState(false);
     const { id } = useParams();
     const location = useLocation();
-    const { moduleId, moduleName, courseName, name } = location.state;
+    const { moduleName, courseName, name } = location.state;
+    const {ID} = location.state;
     const API = "http://localhost:3000";
 
     const { role } = useContext(AuthContext);
-    useEffect(() => {
-        const fetchData = async () => {
-            try {
-                const req = await axios.get(
-                    `${API}/questionlevels/all/${moduleId}`
-                );
-                setData(req.data.question_levels);
 
-                if (req.data.question_levels.length > 0) {
-                    handleTabChange(0);
-                }
-            } catch (error) {
-                console.error("Error fetching data:", error);
-            }
-        };
+   const handleTabChange = useCallback(
+       async (key) => {
+           const index = Number(key);
+           const selectedLevel = data[index];
+            console.log(selectedLevel);
+            
+           if (selectedLevel) {
+               setSelectedLevelId(selectedLevel.id);
+               setEditedLevels(selectedLevel.id);
+               try {
+                   const req = await axios.post(`${API}/questions/all/${id}`, {
+                       level_id: selectedLevel.id,
+                   });
+                   setItem(req.data.data);
+                   console.log(req.data);
+               } catch (err) {
+                   console.error("Error fetching questions:", err);
+               }
+           }
+       },
+       [data, id, API]
+   );
 
-        fetchData();
-    }, [API, moduleId]);
+    console.log(ID);
+    
+   
 
-    const handleTabChange = async (key) => {
-        const index = Number(key);
-        const selectedLevel = data[index];
+   useEffect(() => {
+       const fetchData = async () => {
+           try {
+               const req = await axios.get(`${API}/questionlevels/all/${ID}`);
+               setData(req.data.question_levels);
+               console.log('salom',req.data);
+           } catch (error) {
+               console.error("Error fetching data:", error);
+           }
+       };
 
-        if (selectedLevel) {
-            setSelectedLevelId(selectedLevel.id);
-            setEditedLevels(selectedLevel.id);
-            try {
-                const req = await axios.post(`${API}/questions/all/${id}`, {
-                    level_id: selectedLevel.id,
-                });
-                setItem(req.data.data || []);
-            } catch (err) {
-                console.error("Error fetching questions:", err);
-            }
-        }
-    };
+       fetchData();
+   }, [API, ID]);
+
+   useEffect(() => {
+       if (data.length > 0) {
+           handleTabChange(0);
+       }
+   }, [data, handleTabChange]);
+
 
     const handleEditClick = (
         questionId,

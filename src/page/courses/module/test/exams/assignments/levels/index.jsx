@@ -15,10 +15,10 @@ const AssignmentLevels = () => {
     const [editItem, setEditItem] = useState(null);
     const [form] = Form.useForm();
     const location = useLocation();
-    const { courseName, moduleName, examName, assignmentName } = location.state;
-    const moduleID = location.state?.moduleID;
+    const { courseName, moduleName, examName, assignmentName, moduleID, courseId } =
+        location.state;
     const typeId = location.state?.typeId;
-    const {role} = useContext(AuthContext)
+    const { role } = useContext(AuthContext);;
 
     const API = "http://localhost:3000";
 
@@ -41,7 +41,7 @@ const AssignmentLevels = () => {
         const fetchData = async () => {
             try {
                 const req = await axios.get(
-                    `${API}/questionlevels/all/${moduleID}`
+                    `${API}/questionlevels/all/${courseId}`
                 );
                 setLevels(req.data.question_levels);
             } catch (error) {
@@ -49,7 +49,7 @@ const AssignmentLevels = () => {
             }
         };
         fetchData();
-    }, [moduleID]);
+    }, [courseId]);
 
     useEffect(() => {
         const fetchData = async () => {
@@ -115,7 +115,6 @@ const AssignmentLevels = () => {
             </Menu.Item>
         </Menu>
     );
-    
 
     return (
         <div className='relative p-8 bg-gray-50'>

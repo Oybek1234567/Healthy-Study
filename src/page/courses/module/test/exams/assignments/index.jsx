@@ -18,6 +18,9 @@ const AssignmentTypes = () => {
     const moduleName = location.state?.moduleName;
     const courseName = location.state?.courseName;
     const examName = location.state?.name;
+    const courseId = location.state?.courseId;
+    const numberedCourseId = Number(courseId);
+    
     const API = "http://localhost:3000";
     const { role } = useContext(AuthContext);
 
@@ -28,6 +31,8 @@ const AssignmentTypes = () => {
                     `${API}/assignments/all/${assignmentID}`
                 );
                 setData(req.data.assignments);
+                console.log(req.data);
+                
             } catch (error) {
                 console.error(error);
             }
@@ -168,7 +173,8 @@ const AssignmentTypes = () => {
                                             moduleName,
                                             examName,
                                             assignmentName: item.name,
-                                        }}>
+                                            courseId: numberedCourseId,
+                                        }} style={{textDecoration: "none", color: "black"}}>
                                         {item.name}
                                     </Link>
                                 </td>

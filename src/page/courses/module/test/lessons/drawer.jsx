@@ -33,7 +33,7 @@ const LessonsDrawer = ({ open, onClosed, onCreate }) => {
                     <label htmlFor='name'>Name</label>
                     <input
                         type='text'
-                        className='border-2 border-black'
+                        className='border-2 border-black ml-2'
                         value={input}
                         onChange={(e) => setInput(e.target.value)}
                         required

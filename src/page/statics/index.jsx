@@ -12,12 +12,17 @@ const AllStatics = () => {
     const [editingUser, setEditingUser] = useState(null);
     const { role } = useContext(AuthContext);
     const API = "http://localhost:3000";
+    const token = localStorage.getItem("token");
 
     useEffect(() => {
         const fetchData = async () => {
             try {
-                const response = await axios.get(`${API}/users/all`);
-                console.log("Fetched user data:", response.data.users);
+                const response = await axios.get(`${API}/users/all`, {
+                    headers: {
+                        Authorization: `Bearer ${token}`,
+                    }
+                });
+                console.log("Fetched user data:", response.data);
                 setData(response.data.users || []);
                 setFilteredData(response.data.users || []); // Set initial filtered data
             } catch (error) {

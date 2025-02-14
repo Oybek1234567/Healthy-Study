@@ -1,19 +1,18 @@
 import { useEffect, useState } from "react";
 import useDrawer from "../../../../hooks/useDrawer";
-import { useLocation } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 import axios from "axios";
 import AssignmentsModal from "./modal";
-import { Modal } from "antd";
+// import { Modal } from "antd";
 
 const Assignments = () => {
     const location = useLocation();
-    const { groupId, id, assignment_name, name } = location.state;
-    const { open, onOpen, onClose } = useDrawer();
-    const [showModal, setShowModal] = useState(false);
-    const [assignment, setAssignment] = useState([]);
-    const [data, setData] = useState([]);
-    const [selectedAssignment, setSelectedAssignment] = useState({});
+    const { groupId, id, name, moduleId } = location.state;
+    const { open,  onClose } = useDrawer();
+    const [assignments, setAssignments] = useState([]);
     const API = "http://localhost:3000";
+    console.log(moduleId);
+    
 
     useEffect(() => {
         const handlePostAssignments = async () => {
@@ -24,7 +23,7 @@ const Assignments = () => {
                         assignment_type_id: id,
                     }
                 );
-                setAssignment(response.data.exams);
+                // setAssignment(response.data.exams);
                 console.log(response.data.exams);
             } catch (error) {
                 console.error("Error fetching assignments data:", error);
@@ -33,86 +32,64 @@ const Assignments = () => {
         handlePostAssignments();
     }, [groupId, id]);
 
+    // useEffect(() => {
+    //     const handlePostData = async () => {
+    //         try {
+    //             if (selectedAssignment.id) {
+    //                 const response = await axios.post(
+    //                     `${API}/exams/allforgroup/${groupId}`,
+    //                     {
+    //                         assignment_id: selectedAssignment.id,
+    //                     }
+    //                 );
+    //                 setData(response.data.exams);
+    //                 console.log(response.data.exams);
+    //             }
+    //         } catch (error) {
+    //             console.error("Error fetching data:", error);
+    //         }
+    //     };
+    //     handlePostData();
+    // }, [groupId, selectedAssignment]);
+
     useEffect(() => {
-        const handlePostData = async () => {
+        const fetchData = async () => {
             try {
-                if (selectedAssignment.id) {
-                    const response = await axios.post(
-                        `${API}/exams/allforgroup/${groupId}`,
-                        {
-                            assignment_id: selectedAssignment.id,
-                        }
-                    );
-                    setData(response.data.exams);
-                    console.log(response.data.exams);
-                }
+                const assignmentTypes = await axios.get(
+                    `${API}/assignmenttypes/all/${moduleId}`
+                );
+                setAssignments(assignmentTypes.data.assignmenttypes);
             } catch (error) {
                 console.error("Error fetching data:", error);
             }
         };
-        handlePostData();
-    }, [groupId, selectedAssignment]);
-
-    const handleRowClick = (item) => {
-        setSelectedAssignment(item);
-        setShowModal(true);
-    };
-
-    // Sort data based on result
-    const sortedData = data.sort((a, b) => {
-        if (a.result === null) return 1; // Sort null results to the end
-        if (b.result === null) return -1; // Sort null results to the end
-        return b.result - a.result; // Descending order
-    });
+        fetchData();
+    }, [moduleId]);
 
     return (
         <div className='relative p-8 bg-gray-50'>
-            <div className='flex text-center justify-between'>
-                <h1 className='text-3xl font-bold text-gray-800 mb-6'>
-                    {name} / {assignment_name}
-                </h1>
-                <button
-                    onClick={onOpen}
-                    className='w-10 h-10 rounded-full bg-green-700 text-white text-2xl mb-5'>
-                    +
-                </button>
+            <div className="flex gap-5">
+            {assignments.map((item) => (
+                <Link
+                    to={`/groups/${groupId}/assignmenttypes/${item.id}`}
+                    state={{
+                        groupId,
+                        id: item.id,
+                        assignment_name: item.name,
+                        name: name,
+                        assignment_type_id: item.id,
+                        moduleId
+                    }}
+                    key={item.id}
+                    className='relative flex flex-col justify-center items-center bg-white shadow-lg hover:shadow-xl transition-shadow duration-300 cursor-pointer mt-10 p-6 w-[300px] h-40 border-4 border-gray-300 rounded-lg hover:border-black hover:text-gray-700 no-underline text-black'>
+                    <p className='text-3xl font-semibold'>{item.name}</p>
+                </Link>
+            ))}
             </div>
-            <table className='min-w-full border border-gray-300'>
-                <thead>
-                    <tr className='bg-gray-100 text-xl text-center'>
-                        <th className='px-4 py-2 border border-gray-300'>
-                            Assignment Name
-                        </th>
-                        <th className='px-4 py-2 border border-gray-300'>
-                            Group Name
-                        </th>
-                        <th className='px-4 py-2 border border-gray-300'>
-                            When
-                        </th>
-                    </tr>
-                </thead>
-                <tbody className='text-center text-xl'>
-                    {assignment.map((item) => (
-                        <tr key={item.id} className='hover:bg-gray-50'>
-                            <td className='px-4 py-2 border border-gray-300'>
-                                {item.assignment_name}
-                            </td>
-                            <td
-                                className='px-4 py-2 border border-gray-300 cursor-pointer'
-                                onClick={() => handleRowClick(item)}>
-                                {item.group_name}
-                            </td>
-                            <td className='px-4 py-2 border border-gray-300'>
-                                {item.when.slice(0, 10)}
-                            </td>
-                        </tr>
-                    ))}
-                </tbody>
-            </table>
 
             <AssignmentsModal open={open} onClose={onClose} />
 
-            <Modal
+            {/* <Modal
                 width={"80%"}
                 open={showModal}
                 onCancel={() => setShowModal(false)}
@@ -150,7 +127,7 @@ const Assignments = () => {
                         </div>
                     ))}
                 </div>
-            </Modal>
+            </Modal> */}
         </div>
     );
 };
